@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: postgres:14.1
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=pizzami
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: 'pg_pass'
+    ports:
+      - "5050:80"
+
+  rabbitmq:
+    image: "rabbitmq:alpine"
+    container_name: rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+
+
+  django:
+    build:
+      context: .
+      dockerfile: docker/local.Dockerfile
+    container_name: django
+    command: bash ./docker/local_web_entrypoint.sh
+    environment:
+      - DATABASE_URL=psql://user:password@db:5432/pizzami
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - rabbitmq
+    restart: on-failure
+
+
+volumes:
+    postgres-data:
+    redis-data:
+
