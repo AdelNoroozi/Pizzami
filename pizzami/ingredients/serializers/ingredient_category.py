@@ -33,4 +33,4 @@ class IngredientCategoryBaseOutputSerializer(serializers.ModelSerializer):
 class IngredientCategoryCompleteOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientCategory
-        exclude = "__all__"
+        fields = "__all__"
