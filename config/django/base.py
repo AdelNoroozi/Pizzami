@@ -18,6 +18,7 @@ LOCAL_APPS = [
     'pizzami.common.apps.CommonConfig',
     'pizzami.users.apps.UsersConfig',
     'pizzami.authentication.apps.AuthenticationConfig',
+    'pizzami.ingredients.apps.IngredientsConfig',
 ]
 
 THIRD_PARTY_APPS = [
@@ -85,7 +86,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='psql://user:password@127.0.0.1:5432/pizzami'),
+    'default': env.db('DATABASE_URL', default='psql://user:password@127.0.0.1:5433/pizzami'),
 }
 
 if os.environ.get('GITHUB_WORKFLOW'):
@@ -96,7 +97,7 @@ if os.environ.get('GITHUB_WORKFLOW'):
             'USER': 'user',
             'PASSWORD': 'password',
             'HOST': 'db',
-            'PORT': '5432',
+            'PORT': '5433',
         }
     }
 

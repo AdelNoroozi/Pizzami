@@ -10,3 +10,10 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
+
+class ImageIncludedBaseModel(BaseModel):
+    image_url = models.CharField(max_length=512, verbose_name=_("image url"))
+    image_alt_text = models.CharField(max_length=50, verbose_name=_("image alt text"))
+
+    class Meta:
+        abstract = True
