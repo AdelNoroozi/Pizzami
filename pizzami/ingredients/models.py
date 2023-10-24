@@ -7,7 +7,7 @@ from pizzami.common.models import ImageIncludedBaseModel
 
 
 class IngredientCategory(ImageIncludedBaseModel):
-    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4())
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=30, verbose_name=_("name"))
 
     def __str__(self):
@@ -20,7 +20,7 @@ class IngredientCategory(ImageIncludedBaseModel):
 
 
 class Ingredient(ImageIncludedBaseModel):
-    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4())
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     category = models.ForeignKey(IngredientCategory, on_delete=models.CASCADE, related_name="ingredients",
                                  verbose_name=_("category"))
     name = models.CharField(max_length=30, verbose_name=_("name"))
