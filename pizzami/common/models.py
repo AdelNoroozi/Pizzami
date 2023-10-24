@@ -2,11 +2,15 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from pizzami.common.managers import BaseManager
+
 
 class BaseModel(models.Model):
     created_at = models.DateTimeField(db_index=True, default=timezone.now, verbose_name=_("created at"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("updated at"))
     is_active = models.BooleanField(default=True, verbose_name=_("is active"))
+
+    objects = BaseManager()
 
     class Meta:
         abstract = True
