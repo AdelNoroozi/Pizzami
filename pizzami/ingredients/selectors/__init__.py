@@ -1,0 +1,1 @@
+from pizzami.ingredients.selectors.ingredient_category import get_ingredient_categories
