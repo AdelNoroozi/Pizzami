@@ -8,3 +8,11 @@ def string_ending_validator(field_name: str, str_value: str, ending_str: str):
             _(f"{field_name}s must end with {ending_str}"),
             code="invalid_string_ending"
         )
+
+
+def string_included_validator(field_name: str, str_value: str, including_str: str, included_helper: str):
+    if including_str not in str_value:
+        raise ValidationError(
+            _(f"{field_name}s must include {included_helper}"),
+            code="invalid_string_format"
+        )

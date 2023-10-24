@@ -1,0 +1,1 @@
+from pizzami.ingredients.serializers.ingredient_category import IngredientCategoryInputSerializer
