@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from pizzami.ingredients.models import IngredientCategory
+
+admin.site.register(IngredientCategory)
