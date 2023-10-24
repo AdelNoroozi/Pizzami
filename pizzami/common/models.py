@@ -6,7 +6,7 @@ from pizzami.common.managers import BaseManager
 
 
 class BaseModel(models.Model):
-    created_at = models.DateTimeField(db_index=True, default=timezone.now, verbose_name=_("created at"))
+    created_at = models.DateTimeField(db_index=True, auto_now_add=True, verbose_name=_("created at"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("updated at"))
     is_active = models.BooleanField(default=True, verbose_name=_("is active"))
 
