@@ -22,3 +22,15 @@ class IngredientCategoryInputSerializer(serializers.ModelSerializer):
             included_helper="category's name"
         )
         return value
+
+
+class IngredientCategoryBaseOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IngredientCategory
+        exclude = ("created_at", "updated_at", "is_active")
+
+
+class IngredientCategoryCompleteOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IngredientCategory
+        exclude = "__all__"
