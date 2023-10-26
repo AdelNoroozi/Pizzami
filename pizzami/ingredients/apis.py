@@ -49,3 +49,7 @@ class IngredientCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         updated_ingredient_category_data = update_ingredient_category(ingredient_category_id=_id, data=request.data)
         return Response(data=updated_ingredient_category_data, status=status.HTTP_200_OK)
 
+    def delete(self, request, **kwargs):
+        _id = kwargs.get("id")
+        "delete"
+        return Response(data={""}, status=status.HTTP_204_NO_CONTENT)
