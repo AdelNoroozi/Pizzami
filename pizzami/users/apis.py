@@ -1,25 +1,28 @@
 from django.core.validators import MinLengthValidator
-
+from drf_spectacular.utils import extend_schema
+from rest_framework import serializers
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import serializers
-from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
-from drf_spectacular.utils import extend_schema
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from .validators import number_validator, special_char_validator, letter_validator
+from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.users.models import BaseUser, Profile
-from pizzami.api.mixins import ApiAuthMixin
 from pizzami.users.selectors import get_profile
 from pizzami.users.services import register
+from .validators import number_validator, special_char_validator, letter_validator
 
 
+class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "GET": [IsAuthenticated]
+    }
 
-class ProfileApi(ApiAuthMixin, APIView):
     class OutPutSerializer(serializers.ModelSerializer):
         class Meta:
             model = Profile
-            fields = ("bio", )
+            fields = ("bio",)
 
     @extend_schema(responses=OutPutSerializer)
     def get(self, request):

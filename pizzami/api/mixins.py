@@ -1,7 +1,7 @@
 from typing import Sequence, Type, TYPE_CHECKING
 
 from rest_framework.authentication import BaseAuthentication
-from rest_framework.permissions import IsAuthenticated, BasePermission
+from rest_framework.permissions import BasePermission, AllowAny, IsAdminUser
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
@@ -30,10 +30,20 @@ class ApiAuthMixin:
     authentication_classes: Sequence[Type[BaseAuthentication]] = [
         JWTAuthentication,
     ]
-    permission_classes: PermissionClassesType = (IsAuthenticated,)
 
 
-class ApiOptionalAuthMixin:
-    authentication_classes: Sequence[Type[BaseAuthentication]] = [
-        JWTAuthentication,
-    ]
+class BasePermissionsMixin:
+    permissions = {
+        "POST": [IsAdminUser],
+        "PUT": [IsAdminUser],
+        "PATCH": [IsAdminUser],
+        "DELETE": [IsAdminUser],
+        "GET": [AllowAny]
+    }
+
+    def get_permissions(self):
+        perms = super().get_permissions()
+        if self.request.method in self.permissions.keys():
+            return perms + [p() for p in self.permissions[self.request.method]]
+        else:
+            return perms
