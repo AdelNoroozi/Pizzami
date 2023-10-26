@@ -12,7 +12,7 @@ from pizzami.ingredients.serializers import IngredientCategoryInputSerializer
 from pizzami.ingredients.services import get_ingredient_categories, create_ingredient_category
 
 
-class IngredientCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+class IngredientCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         responses={200: GET_INGREDIENT_CATEGORIES_200_RESPONSE}
