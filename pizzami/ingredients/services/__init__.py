@@ -1,2 +1,3 @@
 from pizzami.ingredients.services.ingredient_category import get_ingredient_categories
 from pizzami.ingredients.services.ingredient_category import create_ingredient_category
+from pizzami.ingredients.services.ingredient_category import update_ingredient_category
