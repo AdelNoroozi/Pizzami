@@ -18,7 +18,7 @@ class IngredientCategoryInputSerializer(serializers.ModelSerializer):
         string_included_validator(
             field_name="image alt text",
             str_value=value,
-            including_str=self.validated_data.get("name"),
+            including_str=self.initial_data.get("name"),
             included_helper="category's name"
         )
         return value
