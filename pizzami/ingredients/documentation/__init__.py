@@ -1,0 +1,1 @@
+from pizzami.ingredients.documentation.ingredient_category import GET_INGREDIENT_CATEGORIES_RESPONSE
