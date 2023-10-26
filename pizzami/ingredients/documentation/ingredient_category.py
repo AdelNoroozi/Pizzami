@@ -8,16 +8,20 @@ GET_INGREDIENT_CATEGORIES_200_RESPONSE = OpenApiResponse(
     description="created_at, updated_at & is_active fields are only visible to users with staff privileges."
 )
 
-SAVE_INGREDIENT_CATEGORY_201_RESPONSE = OpenApiResponse(
+CREATE_INGREDIENT_CATEGORY_201_RESPONSE = OpenApiResponse(
     response=IngredientCategoryCompleteOutputSerializer,
     description="a new ingredient category created successfully."
+)
+
+UPDATE_INGREDIENT_CATEGORY_200_RESPONSE = OpenApiResponse(
+    response=IngredientCategoryCompleteOutputSerializer,
+    description="ingredient category updated successfully."
 )
 
 SAVE_INGREDIENT_CATEGORY_400_RESPONSE = OpenApiResponse(
     description="input values are invalid or don't match the expected format. e.g: image alt text does not contain /"
                 "ingredient category's name."
 )
-
 
 SAVE_INGREDIENT_CATEGORY_401_RESPONSE = OpenApiResponse(
     description="user is not authenticated"
