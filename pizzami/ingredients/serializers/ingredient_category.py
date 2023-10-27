@@ -7,7 +7,7 @@ from pizzami.ingredients.models import IngredientCategory
 class IngredientCategoryInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientCategory
-        fields = ("name", "image_url", "image_alt_text")
+        fields = ("name", "image_url", "image_alt_text", "is_active")
 
     def validate_image_alt_text(self, value):
         string_ending_validator(

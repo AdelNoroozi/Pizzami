@@ -15,8 +15,12 @@ from pizzami.ingredients.documentation import (
     UPDATE_INGREDIENT_CATEGORY_200_RESPONSE
 )
 from pizzami.ingredients.serializers import IngredientCategoryInputSerializer
-from pizzami.ingredients.services import get_ingredient_categories, create_ingredient_category, \
-    update_ingredient_category, delete_ingredient_category
+from pizzami.ingredients.services import (
+    get_ingredient_categories,
+    create_ingredient_category,
+    update_ingredient_category,
+    delete_ingredient_category
+)
 
 
 class IngredientCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
