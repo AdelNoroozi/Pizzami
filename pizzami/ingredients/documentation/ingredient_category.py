@@ -1,4 +1,3 @@
-import rest_framework.serializers
 from drf_spectacular.utils import OpenApiResponse
 
 from pizzami.ingredients.serializers.ingredient_category import IngredientCategoryCompleteOutputSerializer
@@ -23,15 +22,18 @@ SAVE_INGREDIENT_CATEGORY_400_RESPONSE = OpenApiResponse(
                 "ingredient category's name."
 )
 
-SAVE_INGREDIENT_CATEGORY_401_RESPONSE = OpenApiResponse(
+INGREDIENT_CATEGORY_401_RESPONSE = OpenApiResponse(
     description="user is not authenticated"
 )
 
-
-SAVE_INGREDIENT_CATEGORY_403_RESPONSE = OpenApiResponse(
+INGREDIENT_CATEGORY_403_RESPONSE = OpenApiResponse(
     description="non-staff user is trying to create a new ingredient category"
 )
 
 INGREDIENT_CATEGORY_404_RESPONSE = OpenApiResponse(
     description="ingredient category with specified id does not exist"
+)
+
+DELETE_INGREDIENT_CATEGORY_204_RESPONSE = OpenApiResponse(
+    description="ingredient category deleted successfully."
 )
