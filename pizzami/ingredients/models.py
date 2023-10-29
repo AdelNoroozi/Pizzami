@@ -34,6 +34,6 @@ class Ingredient(ImageIncludedBaseModel):
         return self.name
 
     class Meta:
-        verbose_name = _("Category")
-        verbose_name_plural = _("Categories")
+        verbose_name = _("Ingredient")
+        verbose_name_plural = _("Ingredients")
         db_table = "ingredient"

@@ -5,14 +5,14 @@ from pizzami.ingredients.serializers import IngredientCategoryBaseOutputSerializ
 
 
 class IngredientBaseOutputSerializer(serializers.ModelSerializer):
+    category = IngredientCategoryBaseOutputSerializer(many=False)
+
     class Meta:
         model = Ingredient
         exclude = ("created_at", "updated_at", "is_active")
 
 
-class IngredientCompleteOutputSerializer(serializers.ModelSerializer):
-    category = IngredientCategoryBaseOutputSerializer(many=False)
-
-    class Meta:
-        model = Ingredient
+class IngredientCompleteOutputSerializer(IngredientBaseOutputSerializer):
+    class Meta(IngredientBaseOutputSerializer.Meta):
+        exclude = None
         fields = "__all__"
