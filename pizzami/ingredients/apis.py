@@ -19,7 +19,7 @@ from pizzami.ingredients.services import (
     get_ingredient_categories,
     create_ingredient_category,
     update_ingredient_category,
-    delete_ingredient_category
+    delete_ingredient_category, get_ingredients
 )
 
 
@@ -69,3 +69,10 @@ class IngredientCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         _id = kwargs.get("id")
         delete_ingredient_category(ingredient_category_id=_id)
         return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
+
+
+class IngredientsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+
+    def get(self, request):
+        data = get_ingredients(is_user_staff=request.user.is_staff)
+        return Response(data=data, status=status.HTTP_200_OK)
