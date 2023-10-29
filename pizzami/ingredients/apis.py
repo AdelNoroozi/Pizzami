@@ -12,7 +12,8 @@ from pizzami.ingredients.documentation import (
     INGREDIENT_CATEGORY_401_RESPONSE,
     INGREDIENT_CATEGORY_403_RESPONSE,
     INGREDIENT_CATEGORY_404_RESPONSE,
-    UPDATE_INGREDIENT_CATEGORY_200_RESPONSE
+    UPDATE_INGREDIENT_CATEGORY_200_RESPONSE,
+    GET_INGREDIENTS_200_RESPONSE
 )
 from pizzami.ingredients.serializers import IngredientCategoryInputSerializer
 from pizzami.ingredients.services import (
@@ -73,6 +74,9 @@ class IngredientCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class IngredientsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
+    @extend_schema(
+        responses={200: GET_INGREDIENTS_200_RESPONSE}
+    )
     def get(self, request):
         data = get_ingredients(is_user_staff=request.user.is_staff)
         return Response(data=data, status=status.HTTP_200_OK)

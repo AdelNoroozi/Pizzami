@@ -6,3 +6,4 @@ from pizzami.ingredients.documentation.ingredient_category import INGREDIENT_CAT
 from pizzami.ingredients.documentation.ingredient_category import INGREDIENT_CATEGORY_403_RESPONSE
 from pizzami.ingredients.documentation.ingredient_category import INGREDIENT_CATEGORY_404_RESPONSE
 from pizzami.ingredients.documentation.ingredient_category import DELETE_INGREDIENT_CATEGORY_204_RESPONSE
+from pizzami.ingredients.documentation.ingredient import GET_INGREDIENTS_200_RESPONSE
