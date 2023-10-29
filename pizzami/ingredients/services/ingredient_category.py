@@ -6,7 +6,7 @@ from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 from pizzami.ingredients.models import IngredientCategory
 from pizzami.ingredients.selectors import delete_ingredient_category as delete_ingredient_category_selector
 from pizzami.ingredients.selectors import get_ingredient_categories as get_ingredient_categories_selector
-from pizzami.ingredients.serializers.ingredient_category import IngredientCategoryCompleteOutputSerializer, \
+from pizzami.ingredients.serializers import IngredientCategoryCompleteOutputSerializer, \
     IngredientCategoryBaseOutputSerializer, IngredientCategoryInputSerializer
 
 

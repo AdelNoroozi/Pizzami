@@ -1,6 +1,6 @@
 from drf_spectacular.utils import OpenApiResponse
 
-from pizzami.ingredients.serializers.ingredient_category import IngredientCategoryCompleteOutputSerializer
+from pizzami.ingredients.serializers import IngredientCategoryCompleteOutputSerializer
 
 GET_INGREDIENT_CATEGORIES_200_RESPONSE = OpenApiResponse(
     response=IngredientCategoryCompleteOutputSerializer,
