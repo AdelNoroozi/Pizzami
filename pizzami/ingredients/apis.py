@@ -16,7 +16,7 @@ from pizzami.ingredients.documentation import (
     GET_INGREDIENTS_200_RESPONSE,
     CREATE_INGREDIENT_201_RESPONSE,
     INGREDIENT_401_RESPONSE,
-    INGREDIENT_403_RESPONSE, UPDATE_INGREDIENT_200_RESPONSE, INGREDIENT_404_RESPONSE
+    INGREDIENT_403_RESPONSE, UPDATE_INGREDIENT_200_RESPONSE, INGREDIENT_404_RESPONSE, DELETE_INGREDIENT_204_RESPONSE
 )
 from pizzami.ingredients.serializers import IngredientCategoryInputSerializer, IngredientInputSerializer
 from pizzami.ingredients.services import (
@@ -25,7 +25,7 @@ from pizzami.ingredients.services import (
     update_ingredient_category,
     delete_ingredient_category,
     get_ingredients,
-    create_ingredient, update_ingredient
+    create_ingredient, update_ingredient, delete_ingredient
 )
 
 
@@ -108,3 +108,12 @@ class IngredientAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         _id = kwargs.get("id")
         updated_ingredient_data = update_ingredient(ingredient_id=_id, data=request.data)
         return Response(data=updated_ingredient_data, status=status.HTTP_200_OK)
+
+    @extend_schema(responses={204: DELETE_INGREDIENT_204_RESPONSE,
+                              401: INGREDIENT_401_RESPONSE,
+                              403: INGREDIENT_403_RESPONSE,
+                              404: INGREDIENT_404_RESPONSE})
+    def delete(self, request, **kwargs):
+        _id = kwargs.get("id")
+        delete_ingredient(ingredient_id=_id)
+        return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)

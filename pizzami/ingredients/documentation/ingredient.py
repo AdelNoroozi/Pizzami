@@ -33,3 +33,7 @@ INGREDIENT_403_RESPONSE = OpenApiResponse(
 INGREDIENT_404_RESPONSE = OpenApiResponse(
     description="ingredient with specified id does not exist"
 )
+
+DELETE_INGREDIENT_204_RESPONSE = OpenApiResponse(
+    description="ingredient deleted successfully."
+)

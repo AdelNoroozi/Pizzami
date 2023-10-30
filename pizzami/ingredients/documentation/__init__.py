@@ -13,3 +13,4 @@ from pizzami.ingredients.documentation.ingredient import INGREDIENT_401_RESPONSE
 from pizzami.ingredients.documentation.ingredient import INGREDIENT_403_RESPONSE
 from pizzami.ingredients.documentation.ingredient import UPDATE_INGREDIENT_200_RESPONSE
 from pizzami.ingredients.documentation.ingredient import INGREDIENT_404_RESPONSE
+from pizzami.ingredients.documentation.ingredient import DELETE_INGREDIENT_204_RESPONSE
