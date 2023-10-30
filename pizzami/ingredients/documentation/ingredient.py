@@ -12,6 +12,11 @@ CREATE_INGREDIENT_201_RESPONSE = OpenApiResponse(
     description="a new ingredient created successfully."
 )
 
+UPDATE_INGREDIENT_200_RESPONSE = OpenApiResponse(
+    response=IngredientCompleteOutputSerializer,
+    description="ingredient updated_successfully"
+)
+
 SAVE_INGREDIENT_400_RESPONSE = OpenApiResponse(
     description="input values are invalid or don't match the expected format. e.g: image alt text does not contain /"
                 "ingredient's name, category with specified id does not exist."
@@ -23,4 +28,8 @@ INGREDIENT_401_RESPONSE = OpenApiResponse(
 
 INGREDIENT_403_RESPONSE = OpenApiResponse(
     description="non-staff user is trying to create a new ingredient"
+)
+
+INGREDIENT_404_RESPONSE = OpenApiResponse(
+    description="ingredient with specified id does not exist"
 )

@@ -29,7 +29,7 @@ def create_ingredient(data: dict) -> ReturnDict:
 def update_ingredient(ingredient_id: uuid, data: dict) -> ReturnDict:
     ingredient = get_object_or_404(Ingredient, id=ingredient_id)
     serializer = IngredientInputSerializer(instance=ingredient, data=data, partial=True)
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
     serializer.save()
     response_serializer = IngredientCompleteOutputSerializer(serializer.instance, many=False)
     return response_serializer.data

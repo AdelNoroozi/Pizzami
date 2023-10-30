@@ -11,3 +11,5 @@ from pizzami.ingredients.documentation.ingredient import CREATE_INGREDIENT_201_R
 from pizzami.ingredients.documentation.ingredient import SAVE_INGREDIENT_400_RESPONSE
 from pizzami.ingredients.documentation.ingredient import INGREDIENT_401_RESPONSE
 from pizzami.ingredients.documentation.ingredient import INGREDIENT_403_RESPONSE
+from pizzami.ingredients.documentation.ingredient import UPDATE_INGREDIENT_200_RESPONSE
+from pizzami.ingredients.documentation.ingredient import INGREDIENT_404_RESPONSE
