@@ -3,3 +3,4 @@ from pizzami.ingredients.services.ingredient_category import create_ingredient_c
 from pizzami.ingredients.services.ingredient_category import update_ingredient_category
 from pizzami.ingredients.services.ingredient_category import delete_ingredient_category
 from pizzami.ingredients.services.ingredient import get_ingredients
+from pizzami.ingredients.services.ingredient import create_ingredient
