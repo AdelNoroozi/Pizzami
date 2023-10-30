@@ -36,6 +36,6 @@ def update_ingredient_category(ingredient_category_id: uuid, data: dict) -> Retu
     return response_serializer.data
 
 
-def delete_ingredient_category(ingredient_category_id: uuid) -> None:
+def delete_ingredient_category(ingredient_category_id: uuid):
     ingredient_category = get_object_or_404(IngredientCategory, id=ingredient_category_id)
     delete_ingredient_category_selector(ingredient_category)

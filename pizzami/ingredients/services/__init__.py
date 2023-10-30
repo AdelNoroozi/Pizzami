@@ -5,3 +5,4 @@ from pizzami.ingredients.services.ingredient_category import delete_ingredient_c
 from pizzami.ingredients.services.ingredient import get_ingredients
 from pizzami.ingredients.services.ingredient import create_ingredient
 from pizzami.ingredients.services.ingredient import update_ingredient
+from pizzami.ingredients.services.ingredient import delete_ingredient

@@ -4,6 +4,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
 from pizzami.ingredients.models import Ingredient
+from pizzami.ingredients.selectors import delete_ingredient as delete_ingredient_selector
 from pizzami.ingredients.selectors import get_ingredients as get_ingredients_selector
 from pizzami.ingredients.serializers import IngredientCompleteOutputSerializer, IngredientBaseOutputSerializer, \
     IngredientInputSerializer
@@ -33,3 +34,8 @@ def update_ingredient(ingredient_id: uuid, data: dict) -> ReturnDict:
     serializer.save()
     response_serializer = IngredientCompleteOutputSerializer(serializer.instance, many=False)
     return response_serializer.data
+
+
+def delete_ingredient(ingredient_id: uuid):
+    ingredient = get_object_or_404(Ingredient, id=ingredient_id)
+    delete_ingredient_selector(ingredient)

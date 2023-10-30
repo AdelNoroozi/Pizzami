@@ -8,3 +8,7 @@ def get_ingredients(return_all: bool) -> QuerySet[Ingredient]:
         return Ingredient.objects.all()
     else:
         return Ingredient.objects.active()
+
+
+def delete_ingredient(ingredient: Ingredient):
+    ingredient.delete()
