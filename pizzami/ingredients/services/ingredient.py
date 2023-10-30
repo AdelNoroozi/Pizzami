@@ -1,3 +1,6 @@
+import uuid
+
+from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
 from pizzami.ingredients.models import Ingredient
@@ -18,6 +21,15 @@ def get_ingredients(is_user_staff: bool) -> ReturnList[Ingredient]:
 def create_ingredient(data: dict) -> ReturnDict:
     serializer = IngredientInputSerializer(data=data)
     serializer.is_valid(raise_exception=True)
+    serializer.save()
+    response_serializer = IngredientCompleteOutputSerializer(serializer.instance, many=False)
+    return response_serializer.data
+
+
+def update_ingredient(ingredient_id: uuid, data: dict) -> ReturnDict:
+    ingredient = get_object_or_404(Ingredient, id=ingredient_id)
+    serializer = IngredientInputSerializer(instance=ingredient, data=data, partial=True)
+    serializer.is_valid()
     serializer.save()
     response_serializer = IngredientCompleteOutputSerializer(serializer.instance, many=False)
     return response_serializer.data
