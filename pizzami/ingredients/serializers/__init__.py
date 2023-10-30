@@ -3,3 +3,4 @@ from pizzami.ingredients.serializers.ingredient_category import IngredientCatego
 from pizzami.ingredients.serializers.ingredient_category import IngredientCategoryInputSerializer
 from pizzami.ingredients.serializers.ingredient import IngredientBaseOutputSerializer
 from pizzami.ingredients.serializers.ingredient import IngredientCompleteOutputSerializer
+from pizzami.ingredients.serializers.ingredient import IngredientInputSerializer
