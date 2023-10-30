@@ -13,14 +13,19 @@ from pizzami.ingredients.documentation import (
     INGREDIENT_CATEGORY_403_RESPONSE,
     INGREDIENT_CATEGORY_404_RESPONSE,
     UPDATE_INGREDIENT_CATEGORY_200_RESPONSE,
-    GET_INGREDIENTS_200_RESPONSE
+    GET_INGREDIENTS_200_RESPONSE,
+    CREATE_INGREDIENT_201_RESPONSE,
+    INGREDIENT_401_RESPONSE,
+    INGREDIENT_403_RESPONSE
 )
-from pizzami.ingredients.serializers import IngredientCategoryInputSerializer
+from pizzami.ingredients.serializers import IngredientCategoryInputSerializer, IngredientInputSerializer
 from pizzami.ingredients.services import (
     get_ingredient_categories,
     create_ingredient_category,
     update_ingredient_category,
-    delete_ingredient_category, get_ingredients
+    delete_ingredient_category,
+    get_ingredients,
+    create_ingredient
 )
 
 
@@ -80,3 +85,13 @@ class IngredientsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def get(self, request):
         data = get_ingredients(is_user_staff=request.user.is_staff)
         return Response(data=data, status=status.HTTP_200_OK)
+
+    @extend_schema(request=IngredientInputSerializer,
+                   responses={201: CREATE_INGREDIENT_201_RESPONSE,
+                              400: SAVE_INGREDIENT_CATEGORY_400_RESPONSE,
+                              401: INGREDIENT_401_RESPONSE,
+                              403: INGREDIENT_403_RESPONSE
+                              })
+    def post(self, request):
+        ingredient_data = create_ingredient(request.data)
+        return Response(data=ingredient_data, status=status.HTTP_201_CREATED)

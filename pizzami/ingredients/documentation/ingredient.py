@@ -6,3 +6,21 @@ GET_INGREDIENTS_200_RESPONSE = OpenApiResponse(
     response=IngredientCompleteOutputSerializer,
     description="created_at, updated_at & is_active fields are only visible to users with staff privileges."
 )
+
+CREATE_INGREDIENT_201_RESPONSE = OpenApiResponse(
+    response=IngredientCompleteOutputSerializer,
+    description="a new ingredient created successfully."
+)
+
+SAVE_INGREDIENT_400_RESPONSE = OpenApiResponse(
+    description="input values are invalid or don't match the expected format. e.g: image alt text does not contain /"
+                "ingredient's name, category with specified id does not exist."
+)
+
+INGREDIENT_401_RESPONSE = OpenApiResponse(
+    description="user is not authenticated"
+)
+
+INGREDIENT_403_RESPONSE = OpenApiResponse(
+    description="non-staff user is trying to create a new ingredient"
+)
