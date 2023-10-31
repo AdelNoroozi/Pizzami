@@ -27,7 +27,7 @@ INGREDIENT_CATEGORY_401_RESPONSE = OpenApiResponse(
 )
 
 INGREDIENT_CATEGORY_403_RESPONSE = OpenApiResponse(
-    description="non-staff user is trying to create a new ingredient category"
+    description="non-staff user is trying to create, update or delete a new ingredient category"
 )
 
 INGREDIENT_CATEGORY_404_RESPONSE = OpenApiResponse(

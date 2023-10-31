@@ -27,7 +27,7 @@ INGREDIENT_401_RESPONSE = OpenApiResponse(
 )
 
 INGREDIENT_403_RESPONSE = OpenApiResponse(
-    description="non-staff user is trying to create a new ingredient"
+    description="non-staff user is trying to create, update or delete a new ingredient"
 )
 
 INGREDIENT_404_RESPONSE = OpenApiResponse(
