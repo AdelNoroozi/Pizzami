@@ -1,3 +1,4 @@
 from pizzami.foods.serializers.food_category import FoodCategoryBaseOutputSerializer
 from pizzami.foods.serializers.food_category import FoodCategoryDetailedOutputSerializer
 from pizzami.foods.serializers.food_category import FoodCategoryCompleteOutputSerializer
+from pizzami.foods.serializers.food_category_compound import FoodCategoryCompoundInputSerializer
