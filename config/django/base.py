@@ -19,6 +19,7 @@ LOCAL_APPS = [
     'pizzami.users.apps.UsersConfig',
     'pizzami.authentication.apps.AuthenticationConfig',
     'pizzami.ingredients.apps.IngredientsConfig',
+    'pizzami.foods.apps.FoodsConfig',
 ]
 
 THIRD_PARTY_APPS = [
