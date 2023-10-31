@@ -1,15 +1,7 @@
 from rest_framework import serializers
 
-from pizzami.foods.models import FoodCategory, FoodCategoryCompound
-from pizzami.ingredients.serializers import IngredientCategoryBaseOutputSerializer
-
-
-class FoodCategoryCompoundSerializer(serializers.ModelSerializer):
-    ingredient_category = IngredientCategoryBaseOutputSerializer(many=False)
-
-    class Meta:
-        model = FoodCategoryCompound
-        fields = ("ingredient_category", "min", "max")
+from pizzami.foods.models import FoodCategory
+from pizzami.foods.serializers.food_category_compound import FoodCategoryCompoundSerializer
 
 
 class FoodCategoryBaseOutputSerializer(serializers.ModelSerializer):
@@ -29,3 +21,5 @@ class FoodCategoryDetailedOutputSerializer(serializers.ModelSerializer):
 class FoodCategoryCompleteOutputSerializer(FoodCategoryDetailedOutputSerializer):
     class Meta(FoodCategoryDetailedOutputSerializer.Meta):
         fields = "__all__"
+
+
