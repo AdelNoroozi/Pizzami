@@ -8,14 +8,17 @@ from pizzami.ingredients.selectors import delete_ingredient as delete_ingredient
 from pizzami.ingredients.selectors import get_ingredients as get_ingredients_selector
 from pizzami.ingredients.serializers import IngredientCompleteOutputSerializer, IngredientBaseOutputSerializer, \
     IngredientInputSerializer
+from pizzami.ingredients.filters import IngredientFilter
 
 
-def get_ingredients(is_user_staff: bool) -> ReturnList[Ingredient]:
+# get method typing
+def get_ingredients(get_method, is_user_staff: bool) -> ReturnList[Ingredient]:
     queryset = get_ingredients_selector(return_all=is_user_staff)
+    filtered_queryset = IngredientFilter(get_method, queryset=queryset).qs
     if is_user_staff:
-        serializer = IngredientCompleteOutputSerializer(queryset, many=True)
+        serializer = IngredientCompleteOutputSerializer(filtered_queryset, many=True)
     else:
-        serializer = IngredientBaseOutputSerializer(queryset, many=True)
+        serializer = IngredientBaseOutputSerializer(filtered_queryset, many=True)
     return serializer.data
 
 

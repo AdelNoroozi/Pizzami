@@ -83,7 +83,7 @@ class IngredientsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         responses={200: GET_INGREDIENTS_200_RESPONSE}
     )
     def get(self, request):
-        data = get_ingredients(is_user_staff=request.user.is_staff)
+        data = get_ingredients(get_method=request.GET, is_user_staff=request.user.is_staff)
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(request=IngredientInputSerializer,
