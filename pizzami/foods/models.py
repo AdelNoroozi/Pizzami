@@ -21,6 +21,7 @@ class FoodCategory(ImageIncludedBaseModel):
     class Meta:
         verbose_name = _("Food Category")
         verbose_name_plural = _("Food Categories")
+        ordering = ("position",)
         db_table = "food_category"
 
 
