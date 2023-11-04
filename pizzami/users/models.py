@@ -1,5 +1,5 @@
 from django.db import models
-from pizzami.common.models import BaseModel
+from pizzami.common.models import BaseModel, TimeStampedBaseModel
 
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
@@ -7,7 +7,7 @@ from django.contrib.auth.models import PermissionsMixin
 from pizzami.users.managers import BaseUserManager
 
 
-class BaseUser(BaseModel, AbstractBaseUser, PermissionsMixin):
+class BaseUser(TimeStampedBaseModel, AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(verbose_name = "email address",
                               unique=True)

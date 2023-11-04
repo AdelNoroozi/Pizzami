@@ -16,6 +16,7 @@ class IngredientCategory(ImageIncludedBaseModel):
     class Meta:
         verbose_name = _("Ingredient Category")
         verbose_name_plural = _("Ingredient Categories")
+        ordering = ("position",)
         db_table = "ingredient_category"
 
 
@@ -30,10 +31,13 @@ class Ingredient(ImageIncludedBaseModel):
     unit = models.CharField(max_length=30, verbose_name=_("unit"))
     remaining_units = models.PositiveIntegerField(default=0, verbose_name=_("remaining units"))
 
+    main_fk_field = "category"
+
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = _("Ingredient")
         verbose_name_plural = _("Ingredients")
+        ordering = ("position",)
         db_table = "ingredient"
