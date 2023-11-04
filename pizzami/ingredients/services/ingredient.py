@@ -1,5 +1,6 @@
 import uuid
 
+from django.http import QueryDict
 from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
@@ -11,8 +12,7 @@ from pizzami.ingredients.serializers import IngredientCompleteOutputSerializer, 
 from pizzami.ingredients.filters import IngredientFilter
 
 
-# get method typing
-def get_ingredients(get_method, is_user_staff: bool) -> ReturnList[Ingredient]:
+def get_ingredients(get_method: QueryDict, is_user_staff: bool) -> ReturnList[Ingredient]:
     queryset = get_ingredients_selector(return_all=is_user_staff)
     filtered_queryset = IngredientFilter(get_method, queryset=queryset).qs
     if is_user_staff:
