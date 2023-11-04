@@ -3,7 +3,7 @@ from drf_spectacular.utils import OpenApiResponse
 from pizzami.ingredients.serializers import IngredientCategoryCompleteOutputSerializer
 
 GET_INGREDIENT_CATEGORIES_200_RESPONSE = OpenApiResponse(
-    response=IngredientCategoryCompleteOutputSerializer,
+    response=IngredientCategoryCompleteOutputSerializer(many=True),
     description="created_at, updated_at & is_active fields are only visible to users with staff privileges."
 )
 

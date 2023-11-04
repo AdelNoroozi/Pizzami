@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -79,9 +79,8 @@ class IngredientCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class IngredientsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
-    @extend_schema(
-        responses={200: GET_INGREDIENTS_200_RESPONSE}
-    )
+    @extend_schema(parameters=[OpenApiParameter(name="category")],
+                   responses={200: GET_INGREDIENTS_200_RESPONSE})
     def get(self, request):
         data = get_ingredients(get_method=request.GET, is_user_staff=request.user.is_staff)
         return Response(data=data, status=status.HTTP_200_OK)
