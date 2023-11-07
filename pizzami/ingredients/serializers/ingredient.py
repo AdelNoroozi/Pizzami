@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from pizzami.common.validators import string_ending_validator, string_included_validator
+from pizzami.common.validators import string_included_validator
 from pizzami.ingredients.models import Ingredient
 from pizzami.ingredients.serializers import IngredientCategoryBaseOutputSerializer
 
@@ -8,7 +8,7 @@ from pizzami.ingredients.serializers import IngredientCategoryBaseOutputSerializ
 class IngredientInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
-        exclude = ("id", "created_at", "updated_at")
+        exclude = ("id", "created_at", "updated_at", "position")
 
     def validate_image_alt_text(self, value):
         string_included_validator(

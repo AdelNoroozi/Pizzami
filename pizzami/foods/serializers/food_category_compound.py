@@ -1,5 +1,4 @@
 from django.utils.translation import gettext_lazy as _
-
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -18,7 +17,7 @@ class FoodCategoryCompoundSerializer(serializers.ModelSerializer):
 class FoodCategoryCompoundInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodCategoryCompound
-        exclude = ("id",)
+        exclude = ("id", "position")
 
     def validate(self, data):
         if data["min"] > ["max"]:
