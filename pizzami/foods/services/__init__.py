@@ -1,1 +1,3 @@
 from pizzami.foods.services.food_category import get_food_categories
+from pizzami.foods.services.food_category_compound import create_food_category_compound
+from pizzami.foods.services.food_category import create_food_category
