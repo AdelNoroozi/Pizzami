@@ -20,6 +20,6 @@ class FoodCategoryCompoundInputSerializer(serializers.ModelSerializer):
         exclude = ("id", "position")
 
     def validate(self, data):
-        if data["min"] > ["max"]:
+        if data["min"] > data["max"]:
             raise ValidationError(_("min value is greater than max value"), code="invalid_min_max_error")
         return data
