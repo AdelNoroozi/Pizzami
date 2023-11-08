@@ -55,3 +55,4 @@ class FoodCategoryInputSerializer(serializers.ModelSerializer):
             including_str=self.initial_data.get("name"),
             included_helper="food category's name"
         )
+        return value
