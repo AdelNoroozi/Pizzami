@@ -60,3 +60,6 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         _id = kwargs.get("id")
         delete_food_category(food_category_id=_id)
         return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
+
+    def put(self, request, **kwargs):
+        pass
