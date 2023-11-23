@@ -17,9 +17,14 @@ class FoodCategoryCompoundSerializer(serializers.ModelSerializer):
 class FoodCategoryCompoundInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodCategoryCompound
-        exclude = ("id", "position")
+        exclude = ("id", "position", "food_category")
 
     def validate(self, data):
         if data["min"] > data["max"]:
             raise ValidationError(_("min value is greater than max value"), code="invalid_min_max_error")
         return data
+
+    def create(self, validated_data):
+        food_category = self.context.get("food_category")
+        validated_data["food_category"] = food_category
+        return super().create(validated_data)

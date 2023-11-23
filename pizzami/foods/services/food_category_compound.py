@@ -1,10 +1,11 @@
 import uuid
 
+from pizzami.foods.models import FoodCategory
 from pizzami.foods.serializers import FoodCategoryCompoundInputSerializer
 
 
-def create_food_category_compound(food_category_id: uuid, data: dict):
-    data["food_category"] = food_category_id
-    serializer = FoodCategoryCompoundInputSerializer(data=data)
+def create_food_category_compound(food_category: FoodCategory, data: dict):
+    context = {"food_category": food_category}
+    serializer = FoodCategoryCompoundInputSerializer(data=data, context=context)
     serializer.is_valid(raise_exception=True)
     serializer.save()

@@ -19,10 +19,9 @@ def create_food_category(data: dict) -> ReturnDict:
     serializer = FoodCategoryInputSerializer(data=data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    _id = serializer.instance.id
     if "compounds" in data:
         compounds = data.pop("compounds")
         for compound_data in compounds:
-            create_food_category_compound(food_category_id=_id, data=compound_data)
+            create_food_category_compound(food_category=serializer.instance, data=compound_data)
     response_serializer = FoodCategoryCompleteOutputSerializer(serializer.instance, many=False)
     return response_serializer.data
