@@ -47,6 +47,7 @@ def delete_food_category(food_category_id: uuid):
     delete_food_category_selector(food_category=food_category)
 
 
+@transaction.atomic
 def update_food_category(food_category_id: uuid, data: dict) -> ReturnDict:
     food_category = get_object_or_404(FoodCategory, id=food_category_id)
     serializer = FoodCategoryInputSerializer(instance=food_category, data=data, partial=True)

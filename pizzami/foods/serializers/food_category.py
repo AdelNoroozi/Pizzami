@@ -61,6 +61,6 @@ class FoodCategoryInputSerializer(serializers.ModelSerializer):
         )
         return value
 
-    def create(self, validated_data):
-        validated_data.pop('compounds', [])
-        return super().create(validated_data)
+    def save(self, **kwargs):
+        self.validated_data.pop("compounds", [])
+        return super().save(**kwargs)
