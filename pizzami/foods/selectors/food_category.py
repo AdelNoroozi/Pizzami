@@ -8,3 +8,7 @@ def get_food_categories(return_all: bool) -> QuerySet[FoodCategory]:
         return FoodCategory.objects.all()
     else:
         return FoodCategory.objects.active()
+
+
+def delete_food_category(food_category: FoodCategory):
+    food_category.delete()

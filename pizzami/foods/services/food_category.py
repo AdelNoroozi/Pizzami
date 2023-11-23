@@ -5,6 +5,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
 from pizzami.foods.models import FoodCategory
+from pizzami.foods.selectors import delete_food_category as delete_food_category_selector
 from pizzami.foods.selectors import get_food_categories as get_food_categories_selector
 from pizzami.foods.serializers import FoodCategoryBaseOutputSerializer
 from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer, FoodCategoryCompleteOutputSerializer, \
@@ -38,3 +39,8 @@ def retrieve_food_category(food_category_id: uuid, is_user_staff: bool) -> Retur
     else:
         serializer = FoodCategoryDetailedOutputSerializer(food_category)
     return serializer.data
+
+
+def delete_food_category(food_category_id):
+    food_category = get_object_or_404(FoodCategory, id=food_category_id)
+    delete_food_category_selector(food_category=food_category)
