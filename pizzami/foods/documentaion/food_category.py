@@ -37,3 +37,7 @@ RETRIEVE_FOOD_CATEGORY_200_RESPONSE = OpenApiResponse(
 FOOD_CATEGORY_404_RESPONSE = OpenApiResponse(
     description="food category with specified id does not exist"
 )
+
+DELETE_FOOD_CATEGORY_204_RESPONSE = OpenApiResponse(
+    description="food category deleted successfully."
+)

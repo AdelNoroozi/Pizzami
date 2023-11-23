@@ -5,3 +5,4 @@ from pizzami.foods.documentaion.food_category import SAVE_FOOD_CATEGORY_400_RESP
 from pizzami.foods.documentaion.food_category import GET_FOOD_CATEGORIES_200_RESPONSE
 from pizzami.foods.documentaion.food_category import RETRIEVE_FOOD_CATEGORY_200_RESPONSE
 from pizzami.foods.documentaion.food_category import FOOD_CATEGORY_404_RESPONSE
+from pizzami.foods.documentaion.food_category import DELETE_FOOD_CATEGORY_204_RESPONSE
