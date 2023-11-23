@@ -9,7 +9,9 @@ from pizzami.foods.documentaion import (
     SAVE_FOOD_CATEGORY_400_RESPONSE,
     FOOD_CATEGORY_401_RESPONSE,
     FOOD_CATEGORY_403_RESPONSE,
-    GET_FOOD_CATEGORIES_200_RESPONSE
+    GET_FOOD_CATEGORIES_200_RESPONSE,
+RETRIEVE_FOOD_CATEGORY_200_RESPONSE,
+FOOD_CATEGORY_404_RESPONSE
 )
 from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer
 from pizzami.foods.services import get_food_categories, create_food_category, retrieve_food_category
@@ -37,6 +39,10 @@ class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 
 class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    @extend_schema(
+        responses={200: RETRIEVE_FOOD_CATEGORY_200_RESPONSE,
+                   404: FOOD_CATEGORY_404_RESPONSE}
+    )
     def get(self, request, **kwargs):
         _id = kwargs.get("id")
         food_category_data = retrieve_food_category(food_category_id=_id, is_user_staff=request.user.is_staff)

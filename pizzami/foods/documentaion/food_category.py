@@ -1,6 +1,7 @@
 from drf_spectacular.utils import OpenApiResponse
 
-from pizzami.foods.serializers import FoodCategoryCompleteOutputSerializer, FoodCategoryBaseOutputSerializer
+from pizzami.foods.serializers import FoodCategoryCompleteOutputSerializer, FoodCategoryBaseOutputSerializer, \
+    FoodCategoryDetailedOutputSerializer
 
 CREATE_FOOD_CATEGORY_201_RESPONSE = OpenApiResponse(
     response=FoodCategoryCompleteOutputSerializer,
@@ -23,4 +24,16 @@ FOOD_CATEGORY_403_RESPONSE = OpenApiResponse(
 GET_FOOD_CATEGORIES_200_RESPONSE = OpenApiResponse(
     response=FoodCategoryBaseOutputSerializer(many=True),
     description="just for list representation and contains only id, icon & name"
+)
+
+RETRIEVE_FOOD_CATEGORY_200_RESPONSE = OpenApiResponse(
+    response=FoodCategoryDetailedOutputSerializer,
+    description="API's staff purposes: admins see complete details of a food category. /// \n"
+                "API's non-staff purposes: customers want to create a new food and need specific details containing"
+                "information about compounds. "
+                "is customizable, is_active, position & all timestamped fields are only included for staff purposes"
+)
+
+FOOD_CATEGORY_404_RESPONSE = OpenApiResponse(
+    description="food category with specified id does not exist"
 )

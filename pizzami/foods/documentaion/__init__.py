@@ -3,3 +3,5 @@ from pizzami.foods.documentaion.food_category import FOOD_CATEGORY_401_RESPONSE
 from pizzami.foods.documentaion.food_category import FOOD_CATEGORY_403_RESPONSE
 from pizzami.foods.documentaion.food_category import SAVE_FOOD_CATEGORY_400_RESPONSE
 from pizzami.foods.documentaion.food_category import GET_FOOD_CATEGORIES_200_RESPONSE
+from pizzami.foods.documentaion.food_category import RETRIEVE_FOOD_CATEGORY_200_RESPONSE
+from pizzami.foods.documentaion.food_category import FOOD_CATEGORY_404_RESPONSE
