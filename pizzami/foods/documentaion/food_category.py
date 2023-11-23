@@ -9,7 +9,7 @@ CREATE_FOOD_CATEGORY_201_RESPONSE = OpenApiResponse(
 )
 
 SAVE_FOOD_CATEGORY_400_RESPONSE = OpenApiResponse(
-    description="input values are invalid or don't match the expected format. e.g: a compound's min value is larger /"
+    description="input values are invalid or don't match the expected format. e.g: a compound's min value is larger "
                 "than its max value."
 )
 
@@ -40,4 +40,9 @@ FOOD_CATEGORY_404_RESPONSE = OpenApiResponse(
 
 DELETE_FOOD_CATEGORY_204_RESPONSE = OpenApiResponse(
     description="food category deleted successfully."
+)
+
+UPDATE_FOOD_CATEGORY_200_RESPONSE = OpenApiResponse(
+    response=FoodCategoryCompleteOutputSerializer,
+    description="food category updated successfully"
 )
