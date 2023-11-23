@@ -1,10 +1,14 @@
+import uuid
+
 from django.db import transaction
+from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
 from pizzami.foods.models import FoodCategory
 from pizzami.foods.selectors import get_food_categories as get_food_categories_selector
 from pizzami.foods.serializers import FoodCategoryBaseOutputSerializer
-from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer, FoodCategoryCompleteOutputSerializer
+from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer, FoodCategoryCompleteOutputSerializer, \
+    FoodCategoryDetailedOutputSerializer
 from pizzami.foods.services.food_category_compound import create_food_category_compound
 
 
@@ -25,3 +29,9 @@ def create_food_category(data: dict) -> ReturnDict:
             create_food_category_compound(food_category=serializer.instance, data=compound_data)
     response_serializer = FoodCategoryCompleteOutputSerializer(serializer.instance, many=False)
     return response_serializer.data
+
+
+def retrieve_food_category(food_category_id: uuid) -> ReturnDict:
+    food_category = get_object_or_404(FoodCategory, id=food_category_id)
+    serializer = FoodCategoryDetailedOutputSerializer(food_category)
+    return serializer.data
