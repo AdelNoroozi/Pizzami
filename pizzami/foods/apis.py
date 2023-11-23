@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -21,10 +21,11 @@ from pizzami.foods.services.food_category import delete_food_category, update_fo
 class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
+        parameters=[OpenApiParameter(name="is_customizable")],
         responses={200: GET_FOOD_CATEGORIES_200_RESPONSE}
     )
     def get(self, request):
-        data = get_food_categories(is_user_staff=request.user.is_staff)
+        data = get_food_categories(get_method=request.GET, is_user_staff=request.user.is_staff)
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(

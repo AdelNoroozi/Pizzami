@@ -1,9 +1,11 @@
 import uuid
 
 from django.db import transaction
+from django.http import QueryDict
 from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
+from pizzami.foods.filters import FoodCategoryFilter
 from pizzami.foods.models import FoodCategory
 from pizzami.foods.selectors import delete_food_category as delete_food_category_selector, \
     delete_compounds_by_food_category
@@ -14,9 +16,10 @@ from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer,
 from pizzami.foods.services.food_category_compound import create_food_category_compound
 
 
-def get_food_categories(is_user_staff: bool) -> ReturnList[FoodCategory]:
+def get_food_categories(get_method: QueryDict, is_user_staff: bool) -> ReturnList[FoodCategory]:
     queryset = get_food_categories_selector(return_all=is_user_staff)
-    serializer = FoodCategoryBaseOutputSerializer(queryset, many=True)
+    filtered_queryset = FoodCategoryFilter(get_method, queryset=queryset).qs
+    serializer = FoodCategoryBaseOutputSerializer(filtered_queryset, many=True)
     return serializer.data
 
 
