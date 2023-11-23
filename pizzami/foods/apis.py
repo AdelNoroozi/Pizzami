@@ -12,7 +12,7 @@ from pizzami.foods.documentaion import (
     GET_FOOD_CATEGORIES_200_RESPONSE
 )
 from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer
-from pizzami.foods.services import get_food_categories, create_food_category
+from pizzami.foods.services import get_food_categories, create_food_category, retrieve_food_category
 
 
 class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -34,3 +34,10 @@ class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def post(self, request):
         food_category_data = create_food_category(data=request.data)
         return Response(data=food_category_data, status=status.HTTP_201_CREATED)
+
+
+class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    def get(self, request, **kwargs):
+        _id = kwargs.get("id")
+        food_category_data = retrieve_food_category(food_category_id=_id)
+        return Response(data=food_category_data, status=status.HTTP_200_OK)
