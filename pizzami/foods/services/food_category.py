@@ -31,7 +31,10 @@ def create_food_category(data: dict) -> ReturnDict:
     return response_serializer.data
 
 
-def retrieve_food_category(food_category_id: uuid) -> ReturnDict:
+def retrieve_food_category(food_category_id: uuid, is_user_staff: bool) -> ReturnDict:
     food_category = get_object_or_404(FoodCategory, id=food_category_id)
-    serializer = FoodCategoryDetailedOutputSerializer(food_category)
+    if is_user_staff:
+        serializer = FoodCategoryCompleteOutputSerializer(food_category)
+    else:
+        serializer = FoodCategoryDetailedOutputSerializer(food_category)
     return serializer.data

@@ -39,5 +39,5 @@ class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def get(self, request, **kwargs):
         _id = kwargs.get("id")
-        food_category_data = retrieve_food_category(food_category_id=_id)
+        food_category_data = retrieve_food_category(food_category_id=_id, is_user_staff=request.user.is_staff)
         return Response(data=food_category_data, status=status.HTTP_200_OK)
