@@ -43,6 +43,9 @@ class FoodCategoryCompound(BaseModel):
         verbose_name_plural = _("Food Category Compound")
         ordering = ("position",)
         db_table = "food_category_compound"
+        indexes = [
+            models.Index(fields=["food_category", "position"])
+        ]
 
 
 class Food(ImageIncludedBaseModel):

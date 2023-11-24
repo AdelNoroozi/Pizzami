@@ -41,3 +41,6 @@ class Ingredient(ImageIncludedBaseModel):
         verbose_name_plural = _("Ingredients")
         ordering = ("position",)
         db_table = "ingredient"
+        indexes = [
+            models.Index(fields=["category", "position"])
+        ]

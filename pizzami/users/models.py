@@ -26,6 +26,11 @@ class BaseUser(TimeStampedBaseModel, AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
         return self.is_admin
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["email"])
+        ]
+
 
 class Profile(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
