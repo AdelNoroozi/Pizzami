@@ -33,6 +33,7 @@ THIRD_PARTY_APPS = [
 ]
 
 INSTALLED_APPS = [
+    'admin_numeric_filter',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
