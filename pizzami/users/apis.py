@@ -1,17 +1,12 @@
-from django.core.validators import MinLengthValidator
 from drf_spectacular.utils import extend_schema
-from rest_framework import serializers
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
-from pizzami.users.models import BaseUser, Profile
-from pizzami.users.selectors import get_profile
-from pizzami.users.services import register
-from .validators import number_validator, special_char_validator, letter_validator
+from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer
+from pizzami.users.services import register, get_profile
 
 
 class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -19,76 +14,16 @@ class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
         "GET": [IsAuthenticated]
     }
 
-    class OutPutSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Profile
-            fields = ("bio",)
-
-    @extend_schema(responses=OutPutSerializer)
+    @extend_schema(responses=ProfileOutputSerializer)
     def get(self, request):
-        query = get_profile(user=request.user)
-        return Response(self.OutPutSerializer(query, context={"request": request}).data)
+        profile_data = get_profile(user=request.user)
+        return Response(profile_data, status=status.HTTP_200_OK)
 
 
 class RegisterApi(APIView):
-    class InputRegisterSerializer(serializers.Serializer):
-        email = serializers.EmailField(max_length=255)
-        bio = serializers.CharField(max_length=1000, required=False)
-        password = serializers.CharField(
-            validators=[
-                number_validator,
-                letter_validator,
-                special_char_validator,
-                MinLengthValidator(limit_value=10)
-            ]
-        )
-        confirm_password = serializers.CharField(max_length=255)
 
-        def validate_email(self, email):
-            if BaseUser.objects.filter(email=email).exists():
-                raise serializers.ValidationError("email Already Taken")
-            return email
-
-        def validate(self, data):
-            if not data.get("password") or not data.get("confirm_password"):
-                raise serializers.ValidationError("Please fill password and confirm password")
-
-            if data.get("password") != data.get("confirm_password"):
-                raise serializers.ValidationError("confirm password is not equal to password")
-            return data
-
-    class OutPutRegisterSerializer(serializers.ModelSerializer):
-
-        token = serializers.SerializerMethodField("get_token")
-
-        class Meta:
-            model = BaseUser
-            fields = ("email", "token", "created_at", "updated_at")
-
-        def get_token(self, user):
-            data = dict()
-            token_class = RefreshToken
-
-            refresh = token_class.for_user(user)
-
-            data["refresh"] = str(refresh)
-            data["access"] = str(refresh.access_token)
-
-            return data
-
-    @extend_schema(request=InputRegisterSerializer, responses=OutPutRegisterSerializer)
+    @extend_schema(request=RegisterInputSerializer, responses=RegisterOutputSerializer)
     def post(self, request):
-        serializer = self.InputRegisterSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        try:
-            user = register(
-                email=serializer.validated_data.get("email"),
-                password=serializer.validated_data.get("password"),
-                bio=serializer.validated_data.get("bio"),
-            )
-        except Exception as ex:
-            return Response(
-                f"Database Error {ex}",
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        return Response(self.OutPutRegisterSerializer(user, context={"request": request}).data)
+        register_data = register(data=request.data)
+
+        return Response(register_data, status=status.HTTP_201_CREATED)

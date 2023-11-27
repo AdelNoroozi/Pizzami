@@ -11,7 +11,7 @@ class BaseUserManager(BUM):
         if password is not None:
             user.set_password(password)
         else:
-            user.set_unusable_password()
+            raise ValueError(_("Users must have a password"))
 
         user.full_clean()
         user.save(using=self._db)
