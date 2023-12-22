@@ -18,9 +18,10 @@ def register(data: dict) -> ReturnDict:
         bio = data.pop("bio")
     else:
         bio = ""
+    public_name = data.pop("public_name")
     data.pop("confirm_password")
     user = create_user(email=data.get("email"), password=data.get("password"))
 
-    create_profile(user=user, bio=bio)
+    create_profile(user=user, bio=bio, public_name=public_name)
 
     return RegisterOutputSerializer(user).data

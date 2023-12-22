@@ -8,4 +8,4 @@ class ProfileOutputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ("email", "bio")
+        fields = ("email", "bio", "public_name")

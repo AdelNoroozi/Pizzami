@@ -2,13 +2,14 @@ from django.core.validators import MinLengthValidator
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from pizzami.users.models import BaseUser
+from pizzami.users.models import BaseUser, Profile
 from pizzami.users.validators import number_validator, letter_validator, special_char_validator
 
 
 class RegisterInputSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=255)
     bio = serializers.CharField(max_length=1000, required=False)
+    public_name = serializers.CharField(max_length=50, required=True)
     password = serializers.CharField(
         validators=[
             number_validator,
@@ -23,6 +24,11 @@ class RegisterInputSerializer(serializers.Serializer):
         if BaseUser.objects.filter(email=email).exists():
             raise serializers.ValidationError("email Already Taken")
         return email
+
+    def validate_public_name(self, public_name):
+        if Profile.objects.filter(public_name=public_name).exists():
+            raise serializers.ValidationError("public_name Already Taken")
+        return public_name
 
     def validate(self, data):
         if not data.get("password") or not data.get("confirm_password"):
