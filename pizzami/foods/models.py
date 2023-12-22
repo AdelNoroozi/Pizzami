@@ -1,10 +1,12 @@
 import uuid
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from pizzami.common.models import ImageIncludedBaseModel, BaseModel
 from pizzami.ingredients.models import IngredientCategory
+from pizzami.users.models import Profile
 
 
 class FoodCategory(ImageIncludedBaseModel):
@@ -40,7 +42,7 @@ class FoodCategoryCompound(BaseModel):
 
     class Meta:
         verbose_name = _("Food Category Compound")
-        verbose_name_plural = _("Food Category Compound")
+        verbose_name_plural = _("Food Category Compounds")
         ordering = ("position",)
         db_table = "food_category_compound"
         indexes = [
@@ -49,7 +51,38 @@ class FoodCategoryCompound(BaseModel):
 
 
 class Food(ImageIncludedBaseModel):
-    pass
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    name = models.CharField(max_length=50, verbose_name=_("name"))
+    category = models.ForeignKey(FoodCategory, on_delete=models.RESTRICT, related_name="foods",
+                                 verbose_name=_("category"))
+    created_by = models.ForeignKey(Profile, on_delete=models.RESTRICT, related_name="foods",
+                                   verbose_name=_("created by"), blank=True, null=True)
+    description = models.TextField(verbose_name=_("description"))
+    rate = models.PositiveIntegerField(
+        default=0,
+        validators=[
+            MaxValueValidator(5),
+            MinValueValidator(0)
+        ],
+        verbose_name=_("rate")
+    )
+    views = models.PositiveIntegerField(default=0, verbose_name=_("views"))
+    is_confirmed = models.BooleanField(default=False, verbose_name=_("is confirmed"))
+    is_public = models.BooleanField(default=False, verbose_name=_("is public"))
+
+    main_fk_field = "category"
+
+    class Meta:
+        verbose_name = _("Food")
+        verbose_name_plural = _("Foods")
+        ordering = ("position",)
+        db_table = "food"
+        indexes = [
+            models.Index(fields=["category", "position"]),
+            models.Index(fields=["created_at"]),
+            models.Index(fields=["rate"]),
+            models.Index(fields=["views"])
+        ]
 
 
 class FoodIngredient(models.Model):
