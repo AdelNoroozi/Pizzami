@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from pizzami.common.models import ImageIncludedBaseModel, BaseModel
-from pizzami.ingredients.models import IngredientCategory
+from pizzami.ingredients.models import IngredientCategory, Ingredient
 from pizzami.users.models import Profile
 
 
@@ -85,5 +85,19 @@ class Food(ImageIncludedBaseModel):
         ]
 
 
-class FoodIngredient(models.Model):
-    pass
+class FoodIngredient(BaseModel):
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name="ingredients", verbose_name=_("food"))
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name="foods",
+                                   verbose_name=_("ingredient"))
+    amount = models.PositiveIntegerField(verbose_name=_("amount"))
+
+    main_fk_field = "food"
+
+    class Meta:
+        verbose_name = _("FoodIngredient")
+        verbose_name_plural = _("FoodIngredients")
+        ordering = ("position",)
+        db_table = "food_ingredient"
+        indexes = [
+            models.Index(fields=["food", "position"])
+        ]
