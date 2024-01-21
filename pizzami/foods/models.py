@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from pizzami.common.models import ImageIncludedBaseModel, BaseModel
+from pizzami.foods.mangers import FoodManager
 from pizzami.ingredients.models import IngredientCategory, Ingredient
 from pizzami.users.models import Profile
 
@@ -69,6 +70,8 @@ class Food(ImageIncludedBaseModel):
     views = models.PositiveIntegerField(default=0, verbose_name=_("views"))
     is_confirmed = models.BooleanField(default=False, verbose_name=_("is confirmed"))
     is_public = models.BooleanField(default=False, verbose_name=_("is public"))
+
+    objects = FoodManager()
 
     main_fk_field = "category"
 
