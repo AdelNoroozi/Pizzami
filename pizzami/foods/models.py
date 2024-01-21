@@ -86,6 +86,7 @@ class Food(ImageIncludedBaseModel):
 
 
 class FoodIngredient(BaseModel):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name="ingredients", verbose_name=_("food"))
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name="foods",
                                    verbose_name=_("ingredient"))
