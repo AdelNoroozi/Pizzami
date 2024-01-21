@@ -9,7 +9,7 @@ class FoodBaseOutputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Food
-        fields = ("id", "name", "category", "rate", "ingredients_str")
+        fields = ("id", "name", "price", "category", "rate", "ingredients_str")
 
     def get_ingredients_str(self, obj: Food) -> str:
         ingredients = obj.ingredients
