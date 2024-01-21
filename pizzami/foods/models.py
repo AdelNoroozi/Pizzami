@@ -59,15 +59,17 @@ class Food(ImageIncludedBaseModel):
     created_by = models.ForeignKey(Profile, on_delete=models.RESTRICT, related_name="foods",
                                    verbose_name=_("created by"), blank=True, null=True)
     description = models.TextField(verbose_name=_("description"))
-    rate = models.PositiveIntegerField(
+    rate = models.FloatField(
         default=0,
         validators=[
             MaxValueValidator(5),
             MinValueValidator(0)
         ],
+        editable=False,
         verbose_name=_("rate")
     )
-    views = models.PositiveIntegerField(default=0, verbose_name=_("views"))
+    price = models.FloatField(verbose_name=_("price"))
+    views = models.PositiveIntegerField(default=0, editable=False, verbose_name=_("views"))
     is_confirmed = models.BooleanField(default=False, verbose_name=_("is confirmed"))
     is_public = models.BooleanField(default=False, verbose_name=_("is public"))
 
