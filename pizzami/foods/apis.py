@@ -14,7 +14,7 @@ from pizzami.foods.documentaion import (
     FOOD_CATEGORY_404_RESPONSE, DELETE_FOOD_CATEGORY_204_RESPONSE, UPDATE_FOOD_CATEGORY_200_RESPONSE
 )
 from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer
-from pizzami.foods.services import get_food_categories, create_food_category, retrieve_food_category
+from pizzami.foods.services import get_food_categories, create_food_category, retrieve_food_category, get_foods
 from pizzami.foods.services.food_category import delete_food_category, update_food_category
 
 
@@ -72,3 +72,9 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         _id = kwargs.get("id")
         food_category_data = update_food_category(food_category_id=_id, data=request.data)
         return Response(data=food_category_data, status=status.HTTP_200_OK)
+
+
+class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    def get(self, request):
+        data = get_foods()
+        return Response(data=data, status=status.HTTP_200_OK)
