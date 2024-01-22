@@ -15,8 +15,10 @@ class FoodBaseOutputSerializer(serializers.ModelSerializer):
         ingredients = FoodIngredient.objects.filter(food=obj).values_list(
             'amount', 'ingredient__unit', 'ingredient__name'
         )
-        ingredients_flat = [
-            f"{amount} {unit} of {name}" for amount, unit, name in ingredients
-        ]
-        return ", ".join(ingredients_flat) if ingredients_flat else "No ingredients"
+        ingredients_flat = ""
+        for amount, unit, name in ingredients:
+            plural_sign = "s" if amount != 1 else ""
+            ingredients_flat += f"{amount} {unit}{plural_sign} of {name}, "
+
+        return ingredients_flat.rstrip(", ")
 
