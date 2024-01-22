@@ -76,5 +76,11 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def get(self, request):
-        data = get_foods(is_user_staff=request.user.is_staff)
+        if request.GET.get("set") == "mine":
+            if (not request.user.is_authenticated) or request.user.is_staff:
+                return Response(data={"message": "only authenticated normal users can access their own foods"},
+                                status=status.HTTP_403_FORBIDDEN)
+            data = get_foods(is_user_staff=request.user.is_staff, user_created=True, user=request.user)
+        else:
+            data = get_foods(is_user_staff=request.user.is_staff, user_created=False)
         return Response(data=data, status=status.HTTP_200_OK)
