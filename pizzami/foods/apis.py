@@ -76,5 +76,5 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def get(self, request):
-        data = get_foods()
+        data = get_foods(is_user_staff=request.user.is_staff)
         return Response(data=data, status=status.HTTP_200_OK)
