@@ -6,4 +6,4 @@ class FoodManager(BaseManager):
         return self.active(is_public=True, **kwargs)
 
     def confirmed(self, **kwargs):
-        return self.active(is_public=True, **kwargs)
+        return self.active(is_confirmed=True, **kwargs)
