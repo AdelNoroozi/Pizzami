@@ -9,3 +9,9 @@ class ProfileOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ("email", "bio", "public_name")
+
+
+class ProfileReferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ("id", "public_name")
