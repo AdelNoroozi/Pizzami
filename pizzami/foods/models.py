@@ -68,9 +68,11 @@ class Food(ImageIncludedBaseModel):
         editable=False,
         verbose_name=_("rate")
     )
+    is_original = models.BooleanField(default=True, verbose_name=_("is original"))
     price = models.FloatField(verbose_name=_("price"))
     views = models.PositiveIntegerField(default=0, editable=False, verbose_name=_("views"))
-    is_confirmed = models.BooleanField(default=False, verbose_name=_("is confirmed"))
+    ordered_count = models.PositiveIntegerField(default=0, editable=False, verbose_name=_("ordered count"))
+    is_confirmed = models.BooleanField(default=None, blank=True, null=True, verbose_name=_("is confirmed"))
     is_public = models.BooleanField(default=False, verbose_name=_("is public"))
 
     objects = FoodManager()

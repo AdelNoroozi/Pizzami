@@ -11,7 +11,8 @@ class FoodBaseOutputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Food
-        fields = ("id", "name", "price", "category", "created_by", "rate", "ingredients_str")
+        fields = (
+            "id", "name", "price", "category", "created_by", "rate", "ordered_count", "is_original", "ingredients_str")
 
     def get_ingredients_str(self, obj: Food) -> str:
         ingredients = FoodIngredient.objects.filter(food=obj).values_list(
