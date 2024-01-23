@@ -11,7 +11,8 @@ from pizzami.foods.documentaion import (
     FOOD_CATEGORY_403_RESPONSE,
     GET_FOOD_CATEGORIES_200_RESPONSE,
     RETRIEVE_FOOD_CATEGORY_200_RESPONSE,
-    FOOD_CATEGORY_404_RESPONSE, DELETE_FOOD_CATEGORY_204_RESPONSE, UPDATE_FOOD_CATEGORY_200_RESPONSE
+    FOOD_CATEGORY_404_RESPONSE, DELETE_FOOD_CATEGORY_204_RESPONSE, UPDATE_FOOD_CATEGORY_200_RESPONSE,
+    GET_FOODS_200_RESPONSE, GET_FOODS_200_PARAMETERS
 )
 from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer
 from pizzami.foods.services import get_food_categories, create_food_category, retrieve_food_category, get_foods
@@ -75,6 +76,10 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 
 class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    @extend_schema(
+        parameters=GET_FOODS_200_PARAMETERS,
+        responses={200: GET_FOODS_200_RESPONSE}
+    )
     def get(self, request):
         get_method = request.GET
         if get_method.get("set") == "mine":
