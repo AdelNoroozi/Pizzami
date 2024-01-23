@@ -17,7 +17,7 @@ class FoodCategoryCompoundSerializer(serializers.ModelSerializer):
 class FoodCategoryCompoundInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodCategoryCompound
-        exclude = ("is_active ","id", "position", "food_category")
+        exclude = ("is_active", "id", "position", "food_category")
 
     def validate(self, data):
         if data["min"] > data["max"]:
