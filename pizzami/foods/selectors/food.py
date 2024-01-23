@@ -16,3 +16,7 @@ def get_foods(return_all: bool, user_profile: Profile = None) -> QuerySet[Food]:
 
 def search_food(queryset: QuerySet[Food], search_param: str) -> QuerySet[Food]:
     return queryset.filter(Q(name__icontains=search_param) | Q(description__icontains=search_param))
+
+
+def order_foods(queryset: QuerySet[Food], order_param: str) -> QuerySet[Food]:
+    return queryset.order_by(order_param)
