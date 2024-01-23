@@ -27,7 +27,7 @@ class FoodCategoryCompleteOutputSerializer(FoodCategoryDetailedOutputSerializer)
 
 class FoodCategoryInputSerializer(serializers.ModelSerializer):
     # this field is only for defining structure and is not used for creating or updating compounds.
-    compounds = FoodCategoryCompoundInputSerializer(many=True, required=False)
+    compounds = FoodCategoryCompoundInputSerializer(many=True, required=True)
 
     class Meta:
         model = FoodCategory
