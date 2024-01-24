@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from pizzami.common.validators import string_included_validator
 from pizzami.foods.models import Food, FoodIngredient
 from pizzami.foods.serializers.food_ingredient import FoodIngredientOutputSerializer, \
     FoodIngredientBaseInputSerializer
@@ -62,6 +63,15 @@ class FoodInputSerializer(serializers.ModelSerializer):
         if not value.is_active:
             raise ValidationError(_("category is not active"),
                                   code="deactivated_category")
+        return value
+
+    def validate_image_alt_text(self, value):
+        string_included_validator(
+            field_name="image alt text",
+            str_value=value,
+            including_str=self.initial_data.get("name"),
+            included_helper="food's name"
+        )
         return value
 
     def validate(self, data):
