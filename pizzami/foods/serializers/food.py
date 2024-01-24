@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from pizzami.foods.models import Food, FoodIngredient
-from pizzami.foods.serializers import FoodIngredientInputSerializer
+from pizzami.foods.serializers import FoodIngredientInputSerializer, FoodIngredientOutputSerializer
 from pizzami.ingredients.models import Ingredient
 from pizzami.users.models import Profile
 from pizzami.users.serializers import ProfileReferenceSerializer
@@ -38,6 +38,14 @@ class FoodDetailedOutputSerializer(FoodBaseOutputSerializer):
     class Meta(FoodBaseOutputSerializer.Meta):
         fields = None
         exclude = ("description",)
+
+
+class FoodCompleteOutputSerializer(FoodDetailedOutputSerializer):
+    ingredients = FoodIngredientOutputSerializer(many=True)
+
+    class Meta(FoodDetailedOutputSerializer.Meta):
+        exclude = None
+        fields = "__all__"
 
 
 class FoodInputSerializer(serializers.ModelSerializer):

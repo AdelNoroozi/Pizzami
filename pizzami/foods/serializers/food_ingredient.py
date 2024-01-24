@@ -2,7 +2,7 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from pizzami.foods.models import FoodIngredient, FoodCategory, FoodCategoryCompound
+from pizzami.foods.models import FoodIngredient, FoodCategoryCompound
 from pizzami.ingredients.models import Ingredient
 
 
@@ -31,3 +31,9 @@ class FoodIngredientInputSerializer(serializers.ModelSerializer):
         food = self.context.get("food")
         validated_data["food"] = food
         return super().create(validated_data)
+
+
+class FoodIngredientOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FoodIngredient
+        exclude = ("active", "food")
