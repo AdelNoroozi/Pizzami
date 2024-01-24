@@ -58,6 +58,12 @@ class FoodInputSerializer(serializers.ModelSerializer):
         model = Food
         fields = ("name", "category", "description", "ingredients", "image_url", "image_alt_text", "price")
 
+    def validate_category(self, value):
+        if not value.is_active:
+            raise ValidationError(_("category is not active"),
+                                  code="deactivated_category")
+        return value
+
     def validate(self, data):
         if self.context.get("user").is_staff and "price" not in data:
             raise ValidationError(_("the price for foods that are created by staff users need to be specified"),

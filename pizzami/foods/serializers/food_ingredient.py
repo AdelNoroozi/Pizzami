@@ -18,9 +18,7 @@ class FoodIngredientInputSerializer(FoodIngredientBaseInputSerializer):
 
     def validate(self, data):
         food_category = self.context.get("food_category")
-        print(f"{food_category}")
         ingredient = Ingredient.objects.filter(id=data["ingredient"].id).first()
-        print(f"{food_category}")
         food_category_compounds = FoodCategoryCompound.objects.filter(food_category=food_category,
                                                                       ingredient_category=ingredient.category)
         if food_category_compounds.count() == 0:
