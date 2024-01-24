@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 
 from pizzami.common.validators import string_included_validator, string_ending_validator
@@ -61,6 +62,7 @@ class FoodCategoryInputSerializer(serializers.ModelSerializer):
         )
         return value
 
+    @transaction.atomic
     def save(self, **kwargs):
         self.validated_data.pop("compounds", [])
         return super().save(**kwargs)

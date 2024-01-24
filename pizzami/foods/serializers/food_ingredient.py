@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -25,6 +26,7 @@ class FoodIngredientInputSerializer(serializers.ModelSerializer):
                 code="invalid_ingredient_amount")
         return data
 
+    @transaction.atomic
     def create(self, validated_data):
         food = self.context.get("food")
         validated_data["food"] = food

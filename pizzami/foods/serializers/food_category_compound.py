@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -24,6 +25,7 @@ class FoodCategoryCompoundInputSerializer(serializers.ModelSerializer):
             raise ValidationError(_("min value is greater than max value"), code="invalid_min_max_error")
         return data
 
+    @transaction.atomic
     def create(self, validated_data):
         food_category = self.context.get("food_category")
         validated_data["food_category"] = food_category

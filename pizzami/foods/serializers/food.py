@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -61,6 +62,7 @@ class FoodInputSerializer(serializers.ModelSerializer):
             total_price += price * ingredient.get("amount")
         return total_price * 1.2
 
+    @transaction.atomic
     def create(self, validated_data):
         ingredients = validated_data.pop("ingredients", [])
         current_user = self.context.get("user")
