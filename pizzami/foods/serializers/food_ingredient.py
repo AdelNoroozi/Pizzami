@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -6,14 +7,20 @@ from pizzami.foods.models import FoodIngredient, FoodCategoryCompound
 from pizzami.ingredients.models import Ingredient
 
 
-class FoodIngredientInputSerializer(serializers.ModelSerializer):
+class FoodIngredientBaseInputSerializer(serializers.ModelSerializer):
+    ingredient = serializers.CharField(source="ingredient.id")
+
     class Meta:
         model = FoodIngredient
         fields = ("ingredient", "amount")
 
+
+class FoodIngredientInputSerializer(FoodIngredientBaseInputSerializer):
+
     def validate(self, data):
         food_category = self.context.get("food_category")
-        ingredient = Ingredient.objects.filter(id=data["ingredient"]).first()
+        ingredient = Ingredient.objects.filter(id=data["ingredient"].get("id")).first()
+        print(f"{food_category}")
         food_category_compounds = FoodCategoryCompound.objects.filter(food_category=food_category,
                                                                       ingredient_category=ingredient.category)
         if food_category_compounds.count() == 0:

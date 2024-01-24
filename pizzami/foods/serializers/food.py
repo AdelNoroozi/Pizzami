@@ -3,7 +3,8 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from pizzami.foods.models import Food, FoodIngredient
-from pizzami.foods.serializers.food_ingredient import FoodIngredientInputSerializer, FoodIngredientOutputSerializer
+from pizzami.foods.serializers.food_ingredient import FoodIngredientOutputSerializer, \
+    FoodIngredientBaseInputSerializer
 from pizzami.ingredients.models import Ingredient
 from pizzami.users.models import Profile
 from pizzami.users.serializers import ProfileReferenceSerializer
@@ -49,7 +50,7 @@ class FoodCompleteOutputSerializer(FoodDetailedOutputSerializer):
 
 
 class FoodInputSerializer(serializers.ModelSerializer):
-    ingredients = FoodIngredientInputSerializer(many=True, required=True)
+    ingredients = FoodIngredientBaseInputSerializer(many=True, required=True)
     price = serializers.FloatField(required=False)
 
     class Meta:
