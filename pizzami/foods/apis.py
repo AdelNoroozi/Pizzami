@@ -13,8 +13,9 @@ from pizzami.foods.documentaion import (
     GET_FOOD_CATEGORIES_200_RESPONSE,
     RETRIEVE_FOOD_CATEGORY_200_RESPONSE,
     FOOD_CATEGORY_404_RESPONSE, DELETE_FOOD_CATEGORY_204_RESPONSE, UPDATE_FOOD_CATEGORY_200_RESPONSE,
-    GET_FOODS_200_RESPONSE, GET_FOODS_200_PARAMETERS
+    GET_FOODS_200_RESPONSE, GET_FOODS_200_PARAMETERS, CREATE_FOOD_RESPONSES
 )
+from pizzami.foods.serializers import FoodInputSerializer
 from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer
 from pizzami.foods.services import get_food_categories, create_food_category, retrieve_food_category, get_foods, \
     create_food
@@ -99,6 +100,10 @@ class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
             data = get_foods(get_method=get_method, is_user_staff=request.user.is_staff, user_created=False)
         return Response(data=data, status=status.HTTP_200_OK)
 
+    @extend_schema(
+        request=FoodInputSerializer,
+        responses=CREATE_FOOD_RESPONSES
+    )
     def post(self, request):
         food_data = create_food(data=request.data, user=request.user)
         return Response(data=food_data, status=status.HTTP_201_CREATED)

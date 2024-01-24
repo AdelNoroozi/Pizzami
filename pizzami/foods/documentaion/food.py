@@ -1,6 +1,6 @@
 from drf_spectacular.utils import OpenApiResponse, OpenApiParameter
 
-from pizzami.foods.serializers import FoodDetailedOutputSerializer
+from pizzami.foods.serializers import FoodDetailedOutputSerializer, FoodCompleteOutputSerializer
 
 GET_FOODS_200_RESPONSE = OpenApiResponse(
     response=FoodDetailedOutputSerializer(many=True),
@@ -25,3 +25,23 @@ GET_FOODS_200_PARAMETERS = [
                                                   "modified_at. a - symbol can be added before the param for descending"
                                                   " order."),
 ]
+
+CREATE_FOOD_201_RESPONSE = OpenApiResponse(
+    response=FoodCompleteOutputSerializer,
+    description="a new food created successfully."
+)
+
+SAVE_FOOD_400_RESPONSE = OpenApiResponse(
+    description="input values are invalid or don't match the expected format. e.g: there is some ingredient that "
+                "should not be inside foods from this category."
+)
+
+FOOD_401_RESPONSE = OpenApiResponse(
+    description="user is not authenticated"
+)
+
+CREATE_FOOD_RESPONSES = {
+    201: CREATE_FOOD_201_RESPONSE,
+    400: SAVE_FOOD_400_RESPONSE,
+    401: FOOD_401_RESPONSE
+}
