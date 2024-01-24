@@ -11,7 +11,7 @@ def get_foods(return_all: bool, user_profile: Profile = None) -> QuerySet[Food]:
         if user_profile:
             return Food.objects.active().filter(created_by=user_profile)
         else:
-            return Food.objects.confirmed()
+            return Food.objects.confirmed().filter(category__is_active=True)
 
 
 def search_food(queryset: QuerySet[Food], search_param: str) -> QuerySet[Food]:

@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -80,7 +80,7 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     permissions = {
-        "GET": [IsAuthenticated],
+        "GET": [AllowAny],
         "POST": [IsAuthenticated]
     }
 

@@ -14,7 +14,7 @@ from pizzami.users.serializers import ProfileReferenceSerializer
 
 class FoodBaseOutputSerializer(serializers.ModelSerializer):
     category = serializers.CharField(source="category.icon_url")
-    created_by = serializers.CharField(source="created_by.public_name")
+    created_by = serializers.CharField(source="created_by.public_name", allow_null=True)
     ingredients_str = serializers.SerializerMethodField()
 
     class Meta:
