@@ -1,5 +1,6 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -15,7 +16,8 @@ from pizzami.foods.documentaion import (
     GET_FOODS_200_RESPONSE, GET_FOODS_200_PARAMETERS
 )
 from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer
-from pizzami.foods.services import get_food_categories, create_food_category, retrieve_food_category, get_foods
+from pizzami.foods.services import get_food_categories, create_food_category, retrieve_food_category, get_foods, \
+    create_food
 from pizzami.foods.services.food_category import delete_food_category, update_food_category
 
 
@@ -76,6 +78,11 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 
 class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "GET": [IsAuthenticated],
+        "POST": [IsAuthenticated]
+    }
+
     @extend_schema(
         parameters=GET_FOODS_200_PARAMETERS,
         responses={200: GET_FOODS_200_RESPONSE}
@@ -91,3 +98,7 @@ class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         else:
             data = get_foods(get_method=get_method, is_user_staff=request.user.is_staff, user_created=False)
         return Response(data=data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        food_data = create_food(data=request.data, user=request.user)
+        return Response(data=food_data, status=status.HTTP_201_CREATED)
