@@ -8,7 +8,6 @@ from pizzami.ingredients.models import Ingredient
 
 
 class FoodIngredientBaseInputSerializer(serializers.ModelSerializer):
-    ingredient = serializers.CharField(source="ingredient.id")
 
     class Meta:
         model = FoodIngredient
@@ -19,16 +18,17 @@ class FoodIngredientInputSerializer(FoodIngredientBaseInputSerializer):
 
     def validate(self, data):
         food_category = self.context.get("food_category")
-        ingredient = Ingredient.objects.filter(id=data["ingredient"].get("id")).first()
+        print(f"{food_category}")
+        ingredient = Ingredient.objects.filter(id=data["ingredient"].id).first()
         print(f"{food_category}")
         food_category_compounds = FoodCategoryCompound.objects.filter(food_category=food_category,
                                                                       ingredient_category=ingredient.category)
         if food_category_compounds.count() == 0:
             raise ValidationError(_("foods from this category can not have this ingredient"), code="invalid_ingredient")
         food_category_compound = food_category_compounds.first()
-        if data["amount"] >= food_category_compound.max or data["amount"] <= food_category_compound.min:
+        if data["amount"] > food_category_compound.max or data["amount"] < food_category_compound.min:
             raise ValidationError(
-                _(f"invalid amount of ingredient."
+                _(f"invalid amount of {ingredient.name}."
                   f" (min = {food_category_compound.min} - max = {food_category_compound.max})"),
                 code="invalid_ingredient_amount")
         return data
@@ -43,4 +43,4 @@ class FoodIngredientInputSerializer(FoodIngredientBaseInputSerializer):
 class FoodIngredientOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodIngredient
-        exclude = ("active", "food")
+        exclude = ("food", )

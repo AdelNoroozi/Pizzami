@@ -50,7 +50,7 @@ class FoodCompleteOutputSerializer(FoodDetailedOutputSerializer):
 
 
 class FoodInputSerializer(serializers.ModelSerializer):
-    ingredients = FoodIngredientBaseInputSerializer(many=True, required=True)
+    ingredients = FoodIngredientBaseInputSerializer(many=True, required=False)
     price = serializers.FloatField(required=False)
 
     class Meta:
@@ -67,7 +67,7 @@ class FoodInputSerializer(serializers.ModelSerializer):
     def calculate_price(ingredients):
         total_price = 0
         for ingredient in ingredients:
-            price = Ingredient.objects.filter(id=ingredient.get("ingredient")).first().price
+            price = Ingredient.objects.filter(id=ingredient.get("ingredient").id).first().price
             total_price += price * ingredient.get("amount")
         return total_price * 1.2
 
@@ -75,7 +75,7 @@ class FoodInputSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         ingredients = validated_data.pop("ingredients", [])
         current_user = self.context.get("user")
-        if not current_user.is_staff():
+        if not current_user.is_staff:
             profile = Profile.objects.filter(user=current_user).first()
             validated_data["is_original"] = False
             validated_data["created_by"] = profile
