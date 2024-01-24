@@ -7,7 +7,7 @@ from pizzami.foods.models import Food
 from pizzami.foods.selectors import get_foods as get_foods_selector, search_food, order_foods
 from pizzami.foods.serializers import FoodBaseOutputSerializer, FoodDetailedOutputSerializer, FoodInputSerializer, \
     FoodCompleteOutputSerializer
-from pizzami.foods.services import create_food_ingredient
+from pizzami.foods.services.food_ingredient import create_food_ingredient
 from pizzami.users.models import BaseUser
 
 

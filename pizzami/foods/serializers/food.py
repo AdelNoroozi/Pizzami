@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from pizzami.foods.models import Food, FoodIngredient
-from pizzami.foods.serializers import FoodIngredientInputSerializer, FoodIngredientOutputSerializer
+from pizzami.foods.serializers.food_ingredient import FoodIngredientInputSerializer, FoodIngredientOutputSerializer
 from pizzami.ingredients.models import Ingredient
 from pizzami.users.models import Profile
 from pizzami.users.serializers import ProfileReferenceSerializer
