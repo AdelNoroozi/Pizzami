@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -81,4 +82,7 @@ class FoodInputSerializer(serializers.ModelSerializer):
             validated_data["created_by"] = profile
             price = self.calculate_price(ingredients=ingredients)
             validated_data["price"] = price
+        else:
+            validated_data["is_confirmed"] = True
+            validated_data["is_public"] = True
         return super().create(validated_data)
