@@ -1,5 +1,8 @@
+import uuid
+
 from django.db import transaction
 from django.http import QueryDict
+from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
 from pizzami.foods.filters import FoodFilter
@@ -43,3 +46,12 @@ def create_food(data: dict, user: BaseUser) -> ReturnDict:
             create_food_ingredient(food=serializer.instance, data=ingredient_data)
     response_serializer = FoodCompleteOutputSerializer(serializer.instance, many=False)
     return response_serializer.data
+
+
+def retrieve_food(food_id: uuid, is_user_staff: bool):
+    if is_user_staff:
+        food = get_object_or_404(Food, id=food_id)
+    else:
+        food = get_object_or_404(Food, id=food_id, is_active=True)
+    serializer = FoodCompleteOutputSerializer(food)
+    return serializer
