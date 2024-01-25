@@ -26,6 +26,7 @@ from pizzami.foods.services.food_category import delete_food_category, update_fo
 class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
+        tags=['Foods'],
         parameters=[OpenApiParameter(name="is_customizable")],
         responses={200: GET_FOOD_CATEGORIES_200_RESPONSE}
     )
@@ -34,6 +35,7 @@ class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
+        tags=['Foods'],
         request=FoodCategoryInputSerializer,
         responses={201: CREATE_FOOD_CATEGORY_201_RESPONSE,
                    400: SAVE_FOOD_CATEGORY_400_RESPONSE,
@@ -47,6 +49,7 @@ class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     @extend_schema(
+        tags=['Foods'],
         responses={200: RETRIEVE_FOOD_CATEGORY_200_RESPONSE,
                    404: FOOD_CATEGORY_404_RESPONSE}
     )
@@ -56,6 +59,7 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=food_category_data, status=status.HTTP_200_OK)
 
     @extend_schema(
+        tags=['Foods'],
         responses={204: DELETE_FOOD_CATEGORY_204_RESPONSE,
                    401: FOOD_CATEGORY_401_RESPONSE,
                    403: FOOD_CATEGORY_403_RESPONSE,
@@ -67,12 +71,14 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         delete_food_category(food_category_id=_id)
         return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
 
-    @extend_schema(request=FoodCategoryInputSerializer,
-                   responses={200: UPDATE_FOOD_CATEGORY_200_RESPONSE,
-                              400: SAVE_FOOD_CATEGORY_400_RESPONSE,
-                              401: FOOD_CATEGORY_401_RESPONSE,
-                              403: FOOD_CATEGORY_403_RESPONSE,
-                              404: FOOD_CATEGORY_404_RESPONSE})
+    @extend_schema(
+        tags=['Foods'],
+        request=FoodCategoryInputSerializer,
+        responses={200: UPDATE_FOOD_CATEGORY_200_RESPONSE,
+                   400: SAVE_FOOD_CATEGORY_400_RESPONSE,
+                   401: FOOD_CATEGORY_401_RESPONSE,
+                   403: FOOD_CATEGORY_403_RESPONSE,
+                   404: FOOD_CATEGORY_404_RESPONSE})
     def put(self, request, **kwargs):
         _id = kwargs.get("id")
         food_category_data = update_food_category(food_category_id=_id, data=request.data)
@@ -86,6 +92,7 @@ class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
+        tags=['Foods'],
         parameters=GET_FOODS_200_PARAMETERS,
         responses={200: GET_FOODS_200_RESPONSE}
     )
@@ -102,6 +109,7 @@ class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
+        tags=['Foods'],
         request=FoodInputSerializer,
         responses=CREATE_FOOD_RESPONSES
     )
@@ -116,13 +124,14 @@ class FoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         "PUT": [IsAuthenticated]
     }
 
-    @extend_schema(responses=RETRIEVE_FOOD_RESPONSES)
+    @extend_schema(tags=['Foods'], responses=RETRIEVE_FOOD_RESPONSES)
     def get(self, request, **kwargs):
         _id = kwargs.get("id")
         food_data = retrieve_food(food_id=_id, user=request.user)
         return Response(data=food_data, status=status.HTTP_200_OK)
 
     @extend_schema(
+        tags=['Foods'],
         description="normal users can only update name, description and publicity of their own foods.",
         request=FoodInputSerializer,
         responses=UPDATE_FOOD_RESPONSES

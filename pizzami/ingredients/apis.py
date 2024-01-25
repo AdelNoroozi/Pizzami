@@ -32,6 +32,7 @@ from pizzami.ingredients.services import (
 class IngredientCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
+        tags=['Ingredients'],
         responses={200: GET_INGREDIENT_CATEGORIES_200_RESPONSE}
     )
     def get(self, request):
@@ -39,6 +40,7 @@ class IngredientCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
+        tags=['Ingredients'],
         request=IngredientCategoryInputSerializer,
         responses={201: CREATE_INGREDIENT_CATEGORY_201_RESPONSE,
                    400: SAVE_INGREDIENT_CATEGORY_400_RESPONSE,
@@ -53,6 +55,7 @@ class IngredientCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 class IngredientCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
+        tags=['Ingredients'],
         request=IngredientCategoryInputSerializer,
         responses={200: UPDATE_INGREDIENT_CATEGORY_200_RESPONSE,
                    400: SAVE_INGREDIENT_CATEGORY_400_RESPONSE,
@@ -66,6 +69,7 @@ class IngredientCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=updated_ingredient_category_data, status=status.HTTP_200_OK)
 
     @extend_schema(
+        tags=['Ingredients'],
         responses={204: DELETE_INGREDIENT_CATEGORY_204_RESPONSE,
                    401: INGREDIENT_CATEGORY_401_RESPONSE,
                    403: INGREDIENT_CATEGORY_403_RESPONSE,
@@ -79,17 +83,21 @@ class IngredientCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class IngredientsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
-    @extend_schema(parameters=[OpenApiParameter(name="category")],
-                   responses={200: GET_INGREDIENTS_200_RESPONSE})
+    @extend_schema(
+        tags=['Ingredients'],
+        parameters=[OpenApiParameter(name="category")],
+        responses={200: GET_INGREDIENTS_200_RESPONSE})
     def get(self, request):
         data = get_ingredients(get_method=request.GET, is_user_staff=request.user.is_staff)
         return Response(data=data, status=status.HTTP_200_OK)
 
-    @extend_schema(request=IngredientInputSerializer,
-                   responses={201: CREATE_INGREDIENT_201_RESPONSE,
-                              400: SAVE_INGREDIENT_CATEGORY_400_RESPONSE,
-                              401: INGREDIENT_401_RESPONSE,
-                              403: INGREDIENT_403_RESPONSE})
+    @extend_schema(
+        tags=['Ingredients'],
+        request=IngredientInputSerializer,
+        responses={201: CREATE_INGREDIENT_201_RESPONSE,
+                   400: SAVE_INGREDIENT_CATEGORY_400_RESPONSE,
+                   401: INGREDIENT_401_RESPONSE,
+                   403: INGREDIENT_403_RESPONSE})
     def post(self, request):
         ingredient_data = create_ingredient(request.data)
         return Response(data=ingredient_data, status=status.HTTP_201_CREATED)
@@ -97,21 +105,25 @@ class IngredientsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class IngredientAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
-    @extend_schema(request=IngredientInputSerializer,
-                   responses={200: UPDATE_INGREDIENT_200_RESPONSE,
-                              400: SAVE_INGREDIENT_CATEGORY_400_RESPONSE,
-                              401: INGREDIENT_401_RESPONSE,
-                              403: INGREDIENT_403_RESPONSE,
-                              404: INGREDIENT_404_RESPONSE})
+    @extend_schema(
+        tags=['Ingredients'],
+        request=IngredientInputSerializer,
+        responses={200: UPDATE_INGREDIENT_200_RESPONSE,
+                   400: SAVE_INGREDIENT_CATEGORY_400_RESPONSE,
+                   401: INGREDIENT_401_RESPONSE,
+                   403: INGREDIENT_403_RESPONSE,
+                   404: INGREDIENT_404_RESPONSE})
     def put(self, request, **kwargs):
         _id = kwargs.get("id")
         updated_ingredient_data = update_ingredient(ingredient_id=_id, data=request.data)
         return Response(data=updated_ingredient_data, status=status.HTTP_200_OK)
 
-    @extend_schema(responses={204: DELETE_INGREDIENT_204_RESPONSE,
-                              401: INGREDIENT_401_RESPONSE,
-                              403: INGREDIENT_403_RESPONSE,
-                              404: INGREDIENT_404_RESPONSE})
+    @extend_schema(
+        tags=['Ingredients'],
+        responses={204: DELETE_INGREDIENT_204_RESPONSE,
+                   401: INGREDIENT_401_RESPONSE,
+                   403: INGREDIENT_403_RESPONSE,
+                   404: INGREDIENT_404_RESPONSE})
     def delete(self, request, **kwargs):
         _id = kwargs.get("id")
         delete_ingredient(ingredient_id=_id)

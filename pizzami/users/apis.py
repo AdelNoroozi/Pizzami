@@ -14,7 +14,9 @@ class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
         "GET": [IsAuthenticated]
     }
 
-    @extend_schema(responses=ProfileOutputSerializer)
+    @extend_schema(
+        tags=['Users'],
+        responses=ProfileOutputSerializer)
     def get(self, request):
         profile_data = get_profile(user=request.user)
         return Response(profile_data, status=status.HTTP_200_OK)
@@ -22,7 +24,7 @@ class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class RegisterApi(APIView):
 
-    @extend_schema(request=RegisterInputSerializer, responses=RegisterOutputSerializer)
+    @extend_schema(tags=['Users'], request=RegisterInputSerializer, responses=RegisterOutputSerializer)
     def post(self, request):
         register_data = register(data=request.data)
 
