@@ -13,12 +13,12 @@ from pizzami.foods.documentaion import (
     GET_FOOD_CATEGORIES_200_RESPONSE,
     RETRIEVE_FOOD_CATEGORY_200_RESPONSE,
     FOOD_CATEGORY_404_RESPONSE, DELETE_FOOD_CATEGORY_204_RESPONSE, UPDATE_FOOD_CATEGORY_200_RESPONSE,
-    GET_FOODS_200_RESPONSE, GET_FOODS_200_PARAMETERS, CREATE_FOOD_RESPONSES
+    GET_FOODS_200_RESPONSE, GET_FOODS_200_PARAMETERS, CREATE_FOOD_RESPONSES, RETRIEVE_FOOD_RESPONSES
 )
 from pizzami.foods.serializers import FoodInputSerializer
 from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer
 from pizzami.foods.services import get_food_categories, create_food_category, retrieve_food_category, get_foods, \
-    create_food
+    create_food, retrieve_food
 from pizzami.foods.services.food_category import delete_food_category, update_food_category
 
 
@@ -107,3 +107,12 @@ class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def post(self, request):
         food_data = create_food(data=request.data, user=request.user)
         return Response(data=food_data, status=status.HTTP_201_CREATED)
+
+
+class FoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+
+    @extend_schema(responses=RETRIEVE_FOOD_RESPONSES)
+    def get(self, request, **kwargs):
+        _id = kwargs.get("id")
+        food_data = retrieve_food(food_id=_id, user=request.user)
+        return Response(data=food_data, status=status.HTTP_200_OK)

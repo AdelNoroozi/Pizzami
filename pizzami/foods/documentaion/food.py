@@ -45,3 +45,17 @@ CREATE_FOOD_RESPONSES = {
     400: SAVE_FOOD_400_RESPONSE,
     401: FOOD_401_RESPONSE
 }
+
+RETRIEVE_FOOD_200_RESPONSE = OpenApiResponse(
+    response=FoodCompleteOutputSerializer,
+    description="only staff users can see is_public, is_confirmed, is_active, position & all timestamped fields."
+)
+
+FOOD_404_RESPONSE = OpenApiResponse(
+    description="no food found with given id inside your access zone"
+)
+
+RETRIEVE_FOOD_RESPONSES = {
+    200: RETRIEVE_FOOD_200_RESPONSE,
+    404: FOOD_404_RESPONSE
+}
