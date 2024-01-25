@@ -74,7 +74,7 @@ def update_food(food_id: uuid, data: dict, user: BaseUser):
         food.save()
     else:
         food = get_object_or_404(Food, id=food_id)
-        serializer = FoodInputSerializer(instance=food, data=data, partial=True)
+        serializer = FoodInputSerializer(instance=food, data=data, partial=True, context={"user": user})
         serializer.is_valid(raise_exception=True)
         serializer.save()
         delete_food_ingredients_by_food(food=food)

@@ -99,22 +99,22 @@ class FoodInputSerializer(serializers.ModelSerializer):
         return total_price * 1.2
 
     @transaction.atomic
-    def create(self, validated_data):
-        ingredients = validated_data.pop("ingredients", [])
+    def save(self, **kwargs):
+        ingredients = self.validated_data.pop("ingredients", [])
         current_user = self.context.get("user")
         if not current_user.is_staff:
             profile = Profile.objects.filter(user=current_user).first()
-            validated_data["is_original"] = False
-            validated_data["created_by"] = profile
+            self.validated_data["is_original"] = False
+            self.validated_data["created_by"] = profile
             price = self.calculate_price(ingredients=ingredients)
-            validated_data["price"] = price
+            self.validated_data["price"] = price
         else:
-            validated_data["is_confirmed"] = True
-            validated_data["is_public"] = True
-        return super().create(validated_data)
+            self.validated_data["is_confirmed"] = True
+            self.validated_data["is_public"] = True
+        return super().save(**kwargs)
 
 
 class FoodMinorInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food
-        fields = ("name", "description", "public")
+        fields = ("name", "description", "is_public")
