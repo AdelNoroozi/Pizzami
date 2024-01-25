@@ -59,3 +59,15 @@ RETRIEVE_FOOD_RESPONSES = {
     200: RETRIEVE_FOOD_200_RESPONSE,
     404: FOOD_404_RESPONSE
 }
+
+UPDATE_FOOD_200_RESPONSE = OpenApiResponse(
+    response=FoodCompleteOutputSerializer,
+    description="food updated successfully"
+)
+
+UPDATE_FOOD_RESPONSES = {
+    200: UPDATE_FOOD_200_RESPONSE,
+    400: SAVE_FOOD_400_RESPONSE,
+    401: FOOD_401_RESPONSE,
+    404: FOOD_404_RESPONSE
+}

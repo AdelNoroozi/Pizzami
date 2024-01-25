@@ -11,3 +11,4 @@ from pizzami.foods.documentaion.food import GET_FOODS_200_RESPONSE
 from pizzami.foods.documentaion.food import GET_FOODS_200_PARAMETERS
 from pizzami.foods.documentaion.food import CREATE_FOOD_RESPONSES
 from pizzami.foods.documentaion.food import RETRIEVE_FOOD_RESPONSES
+from pizzami.foods.documentaion.food import UPDATE_FOOD_RESPONSES
