@@ -70,6 +70,8 @@ def update_food(food_id: uuid, data: dict, user: BaseUser):
         serializer = FoodMinorInputSerializer(instance=food, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        food.is_confirmed = False
+        food.save()
     else:
         food = get_object_or_404(Food, id=food_id)
         serializer = FoodInputSerializer(instance=food, data=data, partial=True)
