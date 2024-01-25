@@ -48,10 +48,10 @@ def create_food(data: dict, user: BaseUser) -> ReturnDict:
     return response_serializer.data
 
 
-def retrieve_food(food_id: uuid, is_user_staff: bool):
+def retrieve_food(food_id: uuid, is_user_staff: bool) -> ReturnDict:
     if is_user_staff:
         food = get_object_or_404(Food, id=food_id)
     else:
         food = get_object_or_404(Food, id=food_id, is_active=True)
     serializer = FoodCompleteOutputSerializer(food)
-    return serializer
+    return serializer.data
