@@ -49,8 +49,8 @@ class FoodPublicDetailedOutputSerializer(FoodBaseOutputSerializer):
 
     class Meta(FoodBaseOutputSerializer.Meta):
         fields = (
-            "id", "name", "price", "category", "created_by", "rate", "ordered_count", "is_original", "ingredients",
-            "image_url", "image_alt_text", "description")
+            "id", "name", "price", "category", "created_by", "views", "rate", "ordered_count", "is_original",
+            "ingredients", "image_url", "image_alt_text", "description")
 
 
 class FoodCompleteOutputSerializer(FoodDetailedOutputSerializer):

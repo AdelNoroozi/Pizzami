@@ -55,5 +55,7 @@ def retrieve_food(food_id: uuid, user: BaseUser = None) -> ReturnDict:
     else:
         if not food.is_confirmed:
             raise Http404()
+        food.views += 1
+        food.save()
         serializer = FoodPublicDetailedOutputSerializer(food)
     return serializer.data
