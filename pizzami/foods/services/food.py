@@ -9,7 +9,7 @@ from pizzami.foods.filters import FoodFilter
 from pizzami.foods.models import Food
 from pizzami.foods.selectors import get_foods as get_foods_selector, search_food, order_foods
 from pizzami.foods.serializers import FoodBaseOutputSerializer, FoodDetailedOutputSerializer, FoodInputSerializer, \
-    FoodCompleteOutputSerializer
+    FoodCompleteOutputSerializer, FoodPublicDetailedOutputSerializer
 from pizzami.foods.services.food_ingredient import create_food_ingredient
 from pizzami.users.models import BaseUser
 
@@ -51,7 +51,8 @@ def create_food(data: dict, user: BaseUser) -> ReturnDict:
 def retrieve_food(food_id: uuid, is_user_staff: bool) -> ReturnDict:
     if is_user_staff:
         food = get_object_or_404(Food, id=food_id)
+        serializer = FoodCompleteOutputSerializer(food)
     else:
         food = get_object_or_404(Food, id=food_id, is_active=True)
-    serializer = FoodCompleteOutputSerializer(food)
+        serializer = FoodPublicDetailedOutputSerializer(food)
     return serializer.data

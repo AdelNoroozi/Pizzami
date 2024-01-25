@@ -43,6 +43,16 @@ class FoodDetailedOutputSerializer(FoodBaseOutputSerializer):
         exclude = ("description",)
 
 
+class FoodPublicDetailedOutputSerializer(FoodBaseOutputSerializer):
+    ingredients = FoodIngredientOutputSerializer(many=True)
+    ingredients_str = None
+
+    class Meta(FoodBaseOutputSerializer.Meta):
+        fields = (
+            "id", "name", "price", "category", "created_by", "rate", "ordered_count", "is_original", "ingredients",
+            "image_url", "image_alt_text", "description")
+
+
 class FoodCompleteOutputSerializer(FoodDetailedOutputSerializer):
     ingredients = FoodIngredientOutputSerializer(many=True)
 
