@@ -7,9 +7,10 @@ from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
 from pizzami.foods.filters import FoodFilter
 from pizzami.foods.models import Food
-from pizzami.foods.selectors import get_foods as get_foods_selector, search_food, order_foods
+from pizzami.foods.selectors import get_foods as get_foods_selector, search_food, order_foods, \
+    delete_food_ingredients_by_food
 from pizzami.foods.serializers import FoodBaseOutputSerializer, FoodDetailedOutputSerializer, FoodInputSerializer, \
-    FoodCompleteOutputSerializer, FoodPublicDetailedOutputSerializer
+    FoodCompleteOutputSerializer, FoodPublicDetailedOutputSerializer, FoodMinorInputSerializer
 from pizzami.foods.services.food_ingredient import create_food_ingredient
 from pizzami.users.models import BaseUser
 
@@ -48,6 +49,7 @@ def create_food(data: dict, user: BaseUser) -> ReturnDict:
     return response_serializer.data
 
 
+@transaction.atomic
 def retrieve_food(food_id: uuid, user: BaseUser = None) -> ReturnDict:
     food = get_object_or_404(Food, id=food_id)
     if user.is_authenticated and (user.is_staff or food.created_by == user.profile):
@@ -59,3 +61,24 @@ def retrieve_food(food_id: uuid, user: BaseUser = None) -> ReturnDict:
         food.save()
         serializer = FoodPublicDetailedOutputSerializer(food)
     return serializer.data
+
+
+@transaction.atomic
+def update_food(food_id: uuid, data: dict, user: BaseUser):
+    if not user.is_staff:
+        food = get_object_or_404(Food, id=food_id, created_by=user.profile)
+        serializer = FoodMinorInputSerializer(instance=food, data=data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+    else:
+        food = get_object_or_404(Food, id=food_id)
+        serializer = FoodInputSerializer(instance=food, data=data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        delete_food_ingredients_by_food(food=food)
+        if "ingredients" in data:
+            ingredients = data.pop("ingredients")
+            for ingredient_data in ingredients:
+                create_food_ingredient(food=serializer.instance, data=ingredient_data)
+    response_serializer = FoodCompleteOutputSerializer(serializer.instance, many=False)
+    return response_serializer.data

@@ -5,3 +5,4 @@ from pizzami.foods.services.food_category import update_food_category
 from pizzami.foods.services.food import get_foods
 from pizzami.foods.services.food import create_food
 from pizzami.foods.services.food import retrieve_food
+from pizzami.foods.services.food import update_food

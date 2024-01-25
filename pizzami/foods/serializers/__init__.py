@@ -9,3 +9,4 @@ from pizzami.foods.serializers.food import FoodCompleteOutputSerializer
 from pizzami.foods.serializers.food_ingredient import FoodIngredientInputSerializer
 from pizzami.foods.serializers.food_ingredient import FoodIngredientOutputSerializer
 from pizzami.foods.serializers.food import FoodInputSerializer
+from pizzami.foods.serializers.food import FoodMinorInputSerializer

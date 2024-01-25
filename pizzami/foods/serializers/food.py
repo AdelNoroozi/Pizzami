@@ -112,3 +112,9 @@ class FoodInputSerializer(serializers.ModelSerializer):
             validated_data["is_confirmed"] = True
             validated_data["is_public"] = True
         return super().create(validated_data)
+
+
+class FoodMinorInputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Food
+        fields = ("name", "description", "public")
