@@ -50,7 +50,7 @@ def create_food(data: dict, user: BaseUser) -> ReturnDict:
 
 def retrieve_food(food_id: uuid, user: BaseUser = None) -> ReturnDict:
     food = get_object_or_404(Food, id=food_id)
-    if user and (user.is_staff or food.created_by == user.profile):
+    if user.is_authenticated and (user.is_staff or food.created_by == user.profile):
         serializer = FoodCompleteOutputSerializer(food)
     else:
         if not food.is_confirmed:
