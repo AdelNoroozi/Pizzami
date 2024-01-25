@@ -67,7 +67,7 @@ class FoodInputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Food
-        fields = ("name", "category", "description", "ingredients", "image_url", "image_alt_text", "price")
+        fields = ("name", "category", "description", "ingredients", "image_url", "image_alt_text", "is_public", "price")
 
     def validate_category(self, value):
         if not value.is_active:
