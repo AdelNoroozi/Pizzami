@@ -1,7 +1,7 @@
 import uuid
 
 from django.db import transaction
-from django.http import QueryDict
+from django.http import QueryDict, Http404
 from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
@@ -48,11 +48,12 @@ def create_food(data: dict, user: BaseUser) -> ReturnDict:
     return response_serializer.data
 
 
-def retrieve_food(food_id: uuid, is_user_staff: bool) -> ReturnDict:
-    if is_user_staff:
-        food = get_object_or_404(Food, id=food_id)
+def retrieve_food(food_id: uuid, user: BaseUser = None) -> ReturnDict:
+    food = get_object_or_404(Food, id=food_id)
+    if user and (user.is_staff or food.created_by == user.profile):
         serializer = FoodCompleteOutputSerializer(food)
     else:
-        food = get_object_or_404(Food, id=food_id, is_active=True)
+        if not food.is_confirmed:
+            raise Http404()
         serializer = FoodPublicDetailedOutputSerializer(food)
     return serializer.data
