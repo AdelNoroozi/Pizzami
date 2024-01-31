@@ -71,3 +71,17 @@ UPDATE_FOOD_RESPONSES = {
     401: FOOD_401_RESPONSE,
     404: FOOD_404_RESPONSE
 }
+
+CHANGE_FOOD_ACTIVATION_STATUS_200_RESPONSE = OpenApiResponse(
+    response={"message": "food activated/deactivated successfully"})
+
+FOOD_403_RESPONSE = OpenApiResponse(
+    description="you are not allowed to perform this action on this food"
+)
+
+CHANGE_FOOD_ACTIVATION_STATUS_RESPONSES = {
+    200: CHANGE_FOOD_ACTIVATION_STATUS_200_RESPONSE,
+    401: FOOD_401_RESPONSE,
+    403: FOOD_403_RESPONSE,
+    404: FOOD_404_RESPONSE
+}

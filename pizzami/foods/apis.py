@@ -1,10 +1,13 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
+from pizzami.common.services import change_activation_status
 from pizzami.foods.documentaion import (
     CREATE_FOOD_CATEGORY_201_RESPONSE,
     SAVE_FOOD_CATEGORY_400_RESPONSE,
@@ -14,8 +17,9 @@ from pizzami.foods.documentaion import (
     RETRIEVE_FOOD_CATEGORY_200_RESPONSE,
     FOOD_CATEGORY_404_RESPONSE, DELETE_FOOD_CATEGORY_204_RESPONSE, UPDATE_FOOD_CATEGORY_200_RESPONSE,
     GET_FOODS_200_RESPONSE, GET_FOODS_200_PARAMETERS, CREATE_FOOD_RESPONSES, RETRIEVE_FOOD_RESPONSES,
-    UPDATE_FOOD_RESPONSES
+    UPDATE_FOOD_RESPONSES, CHANGE_FOOD_ACTIVATION_STATUS_RESPONSES
 )
+from pizzami.foods.models import Food
 from pizzami.foods.serializers import FoodInputSerializer
 from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer
 from pizzami.foods.services import get_food_categories, create_food_category, retrieve_food_category, get_foods, \
@@ -140,3 +144,22 @@ class FoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         _id = kwargs.get("id")
         food_data = update_food(food_id=_id, data=request.data, user=request.user)
         return Response(data=food_data, status=status.HTTP_200_OK)
+
+
+class FoodActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "PATCH": [IsAdminUser]
+    }
+
+    @extend_schema(
+        tags=['Foods'],
+        description="changes foods activation status. only for staff users.",
+        responses=CHANGE_FOOD_ACTIVATION_STATUS_RESPONSES)
+    def patch(self, request, **kwargs):
+        food_id = kwargs.get("id")
+        new_activation_status = change_activation_status(obj_id=food_id, obj_cls=Food)
+        if new_activation_status:
+            activation_str = "activated"
+        else:
+            activation_str = "deactivated"
+        return Response(data={"message": f"food {activation_str} successfully"})

@@ -5,7 +5,6 @@ from rest_framework.generics import get_object_or_404
 
 
 def change_activation_status(obj_id: uuid, obj_cls: ModelBase) -> bool:
-    print(type(obj_cls))
     obj = get_object_or_404(obj_cls, id=obj_id)
     is_active = obj.is_active
     obj.is_active = not is_active
