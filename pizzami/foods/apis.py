@@ -1,3 +1,5 @@
+from django.utils.translation import gettext_lazy as _
+from django.db.models import RestrictedError
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
@@ -62,6 +64,7 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=['Foods'],
+        # add 400
         responses={204: DELETE_FOOD_CATEGORY_204_RESPONSE,
                    401: FOOD_CATEGORY_401_RESPONSE,
                    403: FOOD_CATEGORY_403_RESPONSE,
@@ -70,7 +73,11 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     )
     def delete(self, request, **kwargs):
         _id = kwargs.get("id")
-        delete_food_category(food_category_id=_id)
+        try:
+            delete_food_category(food_category_id=_id)
+        except RestrictedError:
+            return Response(data={"message": _("can't delete this category as long as it has foods.")},
+                            status=status.HTTP_400_BAD_REQUEST)
         return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
 
     @extend_schema(

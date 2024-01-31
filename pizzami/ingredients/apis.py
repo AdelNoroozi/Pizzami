@@ -1,3 +1,5 @@
+from django.db.models import RestrictedError
+from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
@@ -81,7 +83,13 @@ class IngredientCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     )
     def delete(self, request, **kwargs):
         _id = kwargs.get("id")
-        delete_ingredient_category(ingredient_category_id=_id)
+        try:
+            delete_ingredient_category(ingredient_category_id=_id)
+        except RestrictedError:
+            return Response(data={"message": _(
+                "can't delete this category as long as it has ingredients or some food category is using it as one of "
+                "its compounds.")},
+                status=status.HTTP_400_BAD_REQUEST)
         return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
 
 
@@ -149,7 +157,11 @@ class IngredientAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
                    404: INGREDIENT_404_RESPONSE})
     def delete(self, request, **kwargs):
         _id = kwargs.get("id")
-        delete_ingredient(ingredient_id=_id)
+        try:
+            delete_ingredient(ingredient_id=_id)
+        except RestrictedError:
+            return Response(data={"message": _("can't delete this ingredient as long as it is used in a food.")},
+                            status=status.HTTP_400_BAD_REQUEST)
         return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
 
 
