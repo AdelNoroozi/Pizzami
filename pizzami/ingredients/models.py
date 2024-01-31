@@ -22,7 +22,7 @@ class IngredientCategory(ImageIncludedBaseModel):
 
 class Ingredient(ImageIncludedBaseModel):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    category = models.ForeignKey(IngredientCategory, on_delete=models.CASCADE, related_name="ingredients",
+    category = models.ForeignKey(IngredientCategory, on_delete=models.RESTRICT, related_name="ingredients",
                                  verbose_name=_("category"))
     name = models.CharField(max_length=30, verbose_name=_("name"))
     png_file_url = models.CharField(max_length=512, verbose_name=_("png file url"))
