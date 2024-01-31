@@ -37,3 +37,13 @@ INGREDIENT_404_RESPONSE = OpenApiResponse(
 DELETE_INGREDIENT_204_RESPONSE = OpenApiResponse(
     description="ingredient deleted successfully."
 )
+
+CHANGE_INGREDIENT_ACTIVATION_STATUS_200_RESPONSE = OpenApiResponse(
+    response={"message": "ingredient activated/deactivated successfully"})
+
+CHANGE_INGREDIENT_ACTIVATION_STATUS_RESPONSES = {
+    200: CHANGE_INGREDIENT_ACTIVATION_STATUS_200_RESPONSE,
+    401: INGREDIENT_401_RESPONSE,
+    403: INGREDIENT_403_RESPONSE,
+    404: INGREDIENT_404_RESPONSE
+}
