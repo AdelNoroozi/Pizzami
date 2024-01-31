@@ -85,3 +85,19 @@ CHANGE_FOOD_ACTIVATION_STATUS_RESPONSES = {
     403: FOOD_403_RESPONSE,
     404: FOOD_404_RESPONSE
 }
+
+CHANGE_FOOD_CONFIRMATION_STATUS_200_RESPONSE = OpenApiResponse(
+    response={"message": "food confirmed/rejected/suspended successfully"})
+
+CHANGE_FOOD_CONFIRMATION_STATUS_400_RESPONSE = OpenApiResponse(
+    description="invalid request, probably due to invalid action or trying to change foods status to an status which "
+                "the food is already in."
+)
+
+CHANGE_FOOD_CONFIRMATION_STATUS_RESPONSES = {
+    200: CHANGE_FOOD_CONFIRMATION_STATUS_200_RESPONSE,
+    400: CHANGE_FOOD_CONFIRMATION_STATUS_400_RESPONSE,
+    401: FOOD_401_RESPONSE,
+    403: FOOD_403_RESPONSE,
+    404: FOOD_404_RESPONSE
+}

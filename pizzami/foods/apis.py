@@ -1,6 +1,6 @@
 from django.db import transaction
-from django.utils.translation import gettext_lazy as _
 from django.db.models import RestrictedError
+from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
@@ -18,13 +18,14 @@ from pizzami.foods.documentaion import (
     RETRIEVE_FOOD_CATEGORY_200_RESPONSE,
     FOOD_CATEGORY_404_RESPONSE, DELETE_FOOD_CATEGORY_204_RESPONSE, UPDATE_FOOD_CATEGORY_200_RESPONSE,
     GET_FOODS_200_RESPONSE, GET_FOODS_200_PARAMETERS, CREATE_FOOD_RESPONSES, RETRIEVE_FOOD_RESPONSES,
-    UPDATE_FOOD_RESPONSES, CHANGE_FOOD_ACTIVATION_STATUS_RESPONSES, CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_RESPONSES
+    UPDATE_FOOD_RESPONSES, CHANGE_FOOD_ACTIVATION_STATUS_RESPONSES, CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_RESPONSES,
+    CHANGE_FOOD_CONFIRMATION_STATUS_RESPONSES
 )
 from pizzami.foods.models import Food, FoodCategory
 from pizzami.foods.serializers import FoodInputSerializer
 from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer
 from pizzami.foods.services import get_food_categories, create_food_category, retrieve_food_category, get_foods, \
-    create_food, retrieve_food, update_food
+    create_food, retrieve_food, update_food, confirm_food
 from pizzami.foods.services.food_category import delete_food_category, update_food_category
 
 
@@ -189,3 +190,24 @@ class FoodActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         else:
             activation_str = "deactivated"
         return Response(data={"message": f"food {activation_str} successfully"})
+
+
+class FoodConfirmAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "PATCH": [IsAdminUser]
+    }
+
+    @extend_schema(
+        tags=['Foods'],
+        description="changes foods confirmation status. the action must be confirm, reject or suspend."
+                    " only for staff users.",
+        responses=CHANGE_FOOD_CONFIRMATION_STATUS_RESPONSES)
+    def patch(self, request, **kwargs):
+        food_id = kwargs.get("id")
+        action = kwargs.get("action")
+        food_confirmation = confirm_food(food_id=food_id, action=action)
+        if food_confirmation:
+            return Response(data={"message": f"Food {action}ed successfully"}, status=status.HTTP_200_OK)
+        if food_confirmation is None:
+            return Response(data={"message": f"Food is already {action}ed"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={"message": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)

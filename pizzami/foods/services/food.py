@@ -1,4 +1,5 @@
 import uuid
+from typing import Union
 
 from django.db import transaction
 from django.http import QueryDict, Http404
@@ -84,3 +85,30 @@ def update_food(food_id: uuid, data: dict, user: BaseUser):
                 create_food_ingredient(food=serializer.instance, data=ingredient_data)
     response_serializer = FoodCompleteOutputSerializer(serializer.instance, many=False)
     return response_serializer.data
+
+
+def confirm_food(food_id: uuid, action: str) -> Union[None, bool]:
+    valid_actions = ["confirm", "reject", "suspend"]
+
+    if action not in valid_actions:
+        return False
+
+    food = get_object_or_404(Food, id=food_id)
+
+    if action == "confirm":
+        if not food.is_confirmed:
+            food.is_confirmed = True
+            food.save()
+            return True
+    elif action == "reject":
+        if food.is_confirmed:
+            food.is_confirmed = False
+            food.save()
+            return True
+    elif action == "suspend":
+        if food.is_confirmed is not None:
+            food.is_confirmed = None
+            food.save()
+            return True
+
+    return None

@@ -14,3 +14,4 @@ from pizzami.foods.documentaion.food import CREATE_FOOD_RESPONSES
 from pizzami.foods.documentaion.food import RETRIEVE_FOOD_RESPONSES
 from pizzami.foods.documentaion.food import UPDATE_FOOD_RESPONSES
 from pizzami.foods.documentaion.food import CHANGE_FOOD_ACTIVATION_STATUS_RESPONSES
+from pizzami.foods.documentaion.food import CHANGE_FOOD_CONFIRMATION_STATUS_RESPONSES
