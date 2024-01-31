@@ -46,3 +46,15 @@ UPDATE_FOOD_CATEGORY_200_RESPONSE = OpenApiResponse(
     response=FoodCategoryCompleteOutputSerializer,
     description="food category updated successfully"
 )
+
+
+CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_200_RESPONSE = OpenApiResponse(
+    response={"message": "food category activated/deactivated successfully"})
+
+
+CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_RESPONSES = {
+    200: CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_200_RESPONSE,
+    401: FOOD_CATEGORY_401_RESPONSE,
+    403: FOOD_CATEGORY_403_RESPONSE,
+    404: FOOD_CATEGORY_404_RESPONSE
+}
