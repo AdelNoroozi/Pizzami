@@ -125,7 +125,8 @@ class Order(TimeStampedBaseModel):
     )
 
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    cart = models.OneToOneField(Cart, on_delete=models.RESTRICT, related_name="order", verbose_name=_("cart"))
+    cart = models.OneToOneField(Cart, editable=False, on_delete=models.RESTRICT, related_name="order",
+                                verbose_name=_("cart"))
     discount = models.ForeignKey(Discount, on_delete=models.RESTRICT, related_name="orders", verbose_name=_("discount"))
     address = models.CharField(max_length=256, verbose_name=_("address"))
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_READY_TO_PAY,
