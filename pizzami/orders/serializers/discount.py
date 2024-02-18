@@ -49,7 +49,7 @@ class DiscountCompleteOutputSerializer(serializers.ModelSerializer):
 class DiscountInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
-        exclude = ("id", "is_active", "position", "created_at", "modified_at", "specified_type")
+        exclude = ("id", "is_active", "position", "created_at", "updated_at", "specified_type")
 
     def validate(self, data):
         if data["has_time_limit"] and (data["start_date"] is None or data["expiration_date"] is None):
@@ -60,6 +60,8 @@ class DiscountInputSerializer(serializers.ModelSerializer):
 
         if data["type"] == Discount.TYPE_RATIO and data["percentage_value"] is None:
             raise ValidationError(_("ratio discounts must have a percentage value"))
+
+        return data
 
     @transaction.atomic
     def create(self, validated_data):

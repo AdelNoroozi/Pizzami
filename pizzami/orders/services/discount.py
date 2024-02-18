@@ -1,4 +1,4 @@
-from rest_framework.utils.serializer_helpers import ReturnList
+from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
 from pizzami.orders.models import Discount
 from pizzami.orders.selectors import get_discount_list as get_discount_list_selector
@@ -17,7 +17,7 @@ def get_discount_list(is_user_staff: bool, user: BaseUser = None) -> ReturnList[
     return serializer.data
 
 
-def create_discount(data: dict):
+def create_discount(data: dict) -> ReturnDict:
     serializer = DiscountInputSerializer(data=data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
