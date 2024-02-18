@@ -21,7 +21,8 @@ class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         responses=GET_DISCOUNTS_RESPONSES
     )
     def get(self, request):
-        data = get_discount_list(is_user_staff=request.user.is_staff, user=request.user)
+        query_dict = request.GET
+        data = get_discount_list(query_dict=query_dict, is_user_staff=request.user.is_staff, user=request.user)
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
