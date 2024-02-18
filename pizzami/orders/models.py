@@ -18,7 +18,7 @@ class Discount(TimeStampedBaseModel):
 
     TYPE_CHOICES = (
         (TYPE_ABSOLUTE, "absolute"),
-        (TYPE_RATIO, "ration")
+        (TYPE_RATIO, "ratio")
     )
 
     SPECIFIED_TO_USER = "USR"
@@ -35,7 +35,7 @@ class Discount(TimeStampedBaseModel):
     name = models.CharField(max_length=50, verbose_name=_("name"))
     description = models.TextField(blank=True, null=True, verbose_name=_("description"))
     is_public = models.BooleanField(default=True, verbose_name=_("is public"))
-    code = models.CharField(max_length=10, unique=True, null=True, verbose_name=_("code"))
+    code = models.CharField(max_length=10, unique=True, blank=True, null=True, verbose_name=_("code"))
     has_time_limit = models.BooleanField(default=False, verbose_name=_("has time limit"))
     type = models.CharField(max_length=20, choices=TYPE_CHOICES, verbose_name=_("type"))
     start_date = models.DateTimeField(blank=True, null=True, verbose_name=_("start date"))
@@ -44,7 +44,7 @@ class Discount(TimeStampedBaseModel):
                                          verbose_name=_("specified to type"))
     specified_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name="discounts",
                                        blank=True, null=True, verbose_name=_("specified type"))
-    object_id = models.CharField(max_length=50)
+    object_id = models.CharField(max_length=50, blank=True, null=True)
     specified_object = GenericForeignKey('specified_type', 'object_id')
     percentage_value = models.FloatField(
         blank=True, null=True,
