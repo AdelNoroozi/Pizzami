@@ -89,3 +89,34 @@ class CartItem(TimeStampedBaseModel):
     food = models.ForeignKey(Food, on_delete=models.RESTRICT, related_name="cart_items", verbose_name=_("food"))
     count = models.PositiveIntegerField(validators=[MinValueValidator(1)], verbose_name=_("count"))
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items", verbose_name=_("cart"))
+
+
+class Order(TimeStampedBaseModel):
+    STATUS_READY_TO_PAY = "RTP"
+    STATUS_PAID = "PD"
+    STATUS_REJECTED = "RJC"
+    STATUS_IN_PROGRESS = "IPR"
+    STATUS_DELIVERED = "DLV"
+
+    STATUS_CHOICES = (
+        (STATUS_READY_TO_PAY, "ready to pay"),
+        (STATUS_PAID, "paid"),
+        (STATUS_REJECTED, "rejected"),
+        (STATUS_IN_PROGRESS, "in progress"),
+        (STATUS_DELIVERED, "delivered"),
+    )
+
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    cart = models.OneToOneField(Cart, on_delete=models.RESTRICT, related_name="order", verbose_name=_("cart"))
+    discount = models.ForeignKey(Discount, on_delete=models.RESTRICT, related_name="orders", verbose_name=_("discount"))
+    address = models.CharField(max_length=256, verbose_name=_("address"))
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_READY_TO_PAY,
+                              verbose_name=_("status"))
+    total_value = models.FloatField(verbose_name=_("total value"))
+
+
+class Payment(TimeStampedBaseModel):
+    order = models.ForeignKey(Order, on_delete=models.RESTRICT, related_name="payments", verbose_name=_("order"))
+    is_income = models.BooleanField(default=True, verbose_name=_("is income"))
+    tracking_code = models.CharField(max_length=256, verbose_name=_("tracking code"))
+    payment_data = models.TextField(blank=True, null=True, verbose_name=_("payment data"))
