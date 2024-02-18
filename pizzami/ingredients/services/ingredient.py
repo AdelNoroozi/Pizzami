@@ -12,9 +12,9 @@ from pizzami.ingredients.serializers import IngredientCompleteOutputSerializer, 
 from pizzami.ingredients.filters import IngredientFilter
 
 
-def get_ingredients(get_method: QueryDict, is_user_staff: bool) -> ReturnList[Ingredient]:
+def get_ingredients(query_dict: QueryDict, is_user_staff: bool) -> ReturnList[Ingredient]:
     queryset = get_ingredients_selector(return_all=is_user_staff)
-    filtered_queryset = IngredientFilter(get_method, queryset=queryset).qs
+    filtered_queryset = IngredientFilter(query_dict, queryset=queryset).qs
     if is_user_staff:
         serializer = IngredientCompleteOutputSerializer(filtered_queryset, many=True)
     else:

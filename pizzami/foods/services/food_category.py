@@ -16,9 +16,9 @@ from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer,
 from pizzami.foods.services.food_category_compound import create_food_category_compound
 
 
-def get_food_categories(get_method: QueryDict, is_user_staff: bool) -> ReturnList[FoodCategory]:
+def get_food_categories(query_dict: QueryDict, is_user_staff: bool) -> ReturnList[FoodCategory]:
     queryset = get_food_categories_selector(return_all=is_user_staff)
-    filtered_queryset = FoodCategoryFilter(get_method, queryset=queryset).qs
+    filtered_queryset = FoodCategoryFilter(query_dict, queryset=queryset).qs
     serializer = FoodCategoryBaseOutputSerializer(filtered_queryset, many=True)
     return serializer.data
 

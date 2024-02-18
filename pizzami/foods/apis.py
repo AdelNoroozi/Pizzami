@@ -37,7 +37,7 @@ class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         responses={200: GET_FOOD_CATEGORIES_200_RESPONSE}
     )
     def get(self, request):
-        data = get_food_categories(get_method=request.GET, is_user_staff=request.user.is_staff)
+        data = get_food_categories(query_dict=request.GET, is_user_staff=request.user.is_staff)
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
@@ -133,10 +133,10 @@ class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
             if (not request.user.is_authenticated) or request.user.is_staff:
                 return Response(data={"message": "only authenticated normal users can access their own foods"},
                                 status=status.HTTP_403_FORBIDDEN)
-            data = get_foods(get_method=get_method, is_user_staff=request.user.is_staff, user_created=True,
+            data = get_foods(query_dict=get_method, is_user_staff=request.user.is_staff, user_created=True,
                              user=request.user)
         else:
-            data = get_foods(get_method=get_method, is_user_staff=request.user.is_staff, user_created=False)
+            data = get_foods(query_dict=get_method, is_user_staff=request.user.is_staff, user_created=False)
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(

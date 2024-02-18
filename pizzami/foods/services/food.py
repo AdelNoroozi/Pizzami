@@ -16,17 +16,17 @@ from pizzami.foods.services.food_ingredient import create_food_ingredient
 from pizzami.users.models import BaseUser
 
 
-def get_foods(get_method: QueryDict, is_user_staff: bool, user_created: bool, user: BaseUser = None) -> ReturnList[
+def get_foods(query_dict: QueryDict, is_user_staff: bool, user_created: bool, user: BaseUser = None) -> ReturnList[
     Food]:
     if user_created:
         queryset = get_foods_selector(return_all=False, user_profile=user.profile)
     else:
         queryset = get_foods_selector(return_all=is_user_staff)
-    search_param = get_method.get('search')
-    order_param = get_method.get('order_by')
+    search_param = query_dict.get('search')
+    order_param = query_dict.get('order_by')
     if search_param:
         queryset = search_food(queryset=queryset, search_param=search_param)
-    queryset = FoodFilter(get_method, queryset=queryset).qs
+    queryset = FoodFilter(query_dict, queryset=queryset).qs
     if order_param and \
             order_param.lstrip("-") in ["rate", "price", "ordered_count", "position", "created_at", "modified_at"]:
         queryset = order_foods(queryset=queryset, order_param=order_param)
