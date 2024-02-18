@@ -5,4 +5,5 @@ urlpatterns = [
     path('auth/', include('pizzami.authentication.urls')),
     path('ingredients/', include('pizzami.ingredients.urls')),
     path('foods/', include('pizzami.foods.urls')),
+    path('orders/', include('pizzami.orders.urls')),
 ]
