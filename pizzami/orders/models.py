@@ -80,8 +80,17 @@ class Discount(TimeStampedBaseModel):
 
 class Cart(TimeStampedBaseModel):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    is_active = models.BooleanField(default=True)
+    is_alive = models.BooleanField(default=True)
     user = models.ForeignKey(Profile, on_delete=models.RESTRICT, related_name="carts", verbose_name=_("user"))
+
+    def __str__(self):
+        return f"{self.user.public_name} - {self.created_at}"
+
+    class Meta:
+        verbose_name = _("Cart")
+        verbose_name_plural = _("Carts")
+        ordering = ("position",)
+        db_table = "cart"
 
 
 class CartItem(TimeStampedBaseModel):
@@ -89,6 +98,15 @@ class CartItem(TimeStampedBaseModel):
     food = models.ForeignKey(Food, on_delete=models.RESTRICT, related_name="cart_items", verbose_name=_("food"))
     count = models.PositiveIntegerField(validators=[MinValueValidator(1)], verbose_name=_("count"))
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items", verbose_name=_("cart"))
+
+    def __str__(self):
+        return f"{self.cart.__str__()} - {self.food.name}"
+
+    class Meta:
+        verbose_name = _("Cart Item")
+        verbose_name_plural = _("Cart Items")
+        ordering = ("position",)
+        db_table = "cart item"
 
 
 class Order(TimeStampedBaseModel):
@@ -114,9 +132,35 @@ class Order(TimeStampedBaseModel):
                               verbose_name=_("status"))
     total_value = models.FloatField(verbose_name=_("total value"))
 
+    def __str__(self):
+        return f"{self.cart.__str__()} order"
+
+    class Meta:
+        verbose_name = _("Order")
+        verbose_name_plural = _("Orders")
+        ordering = ("position",)
+        db_table = "order"
+        indexes = [
+            models.Index(fields=["position"]),
+            models.Index(fields=["created_at"])
+        ]
+
 
 class Payment(TimeStampedBaseModel):
     order = models.ForeignKey(Order, on_delete=models.RESTRICT, related_name="payments", verbose_name=_("order"))
     is_income = models.BooleanField(default=True, verbose_name=_("is income"))
     tracking_code = models.CharField(max_length=256, verbose_name=_("tracking code"))
     payment_data = models.TextField(blank=True, null=True, verbose_name=_("payment data"))
+
+    def __str__(self):
+        if self.is_income:
+            type_str = "income"
+        else:
+            type_str = "withdrawal"
+        return f"{self.order.cart.__str__()} {type_str} payment"
+
+    class Meta:
+        verbose_name = _("Payment")
+        verbose_name_plural = _("Payments")
+        ordering = ("position",)
+        db_table = "payment"
