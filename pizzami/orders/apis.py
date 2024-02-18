@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
-from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES
+from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS
 from pizzami.orders.serializers import DiscountInputSerializer
 from pizzami.orders.services import get_discount_list, create_discount
 
@@ -18,6 +18,7 @@ class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=['Orders'],
+        parameters=GET_DISCOUNTS_PARAMETERS,
         responses=GET_DISCOUNTS_RESPONSES
     )
     def get(self, request):
