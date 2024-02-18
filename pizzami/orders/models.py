@@ -42,10 +42,10 @@ class Discount(TimeStampedBaseModel):
     expiration_date = models.DateTimeField(blank=True, null=True, verbose_name=_("expiration date"))
     specified_to_type = models.CharField(max_length=20, blank=True, null=True, choices=SPECIFIED_TO_CHOICES,
                                          verbose_name=_("specified to type"))
-    specified_object = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name="discounts",
-                                         verbose_name=_("specified object"))
+    specified_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name="discounts",
+                                       blank=True, null=True, verbose_name=_("specified type"))
     object_id = models.CharField(max_length=50)
-    content_object = GenericForeignKey('specified_object', 'object_id')
+    specified_object = GenericForeignKey('specified_type', 'object_id')
     percentage_value = models.FloatField(
         blank=True, null=True,
         validators=[

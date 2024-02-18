@@ -10,7 +10,7 @@ class DiscountBaseOutputSerializer(serializers.ModelSerializer):
         model = Discount
         fields = ("id", "name", "description", "code", "expiration_date", "value")
 
-    def get_value(self, obj: Discount):
+    def get_value(self, obj: Discount) -> str:
         if obj.type == obj.TYPE_RATIO:
             return f"{obj.percentage_value}%"
         else:
