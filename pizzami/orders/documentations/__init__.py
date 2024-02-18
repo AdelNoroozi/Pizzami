@@ -1,1 +1,2 @@
 from pizzami.orders.documentations.discounts import GET_DISCOUNTS_RESPONSES
+from pizzami.orders.documentations.discounts import CREATE_DISCOUNT_RESPONSES

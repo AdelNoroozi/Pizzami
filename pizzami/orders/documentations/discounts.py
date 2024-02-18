@@ -18,3 +18,29 @@ GET_DISCOUNTS_RESPONSES = {
     200: GET_DISCOUNTS_200_RESPONSE,
     401: DISCOUNT_401_RESPONSE
 }
+
+CREATE_DISCOUNT_201_RESPONSE = OpenApiResponse(
+    response=DiscountCompleteOutputSerializer,
+    description="a new discount created successfully."
+)
+
+SAVE_DISCOUNT_400_RESPONSE = OpenApiResponse(
+    description="input values are invalid or don't match the expected format. e.g: discount type is absolute, but "
+                "absolute value is null."
+)
+
+SAVE_DISCOUNT_404_RESPONSE = OpenApiResponse(
+    description="no specified object found for this specified id for the specified type"
+)
+
+DISCOUNT_403_RESPONSE = OpenApiResponse(
+    description="you are not allowed to perform this action"
+)
+
+CREATE_DISCOUNT_RESPONSES = {
+    201: CREATE_DISCOUNT_201_RESPONSE,
+    400: SAVE_DISCOUNT_400_RESPONSE,
+    401: DISCOUNT_401_RESPONSE,
+    403: DISCOUNT_403_RESPONSE,
+    404: SAVE_DISCOUNT_404_RESPONSE
+}
