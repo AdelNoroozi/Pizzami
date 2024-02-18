@@ -3,7 +3,8 @@ from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
 from pizzami.orders.filters import DiscountFilter
 from pizzami.orders.models import Discount
-from pizzami.orders.selectors import get_discount_list as get_discount_list_selector, order_discounts, search_discount
+from pizzami.orders.selectors import get_discount_list as get_discount_list_selector, order_discounts, search_discount, \
+    specific_filter_discounts
 from pizzami.orders.serializers import DiscountBaseOutputSerializer, DiscountCompleteOutputSerializer, \
     DiscountInputSerializer
 from pizzami.users.models import BaseUser
@@ -14,9 +15,12 @@ def get_discount_list(query_dict: QueryDict, is_user_staff: bool, user: BaseUser
         queryset = get_discount_list_selector(private_only=False)
         search_param = query_dict.get('search')
         order_param = query_dict.get('order_by')
+        specified_to = query_dict.get('specified_to')
         if search_param:
             queryset = search_discount(queryset=queryset, search_param=search_param)
         queryset = DiscountFilter(query_dict, queryset=queryset).qs
+        if specified_to:
+            queryset = specific_filter_discounts(queryset=queryset, object_id=specified_to)
         if order_param and \
                 order_param.lstrip("-") in ["start_date", "expiration_date", "position", "created_at", "modified_at",
                                             "absolute_value", "percentage_value"]:
