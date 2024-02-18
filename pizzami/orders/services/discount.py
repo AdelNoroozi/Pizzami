@@ -1,6 +1,7 @@
 from django.http import QueryDict
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
+from pizzami.orders.filters import DiscountFilter
 from pizzami.orders.models import Discount
 from pizzami.orders.selectors import get_discount_list as get_discount_list_selector, order_discounts, search_discount
 from pizzami.orders.serializers import DiscountBaseOutputSerializer, DiscountCompleteOutputSerializer, \
@@ -15,6 +16,7 @@ def get_discount_list(query_dict: QueryDict, is_user_staff: bool, user: BaseUser
         order_param = query_dict.get('order_by')
         if search_param:
             queryset = search_discount(queryset=queryset, search_param=search_param)
+        queryset = DiscountFilter(query_dict, queryset=queryset).qs
         if order_param and \
                 order_param.lstrip("-") in ["start_date", "expiration_date", "position", "created_at", "modified_at",
                                             "absolute_value", "percentage_value"]:
