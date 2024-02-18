@@ -27,3 +27,12 @@ def specific_filter_discounts(queryset: QuerySet[Discount], object_id: str) -> Q
 
 def deactivate_discounts_by_obj(object_id: str):
     Discount.objects.filter(object_id=object_id).update(is_active=False)
+
+
+def get_discount_by_food_or_category(food_id: str, category_id: str) -> Discount | None:
+    if Discount.objects.filter(is_active=True, is_public=True, object_id=food_id).exists():
+        return Discount.objects.filter(is_active=True, is_public=True, object_id=food_id).first()
+    elif Discount.objects.filter(is_active=True, is_public=True, object_id=category_id).exists():
+        return Discount.objects.filter(is_active=True, is_public=True, object_id=category_id).first()
+    else:
+        return None

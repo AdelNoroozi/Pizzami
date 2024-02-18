@@ -8,6 +8,7 @@ from pizzami.foods.models import Food, FoodIngredient
 from pizzami.foods.serializers.food_ingredient import FoodIngredientOutputSerializer, \
     FoodIngredientBaseInputSerializer
 from pizzami.ingredients.models import Ingredient
+from pizzami.orders.selectors import get_discount_by_food_or_category
 from pizzami.users.models import Profile
 from pizzami.users.serializers import ProfileReferenceSerializer
 
@@ -16,12 +17,13 @@ class FoodBaseOutputSerializer(serializers.ModelSerializer):
     category = serializers.CharField(source="category.icon_url")
     created_by = serializers.CharField(source="created_by.public_name", allow_null=True)
     ingredients_str = serializers.SerializerMethodField()
+    discounted_price = serializers.SerializerMethodField()
 
     class Meta:
         model = Food
         fields = (
-            "id", "name", "price", "category", "created_by", "rate", "ordered_count", "is_original", "ingredients_str",
-            "image_url", "image_alt_text")
+            "id", "name", "price", "discounted_price", "category", "created_by", "rate", "ordered_count", "is_original",
+            "ingredients_str", "image_url", "image_alt_text")
 
     def get_ingredients_str(self, obj: Food) -> str:
         ingredients = FoodIngredient.objects.filter(food=obj).values_list(
@@ -33,6 +35,19 @@ class FoodBaseOutputSerializer(serializers.ModelSerializer):
             ingredients_flat += f"{amount} {unit}{plural_sign} of {name}, "
 
         return ingredients_flat.rstrip(", ")
+
+    def get_discounted_price(self, obj: Food) -> float | None:
+        discount = get_discount_by_food_or_category(food_id=obj.id, category_id=obj.category.id)
+        if discount is None:
+            return None
+        else:
+            if discount.type == "ABS":
+                if discount.absolute_value >= obj.price:
+                    return 0
+                else:
+                    return obj.price - discount.absolute_value
+            else:
+                return ((100 - discount.percentage_value) / 100) * obj.price
 
 
 class FoodDetailedOutputSerializer(FoodBaseOutputSerializer):
@@ -49,7 +64,7 @@ class FoodPublicDetailedOutputSerializer(FoodBaseOutputSerializer):
 
     class Meta(FoodBaseOutputSerializer.Meta):
         fields = (
-            "id", "name", "price", "category", "created_by", "views", "rate", "ordered_count", "is_original",
+            "id", "name", "price", "discounted_price", "category", "created_by", "views", "rate", "ordered_count", "is_original",
             "ingredients", "image_url", "image_alt_text", "description")
 
 
