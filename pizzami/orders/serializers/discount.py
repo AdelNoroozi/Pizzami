@@ -15,3 +15,9 @@ class DiscountBaseOutputSerializer(serializers.ModelSerializer):
             return f"{obj.percentage_value}%"
         else:
             return f"{obj.absolute_value}$"
+
+
+class DiscountCompleteOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discount
+        fields = "__all__"
