@@ -6,6 +6,7 @@ from rest_framework.generics import get_object_or_404
 from pizzami.foods.models import Food, FoodCategory
 from pizzami.foods.serializers import FoodBaseOutputSerializer, FoodCategoryBaseOutputSerializer
 from pizzami.orders.models import Discount
+from pizzami.orders.selectors import deactivate_discounts_by_obj
 from pizzami.users.models import Profile
 from pizzami.users.serializers import ProfileReferenceSerializer
 
@@ -49,7 +50,7 @@ class DiscountCompleteOutputSerializer(serializers.ModelSerializer):
 class DiscountInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
-        exclude = ("id", "is_active", "position", "created_at", "updated_at", "specified_type")
+        exclude = ("id", "position", "created_at", "updated_at", "specified_type")
 
     def validate(self, data):
         if data["has_time_limit"] and (data["start_date"] is None or data["expiration_date"] is None):
@@ -72,6 +73,9 @@ class DiscountInputSerializer(serializers.ModelSerializer):
         }
         specified_to_type = validated_data.get("specified_to_type")
         specified_object = get_object_or_404(specified_to_type_dict[specified_to_type], id=validated_data["object_id"])
-        validated_data.pop("object_id")
+        object_id = validated_data.pop("object_id")
+        if (validated_data.get("is_active") is None or validated_data.get("is_active") is True) and (
+                specified_to_type == "FOD" or specified_to_type == "CAT"):
+            deactivate_discounts_by_obj(object_id=object_id)
         validated_data["specified_object"] = specified_object
         return super().create(validated_data)

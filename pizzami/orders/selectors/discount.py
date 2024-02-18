@@ -23,3 +23,7 @@ def order_discounts(queryset: QuerySet[Discount], order_param: str) -> QuerySet[
 
 def specific_filter_discounts(queryset: QuerySet[Discount], object_id: str) -> QuerySet[Discount]:
     return queryset.filter(object_id=object_id)
+
+
+def deactivate_discounts_by_obj(object_id: str):
+    Discount.objects.filter(object_id=object_id).update(is_active=False)
