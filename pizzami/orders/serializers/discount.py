@@ -46,4 +46,30 @@ class DiscountCompleteOutputSerializer(serializers.ModelSerializer):
         exclude = ("object_id", "specified_type")
 
 
+class DiscountInputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discount
+        exclude = ("id", "is_active", "position", "created_at", "modified_at", "specified_type")
 
+    def validate(self, data):
+        if data["has_time_limit"] and (data["start_date"] is None or data["expiration_date"] is None):
+            raise ValidationError(_("time limited discounts must have start and expiration date"))
+
+        if data["type"] == Discount.TYPE_ABSOLUTE and data["absolute_value"] is None:
+            raise ValidationError(_("absolute discounts must have a absolute value"))
+
+        if data["type"] == Discount.TYPE_RATIO and data["percentage_value"] is None:
+            raise ValidationError(_("ratio discounts must have a percentage value"))
+
+    @transaction.atomic
+    def create(self, validated_data):
+        specified_to_type_dict = {
+            "USR": Profile,
+            "FOD": Food,
+            "CAT": FoodCategory
+        }
+        specified_to_type = validated_data.get("specified_to_type")
+        specified_object = get_object_or_404(specified_to_type_dict[specified_to_type], id=validated_data["object_id"])
+        validated_data.pop("object_id")
+        validated_data["specified_object"] = specified_object
+        return super().create(validated_data)
