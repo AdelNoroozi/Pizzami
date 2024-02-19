@@ -5,3 +5,4 @@ from pizzami.orders.selectors.discount import specific_filter_discounts
 from pizzami.orders.selectors.discount import deactivate_discounts_by_obj
 from pizzami.orders.selectors.discount import get_discount_by_food_or_category
 from pizzami.orders.selectors.discount import has_discount_orders
+from pizzami.orders.selectors.discount import delete_discount

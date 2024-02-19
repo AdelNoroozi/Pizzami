@@ -1,10 +1,11 @@
 from django.http import QueryDict
+from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
 from pizzami.orders.filters import DiscountFilter
 from pizzami.orders.models import Discount
 from pizzami.orders.selectors import get_discount_list as get_discount_list_selector, order_discounts, search_discount, \
-    specific_filter_discounts
+    specific_filter_discounts, delete_discount as delete_discount_selector
 from pizzami.orders.serializers import DiscountBaseOutputSerializer, DiscountCompleteOutputSerializer, \
     DiscountInputSerializer
 from pizzami.users.models import BaseUser
@@ -38,3 +39,8 @@ def create_discount(data: dict) -> ReturnDict:
     serializer.save()
     response_serializer = DiscountCompleteOutputSerializer(serializer.instance, many=False)
     return response_serializer.data
+
+
+def delete_discount(discount_id: str):
+    discount = get_object_or_404(Discount, id=discount_id)
+    delete_discount_selector(discount=discount)
