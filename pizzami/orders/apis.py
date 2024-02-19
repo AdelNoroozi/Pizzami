@@ -6,10 +6,10 @@ from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS, \
-    DELETE_DISCOUNT_RESPONSES
+    DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES
 from pizzami.orders.selectors import has_discount_orders
 from pizzami.orders.serializers import DiscountInputSerializer
-from pizzami.orders.services import get_discount_list, create_discount, delete_discount
+from pizzami.orders.services import get_discount_list, create_discount, delete_discount, update_discount
 
 
 class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -51,3 +51,13 @@ class DiscountAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
                 status=status.HTTP_400_BAD_REQUEST)
         delete_discount(discount_id=_id)
         return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
+
+    @extend_schema(
+        tags=['Orders'],
+        request=DiscountInputSerializer,
+        responses=UPDATE_DISCOUNT_RESPONSES
+    )
+    def put(self, request, **kwargs):
+        _id = kwargs.get("id")
+        updated_discount_data = update_discount(discount_id=_id, data=request.data)
+        return Response(data=updated_discount_data, status=status.HTTP_200_OK)

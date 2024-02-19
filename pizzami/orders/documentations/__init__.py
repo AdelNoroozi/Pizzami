@@ -2,3 +2,4 @@ from pizzami.orders.documentations.discounts import GET_DISCOUNTS_RESPONSES
 from pizzami.orders.documentations.discounts import CREATE_DISCOUNT_RESPONSES
 from pizzami.orders.documentations.discounts import GET_DISCOUNTS_PARAMETERS
 from pizzami.orders.documentations.discounts import DELETE_DISCOUNT_RESPONSES
+from pizzami.orders.documentations.discounts import UPDATE_DISCOUNT_RESPONSES
