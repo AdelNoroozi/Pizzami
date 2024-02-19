@@ -86,6 +86,11 @@ class Cart(TimeStampedBaseModel):
     def __str__(self):
         return f"{self.user.public_name} - {self.created_at}"
 
+    def save(self, *args, **kwargs):
+        if self.is_alive:
+            Cart.objects.filter(is_alive=True, user=self.user).exclude(id=self.id).update(is_alive=False)
+        super().save(*args, **kwargs)
+
     class Meta:
         verbose_name = _("Cart")
         verbose_name_plural = _("Carts")
