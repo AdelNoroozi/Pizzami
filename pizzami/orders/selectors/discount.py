@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import QuerySet, Q
 
-from pizzami.orders.models import Discount
+from pizzami.orders.models import Discount, Order
 from pizzami.users.models import Profile
 
 
@@ -36,3 +36,14 @@ def get_discount_by_food_or_category(food_id: str, category_id: str) -> Discount
         return Discount.objects.filter(is_active=True, is_public=True, object_id=category_id).first()
     else:
         return None
+
+
+def has_discount_orders(discount_id: str) -> bool:
+    if Order.objects.filter(discount__id=discount_id).exists():
+        return True
+    else:
+        return False
+
+
+def delete_discount(discount: Discount):
+    discount.delete()
