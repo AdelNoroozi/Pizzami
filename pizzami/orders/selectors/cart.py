@@ -12,3 +12,7 @@ def get_or_create_cart_item(cart: Cart, food: Food) -> CartItem:
     if CartItem.objects.filter(food=food, cart=cart).exists():
         return CartItem.objects.filter(food=food, cart=cart).first()
     return CartItem(food=food, cart=cart, count=0)
+
+
+def delete_cart_item(cart_item: CartItem):
+    cart_item.delete()

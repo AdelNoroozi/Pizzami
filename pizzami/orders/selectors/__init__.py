@@ -8,3 +8,4 @@ from pizzami.orders.selectors.discount import has_discount_orders
 from pizzami.orders.selectors.discount import delete_discount
 from pizzami.orders.selectors.cart import get_or_create_cart
 from pizzami.orders.selectors.cart import get_or_create_cart_item
+from pizzami.orders.selectors.cart import delete_cart_item
