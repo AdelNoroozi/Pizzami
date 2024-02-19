@@ -46,7 +46,7 @@ SAVE_DISCOUNT_404_RESPONSE = OpenApiResponse(
 )
 
 DISCOUNT_403_RESPONSE = OpenApiResponse(
-    description="you are not allowed to perform this action"
+    description="you are not allowed to perform this action on discounts"
 )
 
 CREATE_DISCOUNT_RESPONSES = {
@@ -55,4 +55,19 @@ CREATE_DISCOUNT_RESPONSES = {
     401: DISCOUNT_401_RESPONSE,
     403: DISCOUNT_403_RESPONSE,
     404: SAVE_DISCOUNT_404_RESPONSE
+}
+
+DISCOUNT_404_RESPONSE = OpenApiResponse(
+    description="discount with specified id does not exist"
+)
+
+DELETE_DISCOUNT_204_RESPONSE = OpenApiResponse(
+    description="discount deleted successfully."
+)
+
+DELETE_DISCOUNT_RESPONSES = {
+    204: DELETE_DISCOUNT_204_RESPONSE,
+    401: DISCOUNT_401_RESPONSE,
+    403: DISCOUNT_403_RESPONSE,
+    404: DISCOUNT_404_RESPONSE
 }

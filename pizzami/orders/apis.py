@@ -5,9 +5,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
-from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS
+from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS, \
+    DELETE_DISCOUNT_RESPONSES
+from pizzami.orders.selectors import has_discount_orders
 from pizzami.orders.serializers import DiscountInputSerializer
-from pizzami.orders.services import get_discount_list, create_discount
+from pizzami.orders.services import get_discount_list, create_discount, delete_discount
 
 
 class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -34,3 +36,18 @@ class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def post(self, request):
         discount_data = create_discount(request.data)
         return Response(data=discount_data, status=status.HTTP_201_CREATED)
+
+
+class DiscountAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    @extend_schema(
+        tags=['Orders'],
+        responses=DELETE_DISCOUNT_RESPONSES
+    )
+    def delete(self, request, **kwargs):
+        _id = kwargs.get("id")
+        if has_discount_orders(discount_id=_id):
+            return Response(data={"message": _(
+                "can't delete this discount cause there are orders referring to it.")},
+                status=status.HTTP_400_BAD_REQUEST)
+        delete_discount(discount_id=_id)
+        return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
