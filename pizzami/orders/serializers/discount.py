@@ -65,7 +65,8 @@ class DiscountInputSerializer(serializers.ModelSerializer):
         return data
 
     @transaction.atomic
-    def create(self, validated_data):
+    def save(self, **kwargs):
+        validated_data = self.validated_data
         specified_to_type_dict = {
             "USR": Profile,
             "FOD": Food,
@@ -78,4 +79,4 @@ class DiscountInputSerializer(serializers.ModelSerializer):
                 specified_to_type == "FOD" or specified_to_type == "CAT"):
             deactivate_discounts_by_obj(object_id=object_id)
         validated_data["specified_object"] = specified_object
-        return super().create(validated_data)
+        return super().save(**kwargs)
