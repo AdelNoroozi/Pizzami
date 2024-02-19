@@ -44,3 +44,12 @@ def create_discount(data: dict) -> ReturnDict:
 def delete_discount(discount_id: str):
     discount = get_object_or_404(Discount, id=discount_id)
     delete_discount_selector(discount=discount)
+
+
+def update_discount(discount_id: str, data: dict) -> ReturnDict:
+    discount = get_object_or_404(Discount, id=discount_id)
+    serializer = DiscountInputSerializer(instance=discount, data=data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    response_serializer = DiscountCompleteOutputSerializer(serializer.instance, many=False)
+    return response_serializer.data
