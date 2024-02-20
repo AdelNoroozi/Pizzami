@@ -8,9 +8,11 @@ from rest_framework.views import APIView
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS, \
-    DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES, ADD_TO_CART_RESPONSES, MY_CART_RESPONSES
-from pizzami.orders.selectors import has_discount_orders, get_or_create_cart
-from pizzami.orders.serializers import DiscountInputSerializer, CartSerializer, CartItemInputSerializer
+    DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES, ADD_TO_CART_RESPONSES, MY_CART_RESPONSES, \
+    INQUIRY_DISCOUNT_RESPONSES
+from pizzami.orders.selectors import has_discount_orders, get_or_create_cart, inquiry_discount_by_code
+from pizzami.orders.serializers import DiscountInputSerializer, CartSerializer, CartItemInputSerializer, \
+    DiscountInquirySerializer, DiscountBaseOutputSerializer
 from pizzami.orders.services import get_discount_list, create_discount, delete_discount, update_discount, add_to_cart
 
 
@@ -63,6 +65,26 @@ class DiscountAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         _id = kwargs.get("id")
         updated_discount_data = update_discount(discount_id=_id, data=request.data)
         return Response(data=updated_discount_data, status=status.HTTP_200_OK)
+
+
+class InquiryDiscountAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "POST": [IsAuthenticatedAndNotAdmin]
+    }
+
+    @extend_schema(
+        tags=['Orders'],
+        request=DiscountInquirySerializer,
+        responses=INQUIRY_DISCOUNT_RESPONSES
+    )
+    def post(self, request, **kwargs):
+        serializer = DiscountInquirySerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        discount = inquiry_discount_by_code(code=serializer.data["code"], user=request.user.profile)
+        if discount is None:
+            return Response(data={"message": "invalid code"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        response_serializer = DiscountBaseOutputSerializer(discount, many=False)
+        return Response(data=response_serializer.data, status=status.HTTP_200_OK)
 
 
 class AddToCartAPI(ApiAuthMixin, BasePermissionsMixin, APIView):

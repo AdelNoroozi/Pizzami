@@ -1,5 +1,5 @@
-from django.utils.translation import gettext_lazy as _
 from django.db import transaction
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
@@ -88,3 +88,7 @@ class DiscountInputSerializer(serializers.ModelSerializer):
             deactivate_discounts_by_obj(object_id=object_id)
         validated_data["specified_object"] = specified_object
         return super().save(**kwargs)
+
+
+class DiscountInquirySerializer(serializers.Serializer):
+    code = serializers.CharField(required=True)

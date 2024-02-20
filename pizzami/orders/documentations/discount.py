@@ -1,6 +1,6 @@
 from drf_spectacular.utils import OpenApiResponse, OpenApiParameter
 
-from pizzami.orders.serializers import DiscountCompleteOutputSerializer
+from pizzami.orders.serializers import DiscountCompleteOutputSerializer, DiscountBaseOutputSerializer
 
 GET_DISCOUNTS_200_RESPONSE = OpenApiResponse(
     response=DiscountCompleteOutputSerializer(many=True),
@@ -83,4 +83,25 @@ UPDATE_DISCOUNT_RESPONSES = {
     401: DISCOUNT_401_RESPONSE,
     403: DISCOUNT_403_RESPONSE,
     404: SAVE_DISCOUNT_404_RESPONSE
+}
+
+INQUIRY_DISCOUNT_200_RESPONSE = OpenApiResponse(
+    response=DiscountBaseOutputSerializer,
+    description="discount is acceptable."
+)
+
+INQUIRY_DISCOUNT_400_RESPONSE = OpenApiResponse(
+    description="input values are invalid or don't match the expected format. e.g: code missed or is not string."
+)
+
+INQUIRY_DISCOUNT_406_RESPONSE = OpenApiResponse(
+    description="discount code is not acceptable. maybe it is invalid, expired, deactivated or belongs to another user."
+)
+
+INQUIRY_DISCOUNT_RESPONSES = {
+    200: INQUIRY_DISCOUNT_200_RESPONSE,
+    400: INQUIRY_DISCOUNT_400_RESPONSE,
+    401: DISCOUNT_401_RESPONSE,
+    403: DISCOUNT_403_RESPONSE,
+    406: INQUIRY_DISCOUNT_406_RESPONSE
 }

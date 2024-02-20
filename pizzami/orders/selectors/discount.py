@@ -54,6 +54,6 @@ def inquiry_discount_by_code(code: str, user: Profile) -> str | None:
     if discounts.exists():
         discount = discounts.first()
         if discount.is_public or (
-                discount.specified_to_type == Discount.SPECIFIED_TO_USER and discount.object_id == user.id):
-            return discount.id
+                discount.specified_to_type == Discount.SPECIFIED_TO_USER and discount.object_id == str(user.id)):
+            return discount
     return None
