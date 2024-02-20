@@ -1,5 +1,4 @@
 from django.utils.translation import gettext_lazy as _
-
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -9,8 +8,8 @@ from rest_framework.views import APIView
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS, \
-    DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES, ADD_TO_CART_RESPONSES
-from pizzami.orders.selectors import has_discount_orders
+    DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES, ADD_TO_CART_RESPONSES, MY_CART_RESPONSES
+from pizzami.orders.selectors import has_discount_orders, get_or_create_cart
 from pizzami.orders.serializers import DiscountInputSerializer, CartSerializer, CartItemInputSerializer
 from pizzami.orders.services import get_discount_list, create_discount, delete_discount, update_discount, add_to_cart
 
@@ -82,3 +81,18 @@ class AddToCartAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         cart = add_to_cart(food_id=serializer.data["food_id"], count=serializer.data["count"], user=request.user)
         response_serializer = CartSerializer(cart, many=False)
         return Response(data=response_serializer.data, status=status.HTTP_200_OK)
+
+
+class MyCartAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "GET": [IsAuthenticatedAndNotAdmin]
+    }
+
+    @extend_schema(
+        tags=['Orders'],
+        responses=MY_CART_RESPONSES
+    )
+    def get(self, request, **kwargs):
+        cart = get_or_create_cart(user=request.user.profile)
+        serializer = CartSerializer(cart, many=False)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)

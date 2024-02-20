@@ -31,3 +31,14 @@ ADD_TO_CART_RESPONSES = {
     403: CART_403_RESPONSE,
     404: ADD_TO_CART_404_RESPONSE
 }
+
+MY_CART_200_RESPONSE = OpenApiResponse(
+    response=CartSerializer,
+    description="users current alive cart."
+)
+
+MY_CART_RESPONSES = {
+    200: MY_CART_200_RESPONSE,
+    401: CART_401_RESPONSE,
+    403: CART_403_RESPONSE,
+}

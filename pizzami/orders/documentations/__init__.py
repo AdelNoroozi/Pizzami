@@ -4,3 +4,4 @@ from pizzami.orders.documentations.discount import GET_DISCOUNTS_PARAMETERS
 from pizzami.orders.documentations.discount import DELETE_DISCOUNT_RESPONSES
 from pizzami.orders.documentations.discount import UPDATE_DISCOUNT_RESPONSES
 from pizzami.orders.documentations.cart import ADD_TO_CART_RESPONSES
+from pizzami.orders.documentations.cart import MY_CART_RESPONSES
