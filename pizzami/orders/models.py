@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import F, Sum
 from django.utils.translation import gettext_lazy as _
 
 from pizzami.common.models import TimeStampedBaseModel
@@ -100,6 +101,10 @@ class Cart(TimeStampedBaseModel):
         if self.is_alive:
             Cart.objects.filter(is_alive=True, user=self.user).exclude(id=self.id).update(is_alive=False)
         super().save(*args, **kwargs)
+
+    def total_value(self):
+        total_value = self.items.aggregate(total_value=Sum(F("food__price") * F("count")))["total_value"]
+        return total_value
 
     class Meta:
         verbose_name = _("Cart")
