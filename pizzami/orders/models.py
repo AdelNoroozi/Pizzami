@@ -71,6 +71,13 @@ class Discount(TimeStampedBaseModel):
         if self.type == self.TYPE_RATIO and self.percentage_value is None:
             raise ValidationError(_("ratio discounts must have a percentage value"))
 
+        if self.specified_to_type == self.SPECIFIED_TO_USER or self.specified_to_type is None:
+            if not self.code:
+                raise ValidationError(_("User-specified or public broad discounts must have a code."))
+        else:
+            if self.code:
+                raise ValidationError(_("Food or food category specified discounts must not have a code."))
+
     class Meta:
         verbose_name = _("Discount")
         verbose_name_plural = _("Discounts")

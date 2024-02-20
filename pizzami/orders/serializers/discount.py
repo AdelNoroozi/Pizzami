@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -61,6 +62,13 @@ class DiscountInputSerializer(serializers.ModelSerializer):
 
         if data["type"] == Discount.TYPE_RATIO and data["percentage_value"] is None:
             raise ValidationError(_("ratio discounts must have a percentage value"))
+
+        if data["specified_to_type"] == Discount.SPECIFIED_TO_USER or data["specified_to_type"] is None:
+            if not data["code"]:
+                raise ValidationError(_("User-specified or public broad discounts must have a code."))
+        else:
+            if data["code"]:
+                raise ValidationError(_("Food or food category specified discounts must not have a code."))
 
         return data
 
