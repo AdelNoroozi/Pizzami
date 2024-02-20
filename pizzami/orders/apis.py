@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
+from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS, \
     DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES, ADD_TO_CART_RESPONSES
 from pizzami.orders.selectors import has_discount_orders
@@ -67,7 +68,7 @@ class DiscountAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class AddToCartAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     permissions = {
-        "PUT": [IsAuthenticated]
+        "PUT": [IsAuthenticatedAndNotAdmin]
     }
 
     @extend_schema(
