@@ -19,12 +19,12 @@ class DiscountAdmin(BaseModelAdmin, NumericFilterModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(BaseModelAdmin, NumericFilterModelAdmin):
-    list_display = ["__str__", "status", "total_value"] + BaseModelAdmin.list_display
+    list_display = ["__str__", "status", "final_value"] + BaseModelAdmin.list_display
     list_editable = BaseModelAdmin.list_editable + ["status"]
     list_filter = BaseModelAdmin.list_filter + ["status", "cart__user",
-                                                ("total_value", SliderNumericFilter)]
+                                                ("final_value", SliderNumericFilter)]
     search_fields = ["__str__"]
-    ordering = BaseModelAdmin.ordering + ["total_value"]
+    ordering = BaseModelAdmin.ordering + ["final_value"]
 
 
 @admin.register(Payment)
@@ -34,7 +34,7 @@ class PaymentAdmin(BaseModelAdmin, NumericFilterModelAdmin):
     list_filter = BaseModelAdmin.list_filter + ["is_income"]
     search_fields = ["__str__"]
 
-    @admin.display(ordering="order__total_value")
+    @admin.display(ordering="order__final_value")
     def get_total_value(self, obj):
         return obj.order.total_value
 

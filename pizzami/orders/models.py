@@ -152,7 +152,7 @@ class Order(TimeStampedBaseModel):
     address = models.CharField(max_length=256, verbose_name=_("address"))
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_READY_TO_PAY,
                               verbose_name=_("status"))
-    total_value = models.FloatField(verbose_name=_("total value"))
+    final_value = models.FloatField(verbose_name=_("total value"))
 
     def __str__(self):
         return f"{self.cart.__str__()} order"
