@@ -4,7 +4,7 @@ from pizzami.users.models import Profile
 
 
 def get_or_create_cart(user: Profile) -> Cart:
-    cart = Cart.objects.get_or_create(user=user, is_alive=True)
+    cart, created = Cart.objects.get_or_create(user=user, is_alive=True)
     return cart
 
 
