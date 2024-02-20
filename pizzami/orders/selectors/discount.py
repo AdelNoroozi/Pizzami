@@ -47,3 +47,13 @@ def has_discount_orders(discount_id: str) -> bool:
 
 def delete_discount(discount: Discount):
     discount.delete()
+
+
+def inquiry_discount_by_code(code: str, user: Profile) -> str | None:
+    discounts = Discount.objects.active().filter(code=code)
+    if discounts.exists():
+        discount = discounts.first()
+        if discount.is_public or (
+                discount.specified_to_type == Discount.SPECIFIED_TO_USER and discount.object_id == user.id):
+            return discount.id
+    return None
