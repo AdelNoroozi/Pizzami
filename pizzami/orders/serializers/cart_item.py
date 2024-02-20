@@ -10,3 +10,8 @@ class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
         fields = ("id", "food", "count")
+
+
+class CartItemInputSerializer(serializers.Serializer):
+    food_id = serializers.UUIDField(required=True)
+    count = serializers.IntegerField(required=True, help_text="can be a positive or negative int.")

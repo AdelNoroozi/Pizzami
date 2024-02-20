@@ -1,3 +1,5 @@
+from django.utils.translation import gettext_lazy as _
+
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -6,10 +8,10 @@ from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS, \
-    DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES
+    DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES, ADD_TO_CART_RESPONSES
 from pizzami.orders.selectors import has_discount_orders
-from pizzami.orders.serializers import DiscountInputSerializer
-from pizzami.orders.services import get_discount_list, create_discount, delete_discount, update_discount
+from pizzami.orders.serializers import DiscountInputSerializer, CartSerializer, CartItemInputSerializer
+from pizzami.orders.services import get_discount_list, create_discount, delete_discount, update_discount, add_to_cart
 
 
 class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -61,3 +63,21 @@ class DiscountAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         _id = kwargs.get("id")
         updated_discount_data = update_discount(discount_id=_id, data=request.data)
         return Response(data=updated_discount_data, status=status.HTTP_200_OK)
+
+
+class AddToCartAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "PUT": [IsAuthenticated]
+    }
+
+    @extend_schema(
+        tags=['Orders'],
+        request=CartItemInputSerializer,
+        responses=ADD_TO_CART_RESPONSES
+    )
+    def put(self, request, **kwargs):
+        serializer = CartItemInputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        cart = add_to_cart(food_id=serializer.data["food_id"], count=serializer.data["count"], user=request.user)
+        response_serializer = CartSerializer(cart, many=False)
+        return Response(data=response_serializer.data, status=status.HTTP_200_OK)
