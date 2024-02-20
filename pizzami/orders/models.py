@@ -149,7 +149,8 @@ class Order(TimeStampedBaseModel):
                                 verbose_name=_("cart"))
     discount = models.ForeignKey(Discount, on_delete=models.RESTRICT, related_name="orders", blank=True, null=True,
                                  verbose_name=_("discount"))
-    address = models.CharField(max_length=256, verbose_name=_("address"))
+    has_delivery = models.BooleanField(blank=True, null=True, default=None, verbose_name=_("has_delivery"))
+    address = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("address"))
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_READY_TO_PAY,
                               verbose_name=_("status"))
     final_value = models.FloatField(verbose_name=_("total value"))
