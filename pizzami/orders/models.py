@@ -78,6 +78,9 @@ class Discount(TimeStampedBaseModel):
             if self.code:
                 raise ValidationError(_("Food or food category specified discounts must not have a code."))
 
+        if self.specified_to_type == self.SPECIFIED_TO_USER and self.is_public:
+            raise ValidationError(_("user specified discounts can not be public."))
+
     class Meta:
         verbose_name = _("Discount")
         verbose_name_plural = _("Discounts")

@@ -54,21 +54,25 @@ class DiscountInputSerializer(serializers.ModelSerializer):
         exclude = ("id", "position", "created_at", "updated_at", "specified_type")
 
     def validate(self, data):
-        if data["has_time_limit"] and (data["start_date"] is None or data["expiration_date"] is None):
+        if data.get("has_time_limit") is True and (
+                data.get("start_date") is None or data.get("expiration_date") is None):
             raise ValidationError(_("time limited discounts must have start and expiration date"))
 
-        if data["type"] == Discount.TYPE_ABSOLUTE and data["absolute_value"] is None:
+        if data.get("type") == Discount.TYPE_ABSOLUTE and data.get("absolute_value") is None:
             raise ValidationError(_("absolute discounts must have a absolute value"))
 
-        if data["type"] == Discount.TYPE_RATIO and data["percentage_value"] is None:
+        if data.get("type") == Discount.TYPE_RATIO and data.get("percentage_value") is None:
             raise ValidationError(_("ratio discounts must have a percentage value"))
 
-        if data["specified_to_type"] == Discount.SPECIFIED_TO_USER or data["specified_to_type"] is None:
-            if not data["code"]:
+        if data.get("specified_to_type") == Discount.SPECIFIED_TO_USER or data.get("specified_to_type") is None:
+            if not data.get("code"):
                 raise ValidationError(_("User-specified or public broad discounts must have a code."))
         else:
-            if data["code"]:
+            if data.get("code"):
                 raise ValidationError(_("Food or food category specified discounts must not have a code."))
+
+        if data.get("specified_to_type") == Discount.SPECIFIED_TO_USER and data.get("is_public"):
+            raise ValidationError(_("user specified discounts can not be public."))
 
         return data
 
