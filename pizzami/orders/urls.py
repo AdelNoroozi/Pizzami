@@ -1,7 +1,7 @@
 from django.urls import path
 
 from pizzami.orders.apis import DiscountsAPI, DiscountAPI, InquiryDiscountAPI, AddToCartAPI, MyCartAPI, OrdersAPI, \
-    SubmitMyOrderAPI, PaymentsAPI
+    SubmitMyOrderAPI, PaymentsAPI, OrderAPI
 
 urlpatterns = [
     path('discounts/', DiscountsAPI.as_view(), name='discounts'),
@@ -11,6 +11,6 @@ urlpatterns = [
     path('my-cart/', MyCartAPI.as_view(), name='my_cart'),
     path('submit-my-order/', SubmitMyOrderAPI.as_view(), name='submit_my_order'),
     path('payments/', PaymentsAPI.as_view(), name='payments'),
-    path('', OrdersAPI.as_view(), name='orders')
-
+    path('', OrdersAPI.as_view(), name='orders'),
+    path('<str:id>/', OrderAPI.as_view(), name='order'),
 ]

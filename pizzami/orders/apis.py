@@ -9,12 +9,14 @@ from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS, \
     DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES, ADD_TO_CART_RESPONSES, MY_CART_RESPONSES, \
-    INQUIRY_DISCOUNT_RESPONSES, CREATE_OR_UPDATE_ORDER_RESPONSES, SUBMIT_MY_ORDER_RESPONSES
+    INQUIRY_DISCOUNT_RESPONSES, CREATE_OR_UPDATE_ORDER_RESPONSES, SUBMIT_MY_ORDER_RESPONSES, \
+    UPDATE_ORDER_STATUS_RESPONSES
 from pizzami.orders.selectors import has_discount_orders, get_or_create_cart, inquiry_discount_by_code
 from pizzami.orders.serializers import DiscountInputSerializer, CartSerializer, CartItemInputSerializer, \
-    DiscountInquirySerializer, DiscountBaseOutputSerializer, OrderInputSerializer, PaymentGenericSerializer
+    DiscountInquirySerializer, DiscountBaseOutputSerializer, OrderInputSerializer, PaymentGenericSerializer, \
+    UpdateOrderStatusSerializer
 from pizzami.orders.services import get_discount_list, create_discount, delete_discount, update_discount, add_to_cart, \
-    create_or_update_order, submit_my_order, create_payment
+    create_or_update_order, submit_my_order, create_payment, update_order_status
 
 
 class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -137,6 +139,29 @@ class OrdersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         if order_data is None:
             return Response(data={"error": "cart is empty"}, status=status.HTTP_406_NOT_ACCEPTABLE)
         return Response(data=order_data, status=status.HTTP_200_OK)
+
+
+class OrderAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "GET": [IsAuthenticated],
+        "PATCH": [IsAdminUser]
+    }
+
+    @extend_schema(
+        tags=['Orders'],
+        request=UpdateOrderStatusSerializer,
+        responses=UPDATE_ORDER_STATUS_RESPONSES
+    )
+    def patch(self, request, **kwargs):
+        _id = kwargs.get("id")
+        serializer = UpdateOrderStatusSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        is_done, response_message = update_order_status(order_id=_id, status=serializer.data["status"])
+        if not is_done:
+            res_status = status.HTTP_406_NOT_ACCEPTABLE
+        else:
+            res_status = status.HTTP_200_OK
+        return Response(data={"message": response_message}, status=res_status)
 
 
 class SubmitMyOrderAPI(ApiAuthMixin, BasePermissionsMixin, APIView):

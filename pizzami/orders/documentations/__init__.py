@@ -8,3 +8,4 @@ from pizzami.orders.documentations.cart import ADD_TO_CART_RESPONSES
 from pizzami.orders.documentations.cart import MY_CART_RESPONSES
 from pizzami.orders.documentations.order import CREATE_OR_UPDATE_ORDER_RESPONSES
 from pizzami.orders.documentations.order import SUBMIT_MY_ORDER_RESPONSES
+from pizzami.orders.documentations.order import UPDATE_ORDER_STATUS_RESPONSES
