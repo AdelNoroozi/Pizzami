@@ -26,7 +26,7 @@ def create_or_update_order(data: dict, user: BaseUser) -> ReturnDict[Order] | No
 
 @transaction.atomic
 def submit_my_order(user: BaseUser) -> (bool, str):
-    order = get_object_or_404(Order, user=user.profile, status=Order.STATUS_CREATED)
+    order = get_object_or_404(Order, cart__user=user.profile, status=Order.STATUS_CREATED)
     if order.has_delivery is None:
         return False, _("must determine whether the order has delivery or not.")
     order.status = Order.STATUS_READY_TO_PAY
