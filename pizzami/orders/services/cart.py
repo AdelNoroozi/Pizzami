@@ -12,7 +12,7 @@ from pizzami.users.models import BaseUser
 def add_to_cart(food_id: str, count: int, user: BaseUser) -> Cart:
     profile = user.profile
     cart = get_or_create_cart(user=profile)
-    if cart.order:
+    if Order.objects.filter(cart=cart).exists():
         from pizzami.orders.services import change_order_status
         change_order_status(order=cart.order, status=Order.STATUS_CREATED)
     food = get_object_or_404(Food, id=food_id, is_active=True)
