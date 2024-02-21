@@ -134,6 +134,7 @@ class CartItem(TimeStampedBaseModel):
 
 
 class Order(TimeStampedBaseModel):
+    STATUS_CREATED = "CRT"
     STATUS_READY_TO_PAY = "RTP"
     STATUS_PAID = "PD"
     STATUS_REJECTED = "RJC"
@@ -141,6 +142,7 @@ class Order(TimeStampedBaseModel):
     STATUS_DELIVERED = "DLV"
 
     STATUS_CHOICES = (
+        (STATUS_CREATED, "created"),
         (STATUS_READY_TO_PAY, "ready to pay"),
         (STATUS_PAID, "paid"),
         (STATUS_REJECTED, "rejected"),
@@ -155,7 +157,7 @@ class Order(TimeStampedBaseModel):
                                  verbose_name=_("discount"))
     has_delivery = models.BooleanField(blank=True, null=True, default=None, verbose_name=_("has_delivery"))
     address = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("address"))
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_READY_TO_PAY,
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_CREATED,
                               verbose_name=_("status"))
     final_value = models.FloatField(verbose_name=_("total value"))
 
