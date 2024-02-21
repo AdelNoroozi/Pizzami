@@ -22,7 +22,7 @@ def create_or_update_order(data: dict, user: BaseUser) -> ReturnDict[Order] | No
     if cart.items.count() == 0:
         return None
     orders = Order.objects.filter(cart=cart)
-    if orders.exists:
+    if orders.exists():
         order = orders.first()
         change_order_status(order=order, status=Order.STATUS_CREATED)
         serializer = OrderInputSerializer(instance=order, data=data, partial=True, context={"cart": cart})
