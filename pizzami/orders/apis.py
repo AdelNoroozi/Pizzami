@@ -12,9 +12,9 @@ from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOU
     INQUIRY_DISCOUNT_RESPONSES, CREATE_OR_UPDATE_ORDER_RESPONSES, SUBMIT_MY_ORDER_RESPONSES
 from pizzami.orders.selectors import has_discount_orders, get_or_create_cart, inquiry_discount_by_code
 from pizzami.orders.serializers import DiscountInputSerializer, CartSerializer, CartItemInputSerializer, \
-    DiscountInquirySerializer, DiscountBaseOutputSerializer, OrderInputSerializer
+    DiscountInquirySerializer, DiscountBaseOutputSerializer, OrderInputSerializer, PaymentGenericSerializer
 from pizzami.orders.services import get_discount_list, create_discount, delete_discount, update_discount, add_to_cart, \
-    create_or_update_order, submit_my_order
+    create_or_update_order, submit_my_order, create_payment
 
 
 class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -155,3 +155,19 @@ class SubmitMyOrderAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         else:
             res_status = status.HTTP_200_OK
         return Response(data={"message": message}, status=res_status)
+
+
+class PaymentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "GET": [IsAuthenticated],
+        # must be done by payment system API and this is just mock for now
+        "POST": [IsAuthenticatedAndNotAdmin]
+    }
+
+    @extend_schema(
+        tags=['Orders'],
+        request=PaymentGenericSerializer
+    )
+    def post(self, request):
+        payment_data = create_payment(data=request.data)
+        return Response(data=payment_data, status=status.HTTP_201_CREATED)

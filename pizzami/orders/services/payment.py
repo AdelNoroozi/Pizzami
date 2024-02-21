@@ -2,7 +2,7 @@ from django.db import transaction
 from rest_framework.utils.serializer_helpers import ReturnDict
 
 from pizzami.foods.services import add_food_ordered_count
-from pizzami.orders.models import Payment, Order
+from pizzami.orders.models import Payment, Order, CartItem
 from pizzami.orders.serializers import PaymentGenericSerializer
 from pizzami.orders.services import change_order_status
 
@@ -17,7 +17,7 @@ def create_payment(data: dict) -> ReturnDict[Payment]:
     cart = order.cart
     cart.is_alive = False
     cart.save()
-    items = cart.items
+    items = CartItem.objects.filter(cart=cart)
     for item in items:
         add_food_ordered_count(food=item.food, count=item.count)
     return serializer.data
