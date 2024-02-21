@@ -159,8 +159,6 @@ class Order(TimeStampedBaseModel):
                               verbose_name=_("status"))
     final_value = models.FloatField(verbose_name=_("total value"))
 
-    main_fk_field = "cart__user"
-
     def __str__(self):
         return f"{self.cart.__str__()} order"
 
