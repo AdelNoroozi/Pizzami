@@ -47,10 +47,12 @@ def submit_my_order(user: BaseUser) -> (bool, str):
 def update_order_status(order_id: uuid, status: str) -> (bool, str):
     order = get_object_or_404(Order, id=order_id)
     current_status = order.status
-    if current_status not in [Order.STATUS_CREATED, Order.STATUS_READY_TO_PAY]:
+    if current_status in [Order.STATUS_CREATED, Order.STATUS_READY_TO_PAY]:
         return False, _("order is not paid yet.")
     if current_status in [Order.STATUS_REJECTED, Order.STATUS_DELIVERED]:
         return False, _("can't change status of delivered or rejected orders")
+    if current_status == status:
+        return False, _(f"order is already in {status} status")
     if status == Order.STATUS_REJECTED:
         payment_data = {
             "order": order,
