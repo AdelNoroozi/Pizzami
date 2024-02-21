@@ -10,3 +10,8 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ("id", "created_at", "items", "total_value")
+
+
+class CartCompleteOutputsSerializer(CartSerializer):
+    class Meta(CartSerializer.Meta):
+        fields = "__all__"
