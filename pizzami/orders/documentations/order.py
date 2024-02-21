@@ -31,3 +31,23 @@ CREATE_OR_UPDATE_ORDER_RESPONSES = {
     403: ORDER_403_RESPONSE,
     406: CREATE_OR_UPDATE_ORDER_406_RESPONSE
 }
+
+SUBMIT_MY_ORDER_200_RESPONSE = OpenApiResponse(
+    description="order submitted successfully."
+)
+
+SUBMIT_MY_ORDER_404_RESPONSE = OpenApiResponse(
+    description="you don't have an order in 'created' status."
+)
+
+SUBMIT_MY_ORDER_406_RESPONSE = OpenApiResponse(
+    description="something is wrong with your order. e.g: order's delivery status not determined."
+)
+
+SUBMIT_MY_ORDER_RESPONSES = {
+    200: SUBMIT_MY_ORDER_200_RESPONSE,
+    401: ORDER_401_RESPONSE,
+    403: ORDER_403_RESPONSE,
+    404: SUBMIT_MY_ORDER_404_RESPONSE,
+    406: SUBMIT_MY_ORDER_406_RESPONSE
+}

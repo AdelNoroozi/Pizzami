@@ -9,12 +9,12 @@ from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS, \
     DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES, ADD_TO_CART_RESPONSES, MY_CART_RESPONSES, \
-    INQUIRY_DISCOUNT_RESPONSES, CREATE_OR_UPDATE_ORDER_RESPONSES
+    INQUIRY_DISCOUNT_RESPONSES, CREATE_OR_UPDATE_ORDER_RESPONSES, SUBMIT_MY_ORDER_RESPONSES
 from pizzami.orders.selectors import has_discount_orders, get_or_create_cart, inquiry_discount_by_code
 from pizzami.orders.serializers import DiscountInputSerializer, CartSerializer, CartItemInputSerializer, \
     DiscountInquirySerializer, DiscountBaseOutputSerializer, OrderInputSerializer
-from pizzami.orders.services import get_discount_list, create_discount, delete_discount, update_discount, add_to_cart
-from pizzami.orders.services.order import create_or_update_order
+from pizzami.orders.services import get_discount_list, create_discount, delete_discount, update_discount, add_to_cart, \
+    create_or_update_order, submit_my_order
 
 
 class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -137,3 +137,21 @@ class OrdersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         if order_data is None:
             return Response(data={"error": "cart is empty"}, status=status.HTTP_406_NOT_ACCEPTABLE)
         return Response(data=order_data, status=status.HTTP_200_OK)
+
+
+class SubmitMyOrderAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "PATCH": [IsAuthenticatedAndNotAdmin]
+    }
+
+    @extend_schema(
+        tags=['Orders'],
+        responses=SUBMIT_MY_ORDER_RESPONSES
+    )
+    def patch(self, request, **kwargs):
+        done, message = submit_my_order(user=request.user)
+        if not done:
+            res_status = status.HTTP_406_NOT_ACCEPTABLE
+        else:
+            res_status = status.HTTP_200_OK
+        return Response(data={"message": message}, status=res_status)
