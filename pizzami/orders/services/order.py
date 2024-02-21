@@ -9,13 +9,21 @@ from pizzami.orders.serializers import OrderInputSerializer, OrderDetailedOutput
 from pizzami.users.models import BaseUser
 
 
+def change_order_status(order: Order, status: str):
+    order.status = status
+    order.save()
+
+
+@transaction.atomic
 def create_or_update_order(data: dict, user: BaseUser) -> ReturnDict[Order] | None:
     cart = get_or_create_cart(user=user.profile)
     if cart.items.count() == 0:
         return None
     orders = Order.objects.filter(cart=cart)
     if orders.exists:
-        serializer = OrderInputSerializer(instance=orders.first(), data=data, partial=True, context={"cart": cart})
+        order = orders.first()
+        change_order_status(order=order, status=Order.STATUS_CREATED)
+        serializer = OrderInputSerializer(instance=order, data=data, partial=True, context={"cart": cart})
     else:
         serializer = OrderInputSerializer(data=data, context={"cart": cart})
     serializer.is_valid(raise_exception=True)
@@ -29,6 +37,5 @@ def submit_my_order(user: BaseUser) -> (bool, str):
     order = get_object_or_404(Order, cart__user=user.profile, status=Order.STATUS_CREATED)
     if order.has_delivery is None:
         return False, _("must determine whether the order has delivery or not.")
-    order.status = Order.STATUS_READY_TO_PAY
-    order.save()
+    change_order_status(order=order, status=Order.STATUS_READY_TO_PAY)
     return True, _("done")
