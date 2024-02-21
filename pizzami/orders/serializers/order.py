@@ -5,6 +5,7 @@ from rest_framework.exceptions import ValidationError
 
 from pizzami.orders.models import Order, Discount
 from pizzami.orders.selectors import inquiry_discount_by_id
+from pizzami.orders.serializers import CartSerializer
 
 
 class OrderInputSerializer(serializers.ModelSerializer):
@@ -49,3 +50,11 @@ class OrderInputSerializer(serializers.ModelSerializer):
                     final_value = value
         validated_data["final_value"] = final_value
         return super().save(**kwargs)
+
+
+class OrderDetailedOutputSerializer(serializers.ModelSerializer):
+    cart = CartSerializer(many=False)
+
+    class Meta:
+        model = Order
+        fields = "__all__"

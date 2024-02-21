@@ -5,3 +5,5 @@ from pizzami.orders.serializers.discount import DiscountInquirySerializer
 from pizzami.orders.serializers.cart_item import CartItemSerializer
 from pizzami.orders.serializers.cart import CartSerializer
 from pizzami.orders.serializers.cart_item import CartItemInputSerializer
+from pizzami.orders.serializers.order import OrderInputSerializer
+from pizzami.orders.serializers.order import OrderDetailedOutputSerializer
