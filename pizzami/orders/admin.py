@@ -1,5 +1,8 @@
+from typing import Optional
+
 from admin_numeric_filter.admin import NumericFilterModelAdmin, SliderNumericFilter
 from django.contrib import admin
+from django.http import HttpRequest
 
 from pizzami.common.admin import BaseModelAdmin
 from pizzami.orders.models import Discount, Order, Payment
@@ -26,15 +29,32 @@ class OrderAdmin(BaseModelAdmin, NumericFilterModelAdmin):
     search_fields = ["__str__"]
     ordering = BaseModelAdmin.ordering + ["final_value"]
 
+    def has_add_permission(self, request: HttpRequest) -> bool:
+        return False
+
+    def has_delete_permission(self, request: HttpRequest, obj: Optional = ...) -> bool:
+        return False
+
+    def has_change_permission(self, request: HttpRequest, obj: Optional = ...) -> bool:
+        return False
+
 
 @admin.register(Payment)
 class PaymentAdmin(BaseModelAdmin, NumericFilterModelAdmin):
-    list_display = ["__str__", "get_total_value"] + BaseModelAdmin.list_display
+    list_display = ["__str__", "get_final_value"] + BaseModelAdmin.list_display
     list_editable = []
     list_filter = BaseModelAdmin.list_filter + ["is_income"]
     search_fields = ["__str__"]
 
     @admin.display(ordering="order__final_value")
-    def get_total_value(self, obj):
-        return obj.order.total_value
+    def get_final_value(self, obj):
+        return obj.order.final_value
 
+    def has_add_permission(self, request: HttpRequest) -> bool:
+        return False
+
+    def has_delete_permission(self, request: HttpRequest, obj: Optional = ...) -> bool:
+        return False
+
+    def has_change_permission(self, request: HttpRequest, obj: Optional = ...) -> bool:
+        return False
