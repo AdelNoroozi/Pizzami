@@ -166,7 +166,8 @@ class PaymentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=['Orders'],
-        request=PaymentGenericSerializer
+        request=PaymentGenericSerializer,
+        description="don't use. this has no real function."
     )
     def post(self, request):
         payment_data = create_payment(data=request.data)
