@@ -7,3 +7,4 @@ from pizzami.foods.services.food import create_food
 from pizzami.foods.services.food import retrieve_food
 from pizzami.foods.services.food import update_food
 from pizzami.foods.services.food import confirm_food
+from pizzami.foods.services.food import add_food_ordered_count

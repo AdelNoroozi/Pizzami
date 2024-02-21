@@ -112,3 +112,8 @@ def confirm_food(food_id: uuid, action: str) -> Union[None, bool]:
             return True
 
     return None
+
+
+def add_food_ordered_count(food: Food, count: int):
+    food.ordered_count = food.ordered_count + count
+    food.save()
