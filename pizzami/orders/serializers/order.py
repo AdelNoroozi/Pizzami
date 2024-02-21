@@ -14,7 +14,7 @@ class OrderInputSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if data.get("discount"):
-            discount = inquiry_discount_by_id(discount_id=data.get("discount"), user=self.context.get("user"))
+            discount = inquiry_discount_by_id(discount_id=data.get("discount"), user=self.context.get("cart").user)
             if not discount:
                 raise ValidationError(_("invalid discount"))
             else:
