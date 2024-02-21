@@ -175,6 +175,7 @@ class Order(TimeStampedBaseModel):
         ]
 
 
+# everything about payment is just mock, they are all defined because of integration
 class Payment(TimeStampedBaseModel):
     order = models.ForeignKey(Order, on_delete=models.RESTRICT, related_name="payments", verbose_name=_("order"))
     is_income = models.BooleanField(default=True, verbose_name=_("is income"))
