@@ -94,6 +94,8 @@ class Cart(TimeStampedBaseModel):
     is_alive = models.BooleanField(default=True)
     user = models.ForeignKey(Profile, on_delete=models.RESTRICT, related_name="carts", verbose_name=_("user"))
 
+    main_fk_field = "user"
+
     def __str__(self):
         return f"{self.user.public_name} - {self.created_at}"
 
@@ -118,6 +120,8 @@ class CartItem(TimeStampedBaseModel):
     food = models.ForeignKey(Food, on_delete=models.RESTRICT, related_name="cart_items", verbose_name=_("food"))
     count = models.PositiveIntegerField(validators=[MinValueValidator(1)], verbose_name=_("count"))
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items", verbose_name=_("cart"))
+
+    main_fk_field = "cart"
 
     def __str__(self):
         return f"{self.cart.__str__()} - {self.food.name}"
@@ -155,6 +159,8 @@ class Order(TimeStampedBaseModel):
                               verbose_name=_("status"))
     final_value = models.FloatField(verbose_name=_("total value"))
 
+    main_fk_field = "cart__user"
+
     def __str__(self):
         return f"{self.cart.__str__()} order"
 
@@ -174,6 +180,8 @@ class Payment(TimeStampedBaseModel):
     is_income = models.BooleanField(default=True, verbose_name=_("is income"))
     tracking_code = models.CharField(max_length=256, verbose_name=_("tracking code"))
     payment_data = models.TextField(blank=True, null=True, verbose_name=_("payment data"))
+
+    main_fk_field = "order"
 
     def __str__(self):
         if self.is_income:
