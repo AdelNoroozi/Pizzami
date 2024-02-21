@@ -38,7 +38,7 @@ class OrderInputSerializer(serializers.ModelSerializer):
         cart = self.context.get("cart")
         discount = self.validated_data.get("discount")
         validated_data["cart"] = cart
-        final_value = cart.total_value
+        final_value = cart.total_value()
         if discount:
             discount_type = self.context.get("discount_type")
             discount_value = self.context.get("discount_value")
