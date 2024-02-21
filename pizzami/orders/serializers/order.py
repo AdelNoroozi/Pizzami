@@ -60,3 +60,13 @@ class OrderDetailedOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = "__all__"
+
+
+class UpdateOrderStatusSerializer(serializers.Serializer):
+    STATUS_MANUAL_CHOICES = (
+        (Order.STATUS_REJECTED, "rejected"),
+        (Order.STATUS_IN_PROGRESS, "in progress"),
+        (Order.STATUS_DELIVERED, "delivered"),
+    )
+    status = serializers.ChoiceField(choices=STATUS_MANUAL_CHOICES)
+
