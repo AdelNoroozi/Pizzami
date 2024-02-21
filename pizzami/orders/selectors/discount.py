@@ -49,11 +49,24 @@ def delete_discount(discount: Discount):
     discount.delete()
 
 
-def inquiry_discount_by_code(code: str, user: Profile) -> str | None:
+def inquiry_discount(discount: Discount, user_id) -> Discount | None:
+    if discount.is_public or (
+            discount.specified_to_type == Discount.SPECIFIED_TO_USER and discount.object_id == str(user_id)):
+        return discount
+    return None
+
+
+def inquiry_discount_by_code(code: str, user: Profile) -> Discount | None:
     discounts = Discount.objects.active().filter(code=code)
     if discounts.exists():
         discount = discounts.first()
-        if discount.is_public or (
-                discount.specified_to_type == Discount.SPECIFIED_TO_USER and discount.object_id == str(user.id)):
-            return discount
+        return inquiry_discount(discount=discount, user_id=user.id)
+    return None
+
+
+def inquiry_discount_by_id(discount_id: str, user: Profile) -> Discount | None:
+    discounts = Discount.objects.active().filter(id=discount_id)
+    if discounts.exists():
+        discount = discounts.first()
+        return inquiry_discount(discount=discount, user_id=user.id)
     return None
