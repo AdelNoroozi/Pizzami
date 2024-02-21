@@ -9,11 +9,12 @@ from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS, \
     DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES, ADD_TO_CART_RESPONSES, MY_CART_RESPONSES, \
-    INQUIRY_DISCOUNT_RESPONSES
+    INQUIRY_DISCOUNT_RESPONSES, CREATE_OR_UPDATE_ORDER_RESPONSES
 from pizzami.orders.selectors import has_discount_orders, get_or_create_cart, inquiry_discount_by_code
 from pizzami.orders.serializers import DiscountInputSerializer, CartSerializer, CartItemInputSerializer, \
-    DiscountInquirySerializer, DiscountBaseOutputSerializer
+    DiscountInquirySerializer, DiscountBaseOutputSerializer, OrderInputSerializer
 from pizzami.orders.services import get_discount_list, create_discount, delete_discount, update_discount, add_to_cart
+from pizzami.orders.services.order import create_or_update_order
 
 
 class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -118,3 +119,21 @@ class MyCartAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         cart = get_or_create_cart(user=request.user.profile)
         serializer = CartSerializer(cart, many=False)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class OrdersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "GET": [IsAuthenticated],
+        "PUT": [IsAuthenticatedAndNotAdmin]
+    }
+
+    @extend_schema(
+        tags=['Orders'],
+        request=OrderInputSerializer,
+        responses=CREATE_OR_UPDATE_ORDER_RESPONSES
+    )
+    def put(self, request, **kwargs):
+        order_data = create_or_update_order(data=request.data, user=request.user)
+        if order_data is None:
+            return Response(data={"error": "cart is empty"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response(data=order_data, status=status.HTTP_200_OK)
