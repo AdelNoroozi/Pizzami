@@ -11,4 +11,3 @@ from pizzami.orders.serializers.order import OrderDetailedOutputSerializer
 from pizzami.orders.serializers.order import OrderBaseOutputSerializer
 from pizzami.orders.serializers.order import UpdateOrderStatusSerializer
 from pizzami.orders.serializers.payment import PaymentGenericSerializer
-from pizzami.orders.serializers.payment import PaymentReferenceOutput

@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 from pizzami.orders.models import Order, Discount
 from pizzami.orders.selectors import inquiry_discount_by_id
 from pizzami.orders.serializers import CartCompleteOutputsSerializer, DiscountBaseOutputSerializer
+from pizzami.orders.serializers.payment import PaymentReferenceOutput
 from pizzami.users.serializers import ProfileReferenceSerializer
 
 
@@ -57,6 +58,7 @@ class OrderInputSerializer(serializers.ModelSerializer):
 
 class OrderBaseOutputSerializer(serializers.ModelSerializer):
     cart__user = ProfileReferenceSerializer(many=False)
+    payment = PaymentReferenceOutput(many=False)
 
     class Meta:
         model = Order
@@ -66,6 +68,7 @@ class OrderBaseOutputSerializer(serializers.ModelSerializer):
 class OrderDetailedOutputSerializer(serializers.ModelSerializer):
     cart = CartCompleteOutputsSerializer(many=False)
     discount = DiscountBaseOutputSerializer(many=False)
+    payment = PaymentReferenceOutput(many=False)
 
     class Meta:
         model = Order
