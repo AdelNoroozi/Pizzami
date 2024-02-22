@@ -16,7 +16,7 @@ from pizzami.orders.serializers import DiscountInputSerializer, CartSerializer, 
     DiscountInquirySerializer, DiscountBaseOutputSerializer, OrderInputSerializer, PaymentGenericSerializer, \
     UpdateOrderStatusSerializer
 from pizzami.orders.services import get_discount_list, create_discount, delete_discount, update_discount, add_to_cart, \
-    create_or_update_order, submit_my_order, create_payment, update_order_status
+    create_or_update_order, submit_my_order, create_payment, update_order_status, get_orders
 
 
 class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -139,6 +139,22 @@ class OrdersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         if order_data is None:
             return Response(data={"error": "cart is empty"}, status=status.HTTP_406_NOT_ACCEPTABLE)
         return Response(data=order_data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        tags=['Orders'],
+        responses=CREATE_OR_UPDATE_ORDER_RESPONSES
+    )
+    def get(self, request):
+        query_dict = request.GET
+        user = request
+        if not query_dict.get("set") == "mine":
+            if not user.is_staff:
+                return Response(data={"error": "non staff users can only access their own orders"},
+                                status=status.HTTP_403_FORBIDDEN)
+            data = get_orders(query_dict=query_dict, user_created=False)
+        else:
+            data = get_orders(query_dict=query_dict, user_created=True, user=user)
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 class OrderAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
