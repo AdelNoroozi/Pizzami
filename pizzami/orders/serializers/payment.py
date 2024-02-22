@@ -13,3 +13,9 @@ class PaymentGenericSerializer(serializers.ModelSerializer):
     def validate_order(self, value):
         if value.status != Order.STATUS_READY_TO_PAY:
             raise ValidationError(_("invalid order"))
+
+
+class PaymentReferenceOutput(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ("id", "tracking_code", "payment_data")
