@@ -1,13 +1,14 @@
 import uuid
 
 from django.db import transaction
+from django.http import QueryDict
 from django.utils.translation import gettext_lazy as _
 from rest_framework.generics import get_object_or_404
-from rest_framework.utils.serializer_helpers import ReturnDict
+from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 from pizzami.orders.models import Order
-from pizzami.orders.selectors import get_or_create_cart, create_payment
-from pizzami.orders.serializers import OrderInputSerializer, OrderDetailedOutputSerializer
+from pizzami.orders.selectors import get_or_create_cart, create_payment, get_orders as get_orders_selector
+from pizzami.orders.serializers import OrderInputSerializer, OrderDetailedOutputSerializer, OrderBaseOutputSerializer
 from pizzami.users.models import BaseUser
 
 
@@ -65,3 +66,11 @@ def update_order_status(order_id: uuid, status: str) -> (bool, str):
     change_order_status(order=order, status=status)
     return True, _(f"order status changed to {status}")
 
+
+def get_orders(query_dict: QueryDict, user_created: bool, user: BaseUser = None) -> ReturnList[Order]:
+    if user_created:
+        queryset = get_orders_selector(user_created=True, user=user.profile)
+    else:
+        queryset = get_orders_selector(user_created=False)
+    serializer = OrderBaseOutputSerializer(queryset, many=True)
+    return serializer.data

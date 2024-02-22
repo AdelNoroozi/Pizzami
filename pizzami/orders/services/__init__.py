@@ -7,4 +7,5 @@ from pizzami.orders.services.order import create_or_update_order
 from pizzami.orders.services.order import submit_my_order
 from pizzami.orders.services.order import change_order_status
 from pizzami.orders.services.order import update_order_status
+from pizzami.orders.services.order import get_orders
 from pizzami.orders.services.payment import create_payment
