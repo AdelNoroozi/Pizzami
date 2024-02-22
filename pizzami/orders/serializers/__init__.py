@@ -8,5 +8,6 @@ from pizzami.orders.serializers.cart import  CartCompleteOutputsSerializer
 from pizzami.orders.serializers.cart_item import CartItemInputSerializer
 from pizzami.orders.serializers.order import OrderInputSerializer
 from pizzami.orders.serializers.order import OrderDetailedOutputSerializer
+from pizzami.orders.serializers.order import OrderBaseOutputSerializer
 from pizzami.orders.serializers.order import UpdateOrderStatusSerializer
 from pizzami.orders.serializers.payment import PaymentGenericSerializer
