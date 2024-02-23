@@ -36,3 +36,20 @@ CREATE_ADDRESS_RESPONSES = {
     401: ADDRESSES_401_RESPONSE,
     403: ADDRESSES_403_RESPONSE
 }
+
+UPDATE_ADDRESS_200_RESPONSE = OpenApiResponse(
+    response=AddressOutputSerializer(many=False),
+    description="address updated successfully."
+)
+
+ADDRESS_404_RESPONSE = OpenApiResponse(
+    description="no address with specified id found in your access zone."
+)
+
+UPDATE_ADDRESS_RESPONSES = {
+    200: UPDATE_ADDRESS_200_RESPONSE,
+    400: SAVE_ADDRESS_400_RESPONSE,
+    401: ADDRESSES_401_RESPONSE,
+    403: ADDRESSES_403_RESPONSE,
+    404: ADDRESS_404_RESPONSE
+}
