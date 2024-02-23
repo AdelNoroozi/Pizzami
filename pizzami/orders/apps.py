@@ -7,5 +7,6 @@ class OrdersConfig(AppConfig):
 
     def ready(self):
         from config import scheduler
-        from pizzami.orders.tasks import update_discount_status
-        scheduler.start(task=update_discount_status)
+        from pizzami.orders.tasks import update_discount_status, delete_dead_orders
+        scheduler.start(task=update_discount_status, interval=30)
+        scheduler.start(task=delete_dead_orders, interval=1800)
