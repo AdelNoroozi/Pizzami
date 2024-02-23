@@ -18,3 +18,7 @@ def search_order(queryset: QuerySet[Order], search_param: str) -> QuerySet[Order
         Q(cart__items__food__category__name__icontains=search_param) |
         Q(cart__user__public_name__icontains=search_param)
     ).distinct()
+
+
+def order_orders(queryset: QuerySet[Order], order_param: str) -> QuerySet[Order]:
+    return queryset.order_by(order_param)

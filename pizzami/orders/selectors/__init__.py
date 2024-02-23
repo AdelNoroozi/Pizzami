@@ -14,3 +14,4 @@ from pizzami.orders.selectors.cart import delete_cart_item
 from pizzami.orders.selectors.payment import create_payment
 from pizzami.orders.selectors.order import get_orders
 from pizzami.orders.selectors.order import search_order
+from pizzami.orders.selectors.order import order_orders
