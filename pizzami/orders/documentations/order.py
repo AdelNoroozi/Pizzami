@@ -108,3 +108,19 @@ GET_ORDERS_RESPONSES = {
     401: ORDER_401_RESPONSE,
     403: ORDER_403_RESPONSE
 }
+
+RETRIEVE_ORDER_200_RESPONSE = OpenApiResponse(
+    response=OrderDetailedOutputSerializer(many=False),
+    description="returns a single order's data. staff users can access all data but normal users can only access "
+                "their own orders."
+)
+
+RETRIEVE_ORDER_404_RESPONSE = OpenApiResponse(
+    description="no order found with that id in your access zone."
+)
+
+RETRIEVE_ORDER_RESPONSES = {
+    200: RETRIEVE_ORDER_200_RESPONSE,
+    401: ORDER_401_RESPONSE,
+    404: RETRIEVE_ORDER_404_RESPONSE
+}

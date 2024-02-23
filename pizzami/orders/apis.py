@@ -10,7 +10,7 @@ from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS, \
     DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES, ADD_TO_CART_RESPONSES, MY_CART_RESPONSES, \
     INQUIRY_DISCOUNT_RESPONSES, CREATE_OR_UPDATE_ORDER_RESPONSES, SUBMIT_MY_ORDER_RESPONSES, \
-    UPDATE_ORDER_STATUS_RESPONSES, GET_ORDERS_RESPONSES, GET_ORDERS_PARAMETERS
+    UPDATE_ORDER_STATUS_RESPONSES, GET_ORDERS_RESPONSES, GET_ORDERS_PARAMETERS, RETRIEVE_ORDER_RESPONSES
 from pizzami.orders.selectors import has_discount_orders, get_or_create_cart, inquiry_discount_by_code
 from pizzami.orders.serializers import DiscountInputSerializer, CartSerializer, CartItemInputSerializer, \
     DiscountInquirySerializer, DiscountBaseOutputSerializer, OrderInputSerializer, PaymentGenericSerializer, \
@@ -184,7 +184,8 @@ class OrderAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data={"message": response_message}, status=res_status)
 
     @extend_schema(
-        tags=['Orders']
+        tags=['Orders'],
+        responses=RETRIEVE_ORDER_RESPONSES
     )
     def get(self, request, **kwargs):
         _id = kwargs.get("id")

@@ -11,3 +11,4 @@ from pizzami.orders.documentations.order import SUBMIT_MY_ORDER_RESPONSES
 from pizzami.orders.documentations.order import UPDATE_ORDER_STATUS_RESPONSES
 from pizzami.orders.documentations.order import GET_ORDERS_PARAMETERS
 from pizzami.orders.documentations.order import GET_ORDERS_RESPONSES
+from pizzami.orders.documentations.order import RETRIEVE_ORDER_RESPONSES
