@@ -9,7 +9,7 @@ from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
     AddressInputSerializer
-from pizzami.users.services import register, get_profile, get_my_addresses, create_address
+from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address
 
 
 class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -57,4 +57,20 @@ class MyAddressesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     )
     def post(self, request):
         data = create_address(data=request.data, user=request.user)
+        return Response(data, status=status.HTTP_201_CREATED)
+
+
+class MyAddressAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "PUT": [IsAuthenticatedAndNotAdmin],
+        "DELETE": [IsAuthenticatedAndNotAdmin]
+    }
+
+    @extend_schema(
+        tags=['Users'],
+        request=AddressInputSerializer
+    )
+    def put(self, request, **kwargs):
+        _id = kwargs.get("id")
+        data = update_address(address_id=_id, data=request.data, user=request.user)
         return Response(data, status=status.HTTP_201_CREATED)
