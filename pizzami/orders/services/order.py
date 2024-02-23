@@ -11,7 +11,7 @@ from pizzami.orders.models import Order
 from pizzami.orders.selectors import get_or_create_cart, create_payment, get_orders as get_orders_selector, \
     search_order, order_orders
 from pizzami.orders.serializers import OrderInputSerializer, OrderDetailedOutputSerializer, OrderBaseOutputSerializer
-from pizzami.users.models import BaseUser
+from pizzami.users.models import BaseUser, Profile
 
 
 def change_order_status(order: Order, status: str):
@@ -82,4 +82,13 @@ def get_orders(query_dict: QueryDict, user_created: bool, user: BaseUser = None)
     if order_param and order_param.lstrip("-") in ["final_value", "position", "created_at", "modified_at"]:
         queryset = order_orders(queryset=queryset, order_param=order_param)
     serializer = OrderBaseOutputSerializer(queryset, many=True)
+    return serializer.data
+
+
+def retrieve_order(order_id: uuid, is_user_staff: bool, user: Profile) -> ReturnDict[Order]:
+    if is_user_staff:
+        order = get_object_or_404(Order, id=order_id)
+    else:
+        order = get_object_or_404(Order, id=order_id, is_active=True, user=user)
+    serializer = OrderDetailedOutputSerializer(order)
     return serializer.data
