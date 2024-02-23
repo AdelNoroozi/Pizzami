@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 from pizzami.common.models import TimeStampedBaseModel
 from pizzami.users.managers import BaseUserManager
@@ -48,7 +49,7 @@ class Address(TimeStampedBaseModel):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="addresses", verbose_name=_("user"))
     title = models.CharField(max_length=32, verbose_name=_("title"))
     address_str = models.TextField(verbose_name=_("address str"))
-    phone_number = models.CharField(max_length=15, verbose_name=_("phone number"))
+    phone_number = PhoneNumberField(verbose_name=_("phone number"))
 
     def __str__(self):
         return self.title
