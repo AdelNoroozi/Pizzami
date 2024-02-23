@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -42,10 +42,12 @@ class MyAddressesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=['Users'],
+        parameters=[OpenApiParameter(name="search", description="can be any string.")],
         responses=GET_ADDRESSES_RESPONSES
     )
     def get(self, request):
-        data = get_my_addresses(user=request.user)
+        search_param = request.GET.get("search")
+        data = get_my_addresses(user=request.user, search_param=search_param)
         return Response(data, status=status.HTTP_200_OK)
 
     @extend_schema(

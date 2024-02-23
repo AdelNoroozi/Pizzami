@@ -1,13 +1,15 @@
 from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 from pizzami.users.models import BaseUser, Address
-from pizzami.users.selectors import get_addresses_by_user
+from pizzami.users.selectors import get_addresses_by_user, search_address
 from pizzami.users.serializers import AddressOutputSerializer, AddressInputSerializer
 
 
 def get_my_addresses(user: BaseUser, search_param: str = None) -> ReturnList[Address]:
-    addresses = get_addresses_by_user(user=user.profile)
-    serializer = AddressOutputSerializer(addresses, many=True)
+    queryset = get_addresses_by_user(user=user.profile)
+    if search_param:
+        queryset = search_address(queryset=queryset, search_param=search_param)
+    serializer = AddressOutputSerializer(queryset, many=True)
     return serializer.data
 
 
