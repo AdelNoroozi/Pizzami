@@ -1,3 +1,6 @@
+import uuid
+
+from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 from pizzami.users.models import BaseUser, Address
@@ -17,5 +20,14 @@ def create_address(data: dict, user: BaseUser) -> ReturnDict[Address]:
     serializer = AddressInputSerializer(data=data, context={"user": user.profile})
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    serializer = AddressOutputSerializer(serializer.instance)
-    return serializer.data
+    response_serializer = AddressOutputSerializer(serializer.instance)
+    return response_serializer.data
+
+
+def update_address(address_id: uuid, data: dict, user: BaseUser) -> ReturnDict[Address]:
+    address = get_object_or_404(Address, id=address_id, is_active=True, user=user.profile)
+    serializer = AddressInputSerializer(instance=address, data=data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    response_serializer = AddressOutputSerializer(serializer.instance)
+    return response_serializer.data
