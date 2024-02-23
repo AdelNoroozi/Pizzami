@@ -12,7 +12,7 @@ class AddressOutputSerializer(serializers.ModelSerializer):
 class AddressInputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        exclude = ("title", "address_str", "phone_number")
+        fields = ("title", "address_str", "phone_number")
 
     def create(self, validated_data):
         validated_data["user"] = self.context.get("user")
