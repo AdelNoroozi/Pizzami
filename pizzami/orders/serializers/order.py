@@ -57,18 +57,21 @@ class OrderInputSerializer(serializers.ModelSerializer):
 
 
 class OrderBaseOutputSerializer(serializers.ModelSerializer):
-    cart__user = ProfileReferenceSerializer(many=False)
-    payment = PaymentReferenceOutput(many=False)
+    cart_user = serializers.SerializerMethodField()
+    payments = PaymentReferenceOutput(many=True)
 
     class Meta:
         model = Order
-        fields = ("id", "cart__user", "has_delivery", "address", "status", "final_value")
+        fields = ("id", "cart_user", "has_delivery", "address", "status", "final_value", "payments")
+
+    def get_cart_user(self, obj):
+        return ProfileReferenceSerializer(obj.cart.user).data
 
 
 class OrderDetailedOutputSerializer(serializers.ModelSerializer):
     cart = CartCompleteOutputsSerializer(many=False)
     discount = DiscountBaseOutputSerializer(many=False)
-    payment = PaymentReferenceOutput(many=False)
+    payments = PaymentReferenceOutput(many=True)
 
     class Meta:
         model = Order
