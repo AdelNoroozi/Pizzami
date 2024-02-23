@@ -82,7 +82,9 @@ UPDATE_ORDER_STATUS_RESPONSES = {
 
 
 GET_ORDERS_PARAMETERS = [
-    OpenApiParameter(name="set", description="can be null or mine.")
+    OpenApiParameter(name="set", description="can be null or mine."),
+    OpenApiParameter(name="search", description="can be any string. this will be done on addresses, foods' name, "
+                                                "foods' category & user's name."),
 ]
 
 GET_ORDERS_200_RESPONSE = OpenApiResponse(

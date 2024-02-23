@@ -7,7 +7,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 from pizzami.orders.models import Order
-from pizzami.orders.selectors import get_or_create_cart, create_payment, get_orders as get_orders_selector
+from pizzami.orders.selectors import get_or_create_cart, create_payment, get_orders as get_orders_selector, search_order
 from pizzami.orders.serializers import OrderInputSerializer, OrderDetailedOutputSerializer, OrderBaseOutputSerializer
 from pizzami.users.models import BaseUser
 
@@ -72,5 +72,8 @@ def get_orders(query_dict: QueryDict, user_created: bool, user: BaseUser = None)
         queryset = get_orders_selector(user_created=True, user=user.profile)
     else:
         queryset = get_orders_selector(user_created=False)
+    search_param = query_dict.get("search")
+    if search_param:
+        queryset = search_order(queryset=queryset, search_param=search_param)
     serializer = OrderBaseOutputSerializer(queryset, many=True)
     return serializer.data
