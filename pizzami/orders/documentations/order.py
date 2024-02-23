@@ -85,6 +85,13 @@ GET_ORDERS_PARAMETERS = [
     OpenApiParameter(name="set", description="can be null or mine."),
     OpenApiParameter(name="search", description="can be any string. this will be done on addresses, foods' name, "
                                                 "foods' category & user's name."),
+    OpenApiParameter(name="is_active", description="must be true or false"),
+    OpenApiParameter(name="has_delivery", description="must be true or false"),
+    OpenApiParameter(name="final_value__gt", description="must be a float"),
+    OpenApiParameter(name="final_value__lt", description="must be a float"),
+    OpenApiParameter(name="cart__items__food", description="must be the id of a food"),
+    OpenApiParameter(name="cart__items__food__category", description="must be the id of a food category"),
+    OpenApiParameter(name="cart__user", description="must be the id of a user profile")
 ]
 
 GET_ORDERS_200_RESPONSE = OpenApiResponse(

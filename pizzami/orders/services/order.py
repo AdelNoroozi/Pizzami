@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
+from pizzami.orders.filters import OrderFilter
 from pizzami.orders.models import Order
 from pizzami.orders.selectors import get_or_create_cart, create_payment, get_orders as get_orders_selector, search_order
 from pizzami.orders.serializers import OrderInputSerializer, OrderDetailedOutputSerializer, OrderBaseOutputSerializer
@@ -75,5 +76,6 @@ def get_orders(query_dict: QueryDict, user_created: bool, user: BaseUser = None)
     search_param = query_dict.get("search")
     if search_param:
         queryset = search_order(queryset=queryset, search_param=search_param)
+    queryset = OrderFilter(query_dict, queryset=queryset).qs
     serializer = OrderBaseOutputSerializer(queryset, many=True)
     return serializer.data
