@@ -16,7 +16,7 @@ from pizzami.orders.serializers import DiscountInputSerializer, CartSerializer, 
     DiscountInquirySerializer, DiscountBaseOutputSerializer, OrderInputSerializer, PaymentGenericSerializer, \
     UpdateOrderStatusSerializer
 from pizzami.orders.services import get_discount_list, create_discount, delete_discount, update_discount, add_to_cart, \
-    create_or_update_order, submit_my_order, create_payment, update_order_status, get_orders
+    create_or_update_order, submit_my_order, create_payment, update_order_status, get_orders, retrieve_order
 
 
 class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -182,6 +182,18 @@ class OrderAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         else:
             res_status = status.HTTP_200_OK
         return Response(data={"message": response_message}, status=res_status)
+
+    @extend_schema(
+        tags=['Orders']
+    )
+    def get(self, request, **kwargs):
+        _id = kwargs.get("id")
+        is_user_staff = request.user.is_staff
+        if is_user_staff:
+            data = retrieve_order(order_id=_id, is_user_staff=True)
+        else:
+            data = retrieve_order(order_id=_id, is_user_staff=False, user=request.user)
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 class SubmitMyOrderAPI(ApiAuthMixin, BasePermissionsMixin, APIView):

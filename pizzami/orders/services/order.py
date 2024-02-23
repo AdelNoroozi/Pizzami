@@ -85,10 +85,10 @@ def get_orders(query_dict: QueryDict, user_created: bool, user: BaseUser = None)
     return serializer.data
 
 
-def retrieve_order(order_id: uuid, is_user_staff: bool, user: Profile) -> ReturnDict[Order]:
+def retrieve_order(order_id: uuid, is_user_staff: bool, user: BaseUser = None) -> ReturnDict[Order]:
     if is_user_staff:
         order = get_object_or_404(Order, id=order_id)
     else:
-        order = get_object_or_404(Order, id=order_id, is_active=True, user=user)
+        order = get_object_or_404(Order, id=order_id, is_active=True, cart__user=user.profile)
     serializer = OrderDetailedOutputSerializer(order)
     return serializer.data
