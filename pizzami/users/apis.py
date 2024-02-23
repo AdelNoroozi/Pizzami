@@ -6,8 +6,9 @@ from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
-from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer
-from pizzami.users.services import register, get_profile, get_my_addresses
+from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
+    AddressInputSerializer
+from pizzami.users.services import register, get_profile, get_my_addresses, create_address
 
 
 class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -44,3 +45,11 @@ class MyAddressesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def get(self, request):
         data = get_my_addresses(user=request.user)
         return Response(data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        tags=['Users'],
+        request=AddressInputSerializer
+    )
+    def post(self, request):
+        data = create_address(data=request.data, user=request.user)
+        return Response(data, status=status.HTTP_201_CREATED)
