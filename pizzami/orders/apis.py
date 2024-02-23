@@ -10,7 +10,7 @@ from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS, \
     DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES, ADD_TO_CART_RESPONSES, MY_CART_RESPONSES, \
     INQUIRY_DISCOUNT_RESPONSES, CREATE_OR_UPDATE_ORDER_RESPONSES, SUBMIT_MY_ORDER_RESPONSES, \
-    UPDATE_ORDER_STATUS_RESPONSES
+    UPDATE_ORDER_STATUS_RESPONSES, GET_ORDERS_RESPONSES, GET_ORDERS_PARAMETERS
 from pizzami.orders.selectors import has_discount_orders, get_or_create_cart, inquiry_discount_by_code
 from pizzami.orders.serializers import DiscountInputSerializer, CartSerializer, CartItemInputSerializer, \
     DiscountInquirySerializer, DiscountBaseOutputSerializer, OrderInputSerializer, PaymentGenericSerializer, \
@@ -142,17 +142,21 @@ class OrdersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=['Orders'],
-        responses=CREATE_OR_UPDATE_ORDER_RESPONSES
+        parameters=GET_ORDERS_PARAMETERS,
+        responses=GET_ORDERS_RESPONSES
     )
     def get(self, request):
         query_dict = request.GET
-        user = request
+        user = request.user
         if not query_dict.get("set") == "mine":
             if not user.is_staff:
                 return Response(data={"error": "non staff users can only access their own orders"},
                                 status=status.HTTP_403_FORBIDDEN)
             data = get_orders(query_dict=query_dict, user_created=False)
         else:
+            if user.is_staff:
+                return Response(data={"error": "only authenticated normal users can access their own orders"},
+                                status=status.HTTP_403_FORBIDDEN)
             data = get_orders(query_dict=query_dict, user_created=True, user=user)
         return Response(data=data, status=status.HTTP_200_OK)
 
