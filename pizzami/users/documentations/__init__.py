@@ -1,0 +1,2 @@
+from pizzami.users.documentations.address import CREATE_ADDRESS_RESPONSES
+from pizzami.users.documentations.address import GET_ADDRESSES_RESPONSES

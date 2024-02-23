@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
+from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
     AddressInputSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address
@@ -40,7 +41,8 @@ class MyAddressesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Users']
+        tags=['Users'],
+        responses=GET_ADDRESSES_RESPONSES
     )
     def get(self, request):
         data = get_my_addresses(user=request.user)
@@ -48,7 +50,8 @@ class MyAddressesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=['Users'],
-        request=AddressInputSerializer
+        request=AddressInputSerializer,
+        responses=CREATE_ADDRESS_RESPONSES
     )
     def post(self, request):
         data = create_address(data=request.data, user=request.user)
