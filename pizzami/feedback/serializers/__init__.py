@@ -1,0 +1,1 @@
+from pizzami.feedback.serializers.rating import RatingInputSerializer
