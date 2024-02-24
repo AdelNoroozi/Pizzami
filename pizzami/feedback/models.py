@@ -40,6 +40,7 @@ class Comment(MPTTModel, TimeStampedBaseModel):
     parent = TreeForeignKey("self", on_delete=models.CASCADE, related_name="children", blank=True, null=True,
                             verbose_name=_("parent"))
     text = models.TextField(verbose_name=_("text"))
+    is_confirmed = models.BooleanField(blank=True, null=True, default=None, verbose_name=_("is confirmed"))
 
     main_fk_field = "parent"
 
