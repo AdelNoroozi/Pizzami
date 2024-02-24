@@ -80,6 +80,9 @@ class Food(ImageIncludedBaseModel):
 
     main_fk_field = "category"
 
+    def __str__(self):
+        return f"{self.name}"
+
     def update_rate(self):
         from pizzami.feedback.models import Rating
         new_rate = Rating.objects.filter(food=self).aggregate(rate_avg=Avg(F("rate")))["rate_avg"]
@@ -107,6 +110,9 @@ class FoodIngredient(BaseModel):
     amount = models.PositiveIntegerField(verbose_name=_("amount"))
 
     main_fk_field = "food"
+
+    def __str__(self):
+        return f"{self.food.name} - {self.ingredient.name}"
 
     class Meta:
         verbose_name = _("FoodIngredient")
