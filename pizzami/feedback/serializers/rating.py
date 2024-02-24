@@ -5,5 +5,5 @@ from rest_framework import serializers
 
 class RatingInputSerializer(serializers.Serializer):
     food = serializers.UUIDField(required=True)
-    rate = serializers.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], required=True,
-                                    help_text="must be between 1 & 5")
+    rate = serializers.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)], required=True,
+                                    help_text="must be between 0 & 5. 0 means delete.")

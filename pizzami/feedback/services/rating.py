@@ -16,6 +16,9 @@ def create_or_update_rating(food_id: uuid, user: BaseUser, rate: int):
     if (not food.is_public) and (food.created_by != profile):
         raise Http404
     rating = get_or_create_rating(food=food, user=profile)
-    rating.rate = rate
-    rating.save()
+    if rate == 0:
+        rating.delete()
+    else:
+        rating.rate = rate
+        rating.save()
     food.update_rate()
