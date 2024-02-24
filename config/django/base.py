@@ -21,6 +21,7 @@ LOCAL_APPS = [
     'pizzami.ingredients.apps.IngredientsConfig',
     'pizzami.foods.apps.FoodsConfig',
     'pizzami.orders.apps.OrdersConfig',
+    'pizzami.feedback.apps.FeedbackConfig',
 ]
 
 THIRD_PARTY_APPS = [
