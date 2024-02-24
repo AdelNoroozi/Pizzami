@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
+from pizzami.feedback.documentation import RATE_FOOD_DESCRIPTION, RATE_FOOD_RESPONSES
 from pizzami.feedback.serializers import RatingInputSerializer
 from pizzami.feedback.services import create_or_update_rating
 
@@ -16,7 +17,9 @@ class RateFoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=['Feedback'],
-        request=RatingInputSerializer
+        request=RatingInputSerializer,
+        description=RATE_FOOD_DESCRIPTION,
+        responses=RATE_FOOD_RESPONSES
     )
     def put(self, request):
         serializer = RatingInputSerializer(data=request.data)
