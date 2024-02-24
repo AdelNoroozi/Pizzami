@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
+from rest_framework.exceptions import ValidationError
 
 from pizzami.common.models import TimeStampedBaseModel
 from pizzami.foods.models import Food
@@ -46,6 +47,12 @@ class Comment(MPTTModel, TimeStampedBaseModel):
 
     def __str__(self):
         return f"'{self.user.public_name}' for '{self.food.name}' on {self.created_at}"
+
+    def clean(self) -> None:
+        super().clean()
+
+        if self.parent and self.parent.food != self.food:
+            raise ValidationError(_("a comment's food must be the same as its parent."))
 
     class Meta:
         verbose_name = _("Comment")
