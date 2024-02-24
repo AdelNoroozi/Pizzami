@@ -30,11 +30,19 @@ class Ingredient(ImageIncludedBaseModel):
     price = models.FloatField(verbose_name=_("price"))
     unit = models.CharField(max_length=30, verbose_name=_("unit"))
     remaining_units = models.PositiveIntegerField(default=0, verbose_name=_("remaining units"))
+    stock_limit = models.PositiveIntegerField(blank=True, null=True, verbose_name=_("stock limit"))
+    is_available = models.BooleanField(default=True, verbose_name=_("is available"))
 
     main_fk_field = "category"
 
     def __str__(self):
         return self.name
+
+    def check_availability(self):
+        if self.stock_limit and self.stock_limit <= self.remaining_units:
+            self.is_available = False
+            self.save()
+        return self.is_available
 
     class Meta:
         verbose_name = _("Ingredient")
