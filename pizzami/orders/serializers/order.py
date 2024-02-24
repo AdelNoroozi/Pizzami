@@ -29,8 +29,13 @@ class OrderInputSerializer(serializers.ModelSerializer):
                     value = discount.absolute_value
                 self.context["discount_value"] = value
 
-        if data.get("has_delivery") is True and (data.get("address") is None or data.get("address") == ""):
+        address = data.get("address")
+
+        if data.get("has_delivery") is True and (address is None or address == ""):
             raise ValidationError(_("orders that have delivery must have an address"))
+
+        if address and address.user != self.context.get("cart").user:
+            raise ValidationError(_("invalid address"))
 
         return data
 
@@ -53,6 +58,9 @@ class OrderInputSerializer(serializers.ModelSerializer):
                 else:
                     final_value = value
         validated_data["final_value"] = final_value
+        address = self.validated_data.get("address")
+        if address:
+            validated_data["address_str"] = address.address_str + " / " + str(address.phone_number)
         return super().save(**kwargs)
 
 

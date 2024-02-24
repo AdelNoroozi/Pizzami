@@ -158,7 +158,7 @@ class Order(TimeStampedBaseModel):
     has_delivery = models.BooleanField(blank=True, null=True, default=None, verbose_name=_("has_delivery"))
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, related_name="orders", blank=True, null=True,
                                 verbose_name=_("address"))
-    address_str = models.CharField(max_length=300, blank=True, null=True, verbose_name=_("address"))
+    address_str = models.CharField(max_length=300, blank=True, null=True, verbose_name=_("address str"))
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_CREATED,
                               verbose_name=_("status"))
     final_value = models.FloatField(verbose_name=_("total value"))
