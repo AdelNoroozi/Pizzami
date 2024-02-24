@@ -6,10 +6,12 @@ from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
-from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES, UPDATE_ADDRESS_RESPONSES
+from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES, UPDATE_ADDRESS_RESPONSES, \
+    DELETE_ADDRESS_RESPONSES
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
     AddressInputSerializer
-from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address
+from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
+    delete_address
 
 
 class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -75,3 +77,12 @@ class MyAddressAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         _id = kwargs.get("id")
         data = update_address(address_id=_id, data=request.data, user=request.user)
         return Response(data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        tags=['Users'],
+        responses=DELETE_ADDRESS_RESPONSES
+    )
+    def delete(self, request, **kwargs):
+        _id = kwargs.get("id")
+        delete_address(address_id=_id, user=request.user)
+        return Response({"message": "done"}, status=status.HTTP_204_NO_CONTENT)

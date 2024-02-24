@@ -1,3 +1,4 @@
 from pizzami.users.documentations.address import CREATE_ADDRESS_RESPONSES
 from pizzami.users.documentations.address import GET_ADDRESSES_RESPONSES
 from pizzami.users.documentations.address import UPDATE_ADDRESS_RESPONSES
+from pizzami.users.documentations.address import DELETE_ADDRESS_RESPONSES
