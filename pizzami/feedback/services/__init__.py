@@ -1,0 +1,1 @@
+from pizzami.feedback.services.rating import create_or_update_rating
