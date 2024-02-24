@@ -1,10 +1,10 @@
 import uuid
 
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
-from rest_framework.exceptions import ValidationError
 
 from pizzami.common.models import TimeStampedBaseModel
 from pizzami.foods.models import Food
