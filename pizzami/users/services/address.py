@@ -4,7 +4,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 from pizzami.users.models import BaseUser, Address
-from pizzami.users.selectors import get_addresses_by_user, search_address
+from pizzami.users.selectors import get_addresses_by_user, search_address, delete_address as delete_address_selector
 from pizzami.users.serializers import AddressOutputSerializer, AddressInputSerializer
 
 
@@ -31,3 +31,8 @@ def update_address(address_id: uuid, data: dict, user: BaseUser) -> ReturnDict[A
     serializer.save()
     response_serializer = AddressOutputSerializer(serializer.instance)
     return response_serializer.data
+
+
+def delete_address(address_id: uuid, user: BaseUser):
+    address = get_object_or_404(Address, id=address_id, is_active=True, user=user.profile)
+    delete_address_selector(address=address)

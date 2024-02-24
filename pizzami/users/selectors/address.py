@@ -9,3 +9,7 @@ def get_addresses_by_user(user: Profile) -> QuerySet[Address]:
 
 def search_address(queryset: QuerySet[Address], search_param: str) -> QuerySet[Address]:
     return queryset.filter(Q(title__icontains=search_param) | Q(address_str__icontains=search_param)).distinct()
+
+
+def delete_address(address: Address):
+    address.delete()
