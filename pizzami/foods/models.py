@@ -2,6 +2,7 @@ import uuid
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import Avg, F
 from django.utils.translation import gettext_lazy as _
 
 from pizzami.common.models import ImageIncludedBaseModel, BaseModel
@@ -78,6 +79,12 @@ class Food(ImageIncludedBaseModel):
     objects = FoodManager()
 
     main_fk_field = "category"
+
+    def update_rate(self):
+        from pizzami.feedback.models import Rating
+        new_rate = Rating.objects.filter(food=self).aggregate(rate_avg=Avg(F("rate")))["rate_avg"]
+        self.rate = new_rate
+        self.save()
 
     class Meta:
         verbose_name = _("Food")
