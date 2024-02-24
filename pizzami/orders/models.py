@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 from pizzami.common.models import TimeStampedBaseModel
 from pizzami.foods.models import Food
-from pizzami.users.models import Profile
+from pizzami.users.models import Profile, Address
 
 
 class Discount(TimeStampedBaseModel):
@@ -156,7 +156,9 @@ class Order(TimeStampedBaseModel):
     discount = models.ForeignKey(Discount, on_delete=models.RESTRICT, related_name="orders", blank=True, null=True,
                                  verbose_name=_("discount"))
     has_delivery = models.BooleanField(blank=True, null=True, default=None, verbose_name=_("has_delivery"))
-    address = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("address"))
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, related_name="orders", blank=True, null=True,
+                                verbose_name=_("address"))
+    address_str = models.CharField(max_length=300, blank=True, null=True, verbose_name=_("address"))
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_CREATED,
                               verbose_name=_("status"))
     final_value = models.FloatField(verbose_name=_("total value"))
