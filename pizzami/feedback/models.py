@@ -41,6 +41,8 @@ class Comment(MPTTModel, TimeStampedBaseModel):
                             verbose_name=_("parent"))
     text = models.TextField(verbose_name=_("text"))
 
+    main_fk_field = "parent"
+
     def __str__(self):
         return f"'{self.user.public_name}' for '{self.food.name}' on {self.created_at}"
 
