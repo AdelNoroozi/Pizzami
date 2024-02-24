@@ -75,6 +75,7 @@ class Food(ImageIncludedBaseModel):
     ordered_count = models.PositiveIntegerField(default=0, editable=False, verbose_name=_("ordered count"))
     is_confirmed = models.BooleanField(default=None, blank=True, null=True, verbose_name=_("is confirmed"))
     is_public = models.BooleanField(default=False, verbose_name=_("is public"))
+    is_available = models.BooleanField(default=True, verbose_name=_("is available"))
 
     objects = FoodManager()
 
@@ -82,6 +83,13 @@ class Food(ImageIncludedBaseModel):
 
     def __str__(self):
         return f"{self.name}"
+
+    def check_availability(self):
+        ingredients = self.ingredients
+        for ingredient in ingredients:
+            ingredient.check_availability()
+        self.is_available = all(ingredients.values_list("ingredient__is_available"))
+        return self.is_available
 
     def update_rate(self):
         from pizzami.feedback.models import Rating
