@@ -15,27 +15,28 @@ class OrderInputSerializer(serializers.ModelSerializer):
         model = Order
         fields = ("discount", "address", "has_delivery")
 
-    def validate(self, data):
-        if data.get("discount"):
-            discount = inquiry_discount_by_id(discount_id=data.get("discount").id, user=self.context.get("cart").user)
+    def validate_address(self, value):
+        if value and value.user != self.context.get("cart").user:
+            raise ValidationError(_(f"Invalid pk \"{value.id}\" - object does not exist."))
+
+    def validate_discount(self, value):
+        if value:
+            discount = inquiry_discount_by_id(discount_id=value.id, user=self.context.get("cart").user)
             if not discount:
-                raise ValidationError(_("invalid discount"))
+                raise ValidationError(_(f"Invalid pk \"{value.id}\" - object does not exist."))
             else:
                 discount_type = discount.type
                 self.context["discount_type"] = discount_type
                 if discount.type == Discount.TYPE_RATIO:
-                    value = discount.percentage_value
+                    discount_value = discount.percentage_value
                 else:
-                    value = discount.absolute_value
-                self.context["discount_value"] = value
+                    discount_value = discount.absolute_value
+                self.context["discount_value"] = discount_value
 
+    def validate(self, data):
         address = data.get("address")
-
         if data.get("has_delivery") is True and (address is None or address == ""):
             raise ValidationError(_("orders that have delivery must have an address"))
-
-        if address and address.user != self.context.get("cart").user:
-            raise ValidationError(_("invalid address"))
 
         return data
 
