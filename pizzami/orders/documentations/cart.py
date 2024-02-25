@@ -24,12 +24,17 @@ ADD_TO_CART_404_RESPONSE = OpenApiResponse(
     description="food with specified id does not exist"
 )
 
+ADD_TO_CART_406_RESPONSE = OpenApiResponse(
+    description="food is unavailable."
+)
+
 ADD_TO_CART_RESPONSES = {
     200: ADD_TO_CART_200_RESPONSE,
     400: ADD_TO_CART_400_RESPONSE,
     401: CART_401_RESPONSE,
     403: CART_403_RESPONSE,
-    404: ADD_TO_CART_404_RESPONSE
+    404: ADD_TO_CART_404_RESPONSE,
+    406: ADD_TO_CART_406_RESPONSE
 }
 
 MY_CART_200_RESPONSE = OpenApiResponse(

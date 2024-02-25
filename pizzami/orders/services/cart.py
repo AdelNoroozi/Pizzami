@@ -9,13 +9,15 @@ from pizzami.users.models import BaseUser
 
 
 @transaction.atomic
-def add_to_cart(food_id: str, count: int, user: BaseUser) -> Cart:
+def add_to_cart(food_id: str, count: int, user: BaseUser) -> Cart | None:
     profile = user.profile
     cart = get_or_create_cart(user=profile)
     if Order.objects.filter(cart=cart).exists():
         from pizzami.orders.services import change_order_status
         change_order_status(order=cart.order, status=Order.STATUS_CREATED)
     food = get_object_or_404(Food, id=food_id, is_active=True)
+    if not food.is_available:
+        return None
     if (not food.is_public) and (food.created_by != profile):
         raise Http404
     cart_item = get_or_create_cart_item(cart=cart, food=food)
