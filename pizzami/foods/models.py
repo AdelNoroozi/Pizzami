@@ -86,8 +86,6 @@ class Food(ImageIncludedBaseModel):
 
     def check_availability(self):
         ingredients = self.ingredients
-        for ingredient in ingredients:
-            ingredient.check_availability()
         self.is_available = all(ingredients.values_list("ingredient__is_available"))
         self.save()
         return self.is_available
