@@ -6,3 +6,4 @@ from pizzami.ingredients.services.ingredient import get_ingredients
 from pizzami.ingredients.services.ingredient import create_ingredient
 from pizzami.ingredients.services.ingredient import update_ingredient
 from pizzami.ingredients.services.ingredient import delete_ingredient
+from pizzami.ingredients.services.ingredient import update_ingredients_amount_for_cart

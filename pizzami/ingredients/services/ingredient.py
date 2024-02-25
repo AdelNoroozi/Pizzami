@@ -1,15 +1,17 @@
 import uuid
 
+from django.db import transaction
 from django.http import QueryDict
 from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
+from pizzami.ingredients.filters import IngredientFilter
 from pizzami.ingredients.models import Ingredient
 from pizzami.ingredients.selectors import delete_ingredient as delete_ingredient_selector
 from pizzami.ingredients.selectors import get_ingredients as get_ingredients_selector
 from pizzami.ingredients.serializers import IngredientCompleteOutputSerializer, IngredientBaseOutputSerializer, \
     IngredientInputSerializer
-from pizzami.ingredients.filters import IngredientFilter
+from pizzami.orders.models import Cart
 
 
 def get_ingredients(query_dict: QueryDict, is_user_staff: bool) -> ReturnList[Ingredient]:
@@ -42,3 +44,18 @@ def update_ingredient(ingredient_id: uuid, data: dict) -> ReturnDict:
 def delete_ingredient(ingredient_id: uuid):
     ingredient = get_object_or_404(Ingredient, id=ingredient_id)
     delete_ingredient_selector(ingredient)
+
+
+@transaction.atomic
+def update_ingredients_amount_for_cart(cart: Cart):
+    items = cart.items
+    for item in items:
+        food = item.food
+        item_count = item.count
+        for food_ingredient in food.ingredients:
+            ingredient = food_ingredient.ingredient
+            ingredient.remaining_units = ingredient.remaining_units - (
+                    item_count * food_ingredient.amount)
+            ingredient.save()
+            ingredient.check_availability()
+        food.check_availability()
