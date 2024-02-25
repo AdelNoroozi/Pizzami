@@ -39,7 +39,7 @@ class Ingredient(ImageIncludedBaseModel):
         return self.name
 
     def check_availability(self):
-        if self.stock_limit and self.stock_limit <= self.remaining_units:
+        if self.stock_limit and self.stock_limit >= self.remaining_units:
             self.is_available = False
             self.save()
         return self.is_available
