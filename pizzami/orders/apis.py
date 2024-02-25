@@ -103,9 +103,10 @@ class AddToCartAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def put(self, request, **kwargs):
         serializer = CartItemInputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        cart = add_to_cart(food_id=serializer.data["food_id"], count=serializer.data["count"], user=request.user)
+        cart, result_str = add_to_cart(food_id=serializer.data["food_id"], count=serializer.data["count"],
+                                       user=request.user)
         if cart is None:
-            return Response(data={"message": "food is unavailable"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response(data={"message": result_str}, status=status.HTTP_406_NOT_ACCEPTABLE)
         response_serializer = CartSerializer(cart, many=False)
         return Response(data=response_serializer.data, status=status.HTTP_200_OK)
 

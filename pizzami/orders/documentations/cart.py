@@ -25,7 +25,7 @@ ADD_TO_CART_404_RESPONSE = OpenApiResponse(
 )
 
 ADD_TO_CART_406_RESPONSE = OpenApiResponse(
-    description="food is unavailable."
+    description="food is unavailable or too many foods of the same kind."
 )
 
 ADD_TO_CART_RESPONSES = {
