@@ -28,10 +28,11 @@ class FoodIngredientInlineAdmin(admin.TabularInline):
 @admin.register(Food)
 class FoodAdmin(BaseModelAdmin,  NumericFilterModelAdmin):
     inlines = (FoodIngredientInlineAdmin,)
-    list_display = ["name", "price"] + BaseModelAdmin.list_display + ["rate", "is_confirmed", "is_public", "rate",
-                                                                      "views", "ordered_count", "is_original"]
-    list_editable = BaseModelAdmin.list_editable + ["is_confirmed", "is_public"]
-    list_filter = BaseModelAdmin.list_filter + ["is_public", "is_confirmed", "is_original",
+    list_display = ["name", "price"] + BaseModelAdmin.list_display + ["rate", "is_confirmed", "is_public",
+                                                                      "is_available", "rate", "views", "ordered_count",
+                                                                      "is_original"]
+    list_editable = BaseModelAdmin.list_editable + ["is_confirmed", "is_public", "is_available"]
+    list_filter = BaseModelAdmin.list_filter + ["is_public", "is_confirmed", "is_original", "is_available",
                                                 ("price", SliderNumericFilter),
                                                 ("ordered_count", SliderNumericFilter)]
     search_fields = ["name", "description"]

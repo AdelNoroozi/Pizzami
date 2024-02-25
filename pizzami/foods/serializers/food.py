@@ -23,7 +23,7 @@ class FoodBaseOutputSerializer(serializers.ModelSerializer):
         model = Food
         fields = (
             "id", "name", "price", "discounted_price", "category", "created_by", "rate", "ordered_count", "is_original",
-            "ingredients_str", "image_url", "image_alt_text")
+            "is_available", "ingredients_str", "image_url", "image_alt_text")
 
     def get_ingredients_str(self, obj: Food) -> str:
         ingredients = FoodIngredient.objects.filter(food=obj).values_list(
@@ -64,8 +64,8 @@ class FoodPublicDetailedOutputSerializer(FoodBaseOutputSerializer):
 
     class Meta(FoodBaseOutputSerializer.Meta):
         fields = (
-            "id", "name", "price", "discounted_price", "category", "created_by", "views", "rate", "ordered_count", "is_original",
-            "ingredients", "image_url", "image_alt_text", "description")
+            "id", "name", "price", "discounted_price", "category", "created_by", "views", "rate", "ordered_count",
+            "is_original", "is_available", "ingredients", "image_url", "image_alt_text", "description")
 
 
 class FoodCompleteOutputSerializer(FoodDetailedOutputSerializer):
@@ -82,7 +82,9 @@ class FoodInputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Food
-        fields = ("name", "category", "description", "ingredients", "image_url", "image_alt_text", "is_public", "price")
+        fields = (
+            "name", "category", "description", "ingredients", "image_url", "image_alt_text", "is_public",
+            "is_available", "price")
 
     def validate_category(self, value):
         if not value.is_active:
