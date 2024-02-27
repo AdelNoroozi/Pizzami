@@ -32,6 +32,7 @@ class Ingredient(ImageIncludedBaseModel):
     remaining_units = models.PositiveIntegerField(default=0, verbose_name=_("remaining units"))
     stock_limit = models.PositiveIntegerField(blank=True, null=True, verbose_name=_("stock limit"))
     is_available = models.BooleanField(default=True, verbose_name=_("is available"))
+    auto_check_availability = models.BooleanField(default=False, verbose_name=_("auto check availability"))
 
     main_fk_field = "category"
 
