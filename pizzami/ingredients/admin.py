@@ -13,9 +13,9 @@ class IngredientCategoryAdmin(BaseModelAdmin):
 
 @admin.register(Ingredient)
 class IngredientAdmin(BaseModelAdmin, NumericFilterModelAdmin):
-    list_display = ["name", "category", "is_available"] + BaseModelAdmin.list_display + ["remaining_units", "unit",
-                                                                                         "price"]
-    list_editable = BaseModelAdmin.list_editable + ["remaining_units", "is_available"]
+    list_display = ["name", "category", "is_available", "auto_check_availability"] + BaseModelAdmin.list_display + [
+        "remaining_units", "unit", "price"]
+    list_editable = BaseModelAdmin.list_editable + ["remaining_units", "is_available", "auto_check_availability"]
     list_filter = BaseModelAdmin.list_filter + ["category", "is_available", ("price", SliderNumericFilter),
                                                 ("remaining_units", SliderNumericFilter)]
     search_fields = ["name", "category__name"]
