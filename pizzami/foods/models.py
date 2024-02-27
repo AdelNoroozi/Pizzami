@@ -76,6 +76,7 @@ class Food(ImageIncludedBaseModel):
     is_confirmed = models.BooleanField(default=None, blank=True, null=True, verbose_name=_("is confirmed"))
     is_public = models.BooleanField(default=False, verbose_name=_("is public"))
     is_available = models.BooleanField(default=True, verbose_name=_("is available"))
+    auto_check_availability = models.BooleanField(default=False, verbose_name=_("auto check availability"))
 
     objects = FoodManager()
 
