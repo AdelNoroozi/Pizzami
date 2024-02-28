@@ -46,11 +46,11 @@ class Ingredient(ImageIncludedBaseModel):
                 self.is_available = False
             else:
                 self.is_available = True
-            food_ids = self.foods.values_list("food", flat=True)
-            foods = Food.objects.filter(id__in=food_ids)
-            for food in foods:
-                food.check_availability()
         super(Ingredient, self).save(*args, **kwargs)
+        food_ids = self.foods.values_list("food", flat=True)
+        foods = Food.objects.filter(id__in=food_ids)
+        for food in foods:
+            food.check_availability()
 
     class Meta:
         verbose_name = _("Ingredient")
