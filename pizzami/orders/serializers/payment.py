@@ -14,6 +14,8 @@ class PaymentGenericSerializer(serializers.ModelSerializer):
         if value.status != Order.STATUS_READY_TO_PAY:
             raise ValidationError(_("invalid order"))
 
+        return value
+
 
 class PaymentReferenceOutput(serializers.ModelSerializer):
     class Meta:
