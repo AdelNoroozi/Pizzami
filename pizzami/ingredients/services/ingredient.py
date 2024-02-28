@@ -59,4 +59,3 @@ def update_ingredients_amount_for_cart(cart: Cart):
             ingredient.remaining_units = ingredient.remaining_units - (
                     item_count * food_ingredient.amount)
             ingredient.save()
-        food.check_availability()
