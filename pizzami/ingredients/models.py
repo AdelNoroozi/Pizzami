@@ -40,12 +40,14 @@ class Ingredient(ImageIncludedBaseModel):
         return self.name
 
     def save(self, *args, **kwargs):
+        from pizzami.foods.models import Food
         if self.auto_check_availability:
             if self.stock_limit and self.stock_limit >= self.remaining_units:
                 self.is_available = False
             else:
                 self.is_available = True
-            foods = self.foods.values_list("food", flat=True)
+            food_ids = self.foods.values_list("food", flat=True)
+            foods = Food.objects.filter(id__in=food_ids)
             for food in foods:
                 food.check_availability()
         super(Ingredient, self).save(*args, **kwargs)
