@@ -40,3 +40,16 @@ class CommentBaseOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ("id", "food", "parent", "text", "created_at", "is_confirmed")
+
+
+class CommentHierarchicalOutputSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source="user.public_name")
+    children = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Comment
+        exclude = ("id", "food", "parent", "is_confirmed")
+
+    def get_children(self, obj):
+        serializer = CommentHierarchicalOutputSerializer(obj.children, many=True)
+        return serializer.data
