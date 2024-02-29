@@ -4,6 +4,7 @@ from rest_framework.exceptions import ValidationError
 
 from pizzami.feedback.models import Comment
 from pizzami.foods.serializers import FoodBaseOutputSerializer
+from pizzami.users.serializers import ProfileReferenceSerializer
 
 
 class CommentInputSerializer(serializers.ModelSerializer):
@@ -40,6 +41,13 @@ class CommentBaseOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ("id", "food", "parent", "text", "created_at", "is_confirmed")
+
+
+class CommentDetailedOutputSerializer(CommentBaseOutputSerializer):
+    user = ProfileReferenceSerializer(many=False)
+
+    class Meta(CommentBaseOutputSerializer.Meta):
+        fields = CommentBaseOutputSerializer.Meta.fields + ("user",)
 
 
 class CommentHierarchicalOutputSerializer(serializers.ModelSerializer):
