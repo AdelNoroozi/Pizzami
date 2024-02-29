@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from pizzami.common.validators import string_included_validator
+from pizzami.feedback.models import Comment
 from pizzami.foods.models import Food, FoodIngredient
 from pizzami.foods.serializers.food_ingredient import FoodIngredientOutputSerializer, \
     FoodIngredientBaseInputSerializer
@@ -61,11 +62,18 @@ class FoodDetailedOutputSerializer(FoodBaseOutputSerializer):
 class FoodPublicDetailedOutputSerializer(FoodBaseOutputSerializer):
     ingredients = FoodIngredientOutputSerializer(many=True)
     ingredients_str = None
+    comments = serializers.SerializerMethodField()
 
     class Meta(FoodBaseOutputSerializer.Meta):
         fields = (
             "id", "name", "price", "discounted_price", "category", "created_by", "views", "rate", "ordered_count",
-            "is_original", "is_available", "ingredients", "image_url", "image_alt_text", "description")
+            "is_original", "is_available", "ingredients", "image_url", "image_alt_text", "description", "comments")
+
+    def get_comments(self, obj):
+        from pizzami.feedback.serializers import CommentHierarchicalOutputSerializer
+        root_comments = Comment.objects.filter(food=obj, parent=None, is_confirmed=True).order_by("created_at")
+        serializer = CommentHierarchicalOutputSerializer(root_comments, many=True)
+        return serializer.data
 
 
 class FoodCompleteOutputSerializer(FoodDetailedOutputSerializer):
