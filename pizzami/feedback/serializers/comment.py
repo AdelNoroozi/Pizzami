@@ -11,6 +11,12 @@ class CommentInputSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ("food", "parent", "text")
 
+    def validate_food(self, value):
+        if not value.is_active or not value.is_confirmed or not value.is_public:
+            raise ValidationError(_(f"Invalid pk \"{value.id}\" - object does not exist."))
+
+        return value
+
     def validate_parent(self, value):
         if value.is_confirmed is not True:
             raise ValidationError(_("a comment's parent must be confirmed."))
