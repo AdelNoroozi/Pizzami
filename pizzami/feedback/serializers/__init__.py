@@ -1,1 +1,2 @@
+from pizzami.feedback.serializers.comment import CommentInputSerializer
 from pizzami.feedback.serializers.rating import RatingInputSerializer
