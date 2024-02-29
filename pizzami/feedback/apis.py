@@ -8,7 +8,7 @@ from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.feedback.documentation import RATE_FOOD_DESCRIPTION, RATE_FOOD_RESPONSES, CREATE_COMMENT_RESPONSES
 from pizzami.feedback.serializers import RatingInputSerializer, CommentInputSerializer
-from pizzami.feedback.services import create_or_update_rating, create_comment
+from pizzami.feedback.services import create_or_update_rating, create_comment, get_comments
 
 
 class RateFoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -34,6 +34,24 @@ class CommentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         "GET": [IsAuthenticated],
         "POST": [IsAuthenticatedAndNotAdmin]
     }
+
+    @extend_schema(
+        tags=["FeedBack"],
+    )
+    def get(self, request):
+        query_dict = request.GET
+        user = request.user
+        if not query_dict.get("set") == "mine":
+            if not user.is_staff:
+                return Response(data={"error": "non staff users can only access their own comments"},
+                                status=status.HTTP_403_FORBIDDEN)
+            data = get_comments(query_dict=query_dict, is_user_staff=True)
+        else:
+            if user.is_staff:
+                return Response(data={"error": "only authenticated normal users can access their own comments"},
+                                status=status.HTTP_403_FORBIDDEN)
+            data = get_comments(query_dict=query_dict, is_user_staff=True, user=user)
+        return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
         tags=["Feedback"],
