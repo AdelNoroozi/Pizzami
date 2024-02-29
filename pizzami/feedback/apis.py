@@ -36,7 +36,7 @@ class CommentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=["FeedBack"],
+        tags=["Feedback"],
     )
     def get(self, request):
         query_dict = request.GET
@@ -50,7 +50,7 @@ class CommentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
             if user.is_staff:
                 return Response(data={"error": "only authenticated normal users can access their own comments"},
                                 status=status.HTTP_403_FORBIDDEN)
-            data = get_comments(query_dict=query_dict, is_user_staff=True, user=user)
+            data = get_comments(query_dict=query_dict, is_user_staff=False, user=user)
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(

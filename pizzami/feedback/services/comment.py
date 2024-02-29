@@ -16,12 +16,11 @@ def create_comment(data: dict, user: BaseUser) -> ReturnDict[Comment]:
     return response_serializer.data
 
 
-def get_comments(query_dict: QueryDict, is_user_staff: bool, user: BaseUser) -> ReturnList[Comment]:
+def get_comments(query_dict: QueryDict, is_user_staff: bool, user: BaseUser = None) -> ReturnList[Comment]:
     if not is_user_staff:
         queryset = get_comments_selector(user_created=True, user=user.profile)
-        serializer = CommentBaseOutputSerializer
+        serializer = CommentBaseOutputSerializer(queryset, many=True)
     else:
         queryset = get_comments_selector(user_created=False)
-        serializer = CommentDetailedOutputSerializer
-    serializer(queryset=queryset, many=True)
+        serializer = CommentDetailedOutputSerializer(queryset, many=True)
     return serializer.data
