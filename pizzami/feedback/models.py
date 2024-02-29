@@ -54,6 +54,9 @@ class Comment(MPTTModel, TimeStampedBaseModel):
         if self.parent and self.parent.food != self.food:
             raise ValidationError(_("a comment's food must be the same as its parent."))
 
+        if self.parent and self.parent.is_confirmed is not True:
+            raise ValidationError(_("a comment's parent must be confirmed."))
+
     class Meta:
         verbose_name = _("Comment")
         verbose_name_plural = _("Comments")
