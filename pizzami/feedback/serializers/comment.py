@@ -51,12 +51,16 @@ class CommentDetailedOutputSerializer(CommentBaseOutputSerializer):
 
 
 class CommentHierarchicalOutputSerializer(serializers.ModelSerializer):
-    user = serializers.CharField(source="user.public_name")
+    user = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
         exclude = ("id", "food", "parent", "is_confirmed")
+
+    def get_user(self, obj):
+        user = obj.user
+        return user.public_name if user else None
 
     def get_children(self, obj):
         serializer = CommentHierarchicalOutputSerializer(obj.children, many=True)

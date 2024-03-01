@@ -49,12 +49,12 @@ class Comment(MPTTModel, TimeStampedBaseModel):
 
     def __str__(self):
         if self.user:
-            creator = self.user.public_name
+            creator = f"'{self.user.public_name}'"
         elif self.by_staff:
             creator = "staff"
         else:
             creator = "unknown"
-        return f"'{creator}' for '{self.food.name}' on {self.created_at}"
+        return f"{creator} for '{self.food.name}' on {self.created_at}"
 
     def clean(self) -> None:
         super().clean()
