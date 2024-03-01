@@ -48,7 +48,13 @@ class Comment(MPTTModel, TimeStampedBaseModel):
     main_fk_field = "parent"
 
     def __str__(self):
-        return f"'{self.user.public_name}' for '{self.food.name}' on {self.created_at}"
+        if self.user:
+            creator = self.user.public_name
+        elif self.by_staff:
+            creator = "staff"
+        else:
+            creator = "unknown"
+        return f"'{creator}' for '{self.food.name}' on {self.created_at}"
 
     def clean(self) -> None:
         super().clean()
