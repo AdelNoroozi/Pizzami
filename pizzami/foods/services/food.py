@@ -96,13 +96,14 @@ def confirm_food(food_id: uuid, action: str) -> Union[None, bool]:
     food = get_object_or_404(Food, id=food_id)
 
     if action == "confirm":
-        if not food.is_confirmed:
+        if food.is_confirmed is not True:
             food.is_confirmed = True
             food.save()
             return True
     elif action == "reject":
-        if food.is_confirmed:
+        if food.is_confirmed is not False:
             food.is_confirmed = False
+            food.is_public = False
             food.save()
             return True
     elif action == "suspend":
