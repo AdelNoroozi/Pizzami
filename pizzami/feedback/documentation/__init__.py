@@ -4,3 +4,5 @@ from pizzami.feedback.documentation.comment import CREATE_COMMENT_RESPONSES
 from pizzami.feedback.documentation.comment import GET_COMMENTS_RESPONSES
 from pizzami.feedback.documentation.comment import GET_COMMENTS_PARAMETERS
 from pizzami.feedback.documentation.comment import GET_COMMENTS_DESCRIPTION
+from pizzami.feedback.documentation.comment import CHANGE_COMMENT_CONFIRMATION_STATUS_RESPONSES
+from pizzami.feedback.documentation.comment import CHANGE_COMMENT_CONFIRMATION_STATUS_DESCRIPTION

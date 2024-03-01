@@ -54,3 +54,26 @@ GET_COMMENTS_PARAMETERS = [
 
 GET_COMMENTS_DESCRIPTION = _("returns a list of comments. normal users can only access their own comments by setting "
                              "the 'set' parameter to 'mine'. staff users can access all comments.")
+
+CHANGE_COMMENT_CONFIRMATION_STATUS_200_RESPONSE = OpenApiResponse(
+    response={"message": _("comment confirmed/rejected/suspended successfully")})
+
+CHANGE_COMMENT_CONFIRMATION_STATUS_400_RESPONSE = OpenApiResponse(
+    description=_("invalid request, probably due to invalid action or trying to change comment's status to a status "
+                  "which the comment is already in.")
+)
+
+COMMENT_404_RESPONSE = OpenApiResponse(
+    description=_("Comment with specified id not found")
+)
+
+CHANGE_COMMENT_CONFIRMATION_STATUS_RESPONSES = {
+    200: CHANGE_COMMENT_CONFIRMATION_STATUS_200_RESPONSE,
+    400: CHANGE_COMMENT_CONFIRMATION_STATUS_200_RESPONSE,
+    401: COMMENT_401_RESPONSE,
+    403: COMMENT_403_RESPONSE,
+    404: COMMENT_404_RESPONSE
+}
+
+CHANGE_COMMENT_CONFIRMATION_STATUS_DESCRIPTION = _("changes comments confirmation status. the action must be confirm, "
+                                                   "reject or suspend. only for staff users.")

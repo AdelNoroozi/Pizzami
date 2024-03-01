@@ -7,7 +7,8 @@ from rest_framework.views import APIView
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.feedback.documentation import RATE_FOOD_DESCRIPTION, RATE_FOOD_RESPONSES, CREATE_COMMENT_RESPONSES, \
-    GET_COMMENTS_DESCRIPTION, GET_COMMENTS_PARAMETERS, GET_COMMENTS_RESPONSES
+    GET_COMMENTS_DESCRIPTION, GET_COMMENTS_PARAMETERS, GET_COMMENTS_RESPONSES, \
+    CHANGE_COMMENT_CONFIRMATION_STATUS_RESPONSES, CHANGE_COMMENT_CONFIRMATION_STATUS_DESCRIPTION
 from pizzami.feedback.serializers import RatingInputSerializer, CommentInputSerializer
 from pizzami.feedback.services import create_or_update_rating, create_comment, get_comments, confirm_comment
 
@@ -73,7 +74,9 @@ class CommentConfirmAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=["Feedback"]
+        tags=["Feedback"],
+        responses=CHANGE_COMMENT_CONFIRMATION_STATUS_RESPONSES,
+        description=CHANGE_COMMENT_CONFIRMATION_STATUS_DESCRIPTION
     )
     def patch(self, request, **kwargs):
         comment_id = kwargs.get("id")
