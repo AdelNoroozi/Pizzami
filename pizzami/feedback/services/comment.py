@@ -1,4 +1,7 @@
+import uuid
+
 from django.http import QueryDict
+from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 from pizzami.feedback.filters import CommentFilter
@@ -30,3 +33,26 @@ def get_comments(query_dict: QueryDict, is_user_staff: bool, user: BaseUser = No
     serializer_class = CommentDetailedOutputSerializer if is_user_staff else CommentBaseOutputSerializer
     serializer = serializer_class(queryset, many=True)
     return serializer.data
+
+
+def confirm_comment(comment_id: uuid, action: str) -> bool | None:
+    valid_actions = ["confirm", "reject", "suspend"]
+    if action not in valid_actions:
+        return False
+    comment = get_object_or_404(Comment, id=comment_id)
+    if action == "confirm":
+        if comment.is_confirmed is not True:
+            comment.is_confirmed = True
+            comment.save()
+            return True
+    elif action == "reject":
+        if comment.is_confirmed is not False:
+            comment.is_confirmed = False
+            comment.save()
+            return True
+    elif action == "suspend":
+        if comment.is_confirmed is not None:
+            comment.is_confirmed = None
+            comment.save()
+            return True
+    return None
