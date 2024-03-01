@@ -47,7 +47,7 @@ class CommentDetailedOutputSerializer(CommentBaseOutputSerializer):
     user = ProfileReferenceSerializer(many=False)
 
     class Meta(CommentBaseOutputSerializer.Meta):
-        fields = CommentBaseOutputSerializer.Meta.fields + ("user",)
+        fields = CommentBaseOutputSerializer.Meta.fields + ("user", "by_staff")
 
 
 class CommentHierarchicalOutputSerializer(serializers.ModelSerializer):

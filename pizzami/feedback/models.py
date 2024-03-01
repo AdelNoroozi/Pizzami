@@ -37,11 +37,13 @@ class Rating(models.Model):
 class Comment(MPTTModel, TimeStampedBaseModel):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name="comments", verbose_name=_("food"))
-    user = models.ForeignKey(Profile, on_delete=models.DO_NOTHING, related_name="comments", verbose_name=_("user"))
+    user = models.ForeignKey(Profile, on_delete=models.DO_NOTHING, related_name="comments", blank=True, null=True,
+                             verbose_name=_("user"))
     parent = TreeForeignKey("self", on_delete=models.CASCADE, related_name="children", blank=True, null=True,
                             verbose_name=_("parent"))
     text = models.TextField(verbose_name=_("text"))
     is_confirmed = models.BooleanField(blank=True, null=True, default=None, verbose_name=_("is confirmed"))
+    by_staff = models.BooleanField(default=False, verbose_name=_("by staff"))
 
     main_fk_field = "parent"
 
