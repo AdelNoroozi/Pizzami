@@ -6,7 +6,8 @@ from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
-from pizzami.feedback.documentation import RATE_FOOD_DESCRIPTION, RATE_FOOD_RESPONSES, CREATE_COMMENT_RESPONSES
+from pizzami.feedback.documentation import RATE_FOOD_DESCRIPTION, RATE_FOOD_RESPONSES, CREATE_COMMENT_RESPONSES, \
+    GET_COMMENTS_DESCRIPTION, GET_COMMENTS_PARAMETERS, GET_COMMENTS_RESPONSES
 from pizzami.feedback.serializers import RatingInputSerializer, CommentInputSerializer
 from pizzami.feedback.services import create_or_update_rating, create_comment, get_comments
 
@@ -37,6 +38,9 @@ class CommentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=["Feedback"],
+        description=GET_COMMENTS_DESCRIPTION,
+        parameters=GET_COMMENTS_PARAMETERS,
+        responses=GET_COMMENTS_RESPONSES
     )
     def get(self, request):
         query_dict = request.GET

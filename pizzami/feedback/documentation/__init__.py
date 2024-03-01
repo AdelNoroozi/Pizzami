@@ -1,3 +1,6 @@
 from pizzami.feedback.documentation.rating import RATE_FOOD_DESCRIPTION
 from pizzami.feedback.documentation.rating import RATE_FOOD_RESPONSES
 from pizzami.feedback.documentation.comment import CREATE_COMMENT_RESPONSES
+from pizzami.feedback.documentation.comment import GET_COMMENTS_RESPONSES
+from pizzami.feedback.documentation.comment import GET_COMMENTS_PARAMETERS
+from pizzami.feedback.documentation.comment import GET_COMMENTS_DESCRIPTION
