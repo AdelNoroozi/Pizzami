@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -9,7 +9,7 @@ from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.feedback.documentation import RATE_FOOD_DESCRIPTION, RATE_FOOD_RESPONSES, CREATE_COMMENT_RESPONSES, \
     GET_COMMENTS_DESCRIPTION, GET_COMMENTS_PARAMETERS, GET_COMMENTS_RESPONSES
 from pizzami.feedback.serializers import RatingInputSerializer, CommentInputSerializer
-from pizzami.feedback.services import create_or_update_rating, create_comment, get_comments
+from pizzami.feedback.services import create_or_update_rating, create_comment, get_comments, confirm_comment
 
 
 class RateFoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -65,3 +65,22 @@ class CommentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def post(self, request):
         comment_data = create_comment(data=request.data, user=request.user)
         return Response(data=comment_data, status=status.HTTP_201_CREATED)
+
+
+class CommentConfirmAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "PATCH": [IsAdminUser]
+    }
+
+    @extend_schema(
+        tags=["Feedback"]
+    )
+    def patch(self, request, **kwargs):
+        comment_id = kwargs.get("id")
+        action = kwargs.get("action")
+        comment_confirmation = confirm_comment(comment_id=comment_id, action=action)
+        if comment_confirmation:
+            return Response(data={"message": f"Comment {action}ed successfully"}, status=status.HTTP_200_OK)
+        if comment_confirmation is None:
+            return Response(data={"message": f"Comment is already {action}ed"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={"message": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
