@@ -1,6 +1,7 @@
 from django.http import QueryDict
 from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
+from pizzami.feedback.filters import CommentFilter
 from pizzami.feedback.models import Comment
 from pizzami.feedback.selectors import get_comments as get_comments_selector, search_comment
 from pizzami.feedback.serializers import CommentInputSerializer, CommentBaseOutputSerializer, \
@@ -22,6 +23,7 @@ def get_comments(query_dict: QueryDict, is_user_staff: bool, user: BaseUser = No
     search_param = query_dict.get("search")
     if search_param:
         queryset = search_comment(queryset=queryset, search_param=search_param)
+    queryset = CommentFilter(query_dict, queryset=queryset).qs
     serializer_class = CommentDetailedOutputSerializer if is_user_staff else CommentBaseOutputSerializer
     serializer = serializer_class(queryset, many=True)
     return serializer.data
