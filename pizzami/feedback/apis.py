@@ -34,7 +34,7 @@ class RateFoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 class CommentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     permissions = {
         "GET": [IsAuthenticated],
-        "POST": [IsAuthenticatedAndNotAdmin]
+        "POST": [IsAuthenticated]
     }
 
     @extend_schema(

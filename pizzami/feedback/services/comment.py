@@ -13,7 +13,8 @@ from pizzami.users.models import BaseUser
 
 
 def create_comment(data: dict, user: BaseUser) -> ReturnDict[Comment]:
-    serializer = CommentInputSerializer(data=data, context={"user": user.profile})
+    user_obj = user.profile if not user.is_staff else None
+    serializer = CommentInputSerializer(data=data, context={"user": user_obj})
     serializer.is_valid(raise_exception=True)
     serializer.save()
     response_serializer = CommentBaseOutputSerializer(serializer.instance, many=False)

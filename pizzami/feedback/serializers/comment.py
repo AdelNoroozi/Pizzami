@@ -31,7 +31,12 @@ class CommentInputSerializer(serializers.ModelSerializer):
         return data
 
     def save(self, **kwargs):
-        self.validated_data["user"] = self.context.get("user")
+        user_obj = self.context.get("user")
+        if user_obj:
+            self.validated_data["user"] = user_obj
+        else:
+            self.validated_data["by_staff"] = True
+            self.validated_data["is_confirmed"] = True
         return super().save(**kwargs)
 
 
