@@ -40,7 +40,7 @@ class CommentBaseOutputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ("id", "food", "parent", "text", "created_at", "is_confirmed")
+        fields = ("id", "food", "parent", "text", "created_at", "updated_at", "is_confirmed")
 
 
 class CommentDetailedOutputSerializer(CommentBaseOutputSerializer):
