@@ -17,3 +17,7 @@ def search_comment(queryset: QuerySet, search_param: str) -> QuerySet[Comment]:
 
 def order_comments(queryset: QuerySet, order_param: str) -> QuerySet[Comment]:
     return queryset.order_by(order_param)
+
+
+def delete_comment(comment: Comment):
+    comment.delete()

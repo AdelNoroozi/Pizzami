@@ -6,7 +6,8 @@ from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 from pizzami.feedback.filters import CommentFilter
 from pizzami.feedback.models import Comment
-from pizzami.feedback.selectors import get_comments as get_comments_selector, search_comment, order_comments
+from pizzami.feedback.selectors import get_comments as get_comments_selector, search_comment, order_comments, \
+    delete_comment as delete_comment_selector
 from pizzami.feedback.serializers import CommentInputSerializer, CommentBaseOutputSerializer, \
     CommentDetailedOutputSerializer
 from pizzami.users.models import BaseUser
@@ -57,3 +58,11 @@ def confirm_comment(comment_id: uuid, action: str) -> bool | None:
             comment.save()
             return True
     return None
+
+
+def delete_comment(comment_id: uuid, user: BaseUser):
+    if user.is_staff:
+        comment = get_object_or_404(Comment, id=comment_id)
+    else:
+        comment = get_object_or_404(Comment, id=comment_id, user=user.profile)
+    delete_comment_selector(comment=comment)
