@@ -10,7 +10,8 @@ from pizzami.feedback.documentation import RATE_FOOD_DESCRIPTION, RATE_FOOD_RESP
     GET_COMMENTS_DESCRIPTION, GET_COMMENTS_PARAMETERS, GET_COMMENTS_RESPONSES, \
     CHANGE_COMMENT_CONFIRMATION_STATUS_RESPONSES, CHANGE_COMMENT_CONFIRMATION_STATUS_DESCRIPTION
 from pizzami.feedback.serializers import RatingInputSerializer, CommentInputSerializer
-from pizzami.feedback.services import create_or_update_rating, create_comment, get_comments, confirm_comment
+from pizzami.feedback.services import create_or_update_rating, create_comment, get_comments, confirm_comment, \
+    delete_comment
 
 
 class RateFoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -66,6 +67,20 @@ class CommentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def post(self, request):
         comment_data = create_comment(data=request.data, user=request.user)
         return Response(data=comment_data, status=status.HTTP_201_CREATED)
+
+
+class CommentAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "DELETE": [IsAuthenticated]
+    }
+
+    @extend_schema(
+        tags=["Feedback"]
+    )
+    def delete(self, request, **kwargs):
+        _id = kwargs.get("id")
+        delete_comment(comment_id=_id, user=request.user)
+        return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
 
 
 class CommentConfirmAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
