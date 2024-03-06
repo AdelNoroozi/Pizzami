@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
+
     *THIRD_PARTY_APPS,
     *LOCAL_APPS,
 ]
@@ -168,6 +171,7 @@ CACHES = {
 # Cache time to live is 15 minutes.
 CACHE_TTL = 60 * 15
 
+SITE_ID = 1
 
 APP_DOMAIN = env("APP_DOMAIN", default="http://localhost:8000")
 

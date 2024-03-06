@@ -3,6 +3,7 @@ import uuid
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Avg, F
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from pizzami.common.models import ImageIncludedBaseModel, BaseModel
@@ -97,6 +98,9 @@ class Food(ImageIncludedBaseModel):
         new_rate = Rating.objects.filter(food=self).aggregate(rate_avg=Avg(F("rate")))["rate_avg"]
         self.rate = new_rate
         self.save()
+
+    def get_absolute_url(self):
+        return reverse('api:foods:food', kwargs={'id': self.pk})
 
     class Meta:
         verbose_name = _("Food")
