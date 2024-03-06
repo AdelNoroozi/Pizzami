@@ -1,7 +1,7 @@
 import os
 from config.env import env, BASE_DIR
 
-env.read_env(os.path.join(BASE_DIR, ".env"))
+env.read_env(os.path.join(os.path.join(BASE_DIR, '.env')))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '=ug_ucl@yi6^mrcjyz%(u0%&g2adt#bz3@yos%#@*t#t!ypx=a'
@@ -179,4 +179,4 @@ from config.settings.sessions import *  # noqa
 from config.settings.celery import *  # noqa
 from config.settings.swagger import *  # noqa
 #from config.settings.sentry import *  # noqa
-#from config.settings.email_sending import *  # noqa
+from config.settings.email_sending import *  # noqa

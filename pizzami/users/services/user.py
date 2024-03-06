@@ -4,6 +4,7 @@ from rest_framework.utils.serializer_helpers import ReturnDict
 from pizzami.users.models import BaseUser
 from pizzami.users.selectors.profile import create_profile
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer
+from pizzami.users.services import send_welcome_mail
 
 
 def create_user(email: str, password: str) -> BaseUser:
@@ -23,5 +24,7 @@ def register(data: dict) -> ReturnDict:
     user = create_user(email=data.get("email"), password=data.get("password"))
 
     create_profile(user=user, bio=bio, public_name=public_name)
+
+    send_welcome_mail(user=user, public_name=public_name)
 
     return RegisterOutputSerializer(user).data
