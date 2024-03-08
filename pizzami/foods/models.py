@@ -6,9 +6,9 @@ from django.db.models import Avg, F
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from taggit.managers import TaggableManager
+from taggit.models import GenericUUIDTaggedItemBase, TaggedItemBase
 
 from pizzami.common.models import ImageIncludedBaseModel, BaseModel
-from pizzami.common.tags import UUIDTaggedItem
 from pizzami.foods.mangers import FoodManager
 from pizzami.ingredients.models import IngredientCategory, Ingredient
 from pizzami.users.models import Profile
@@ -53,6 +53,12 @@ class FoodCategoryCompound(BaseModel):
         indexes = [
             models.Index(fields=["food_category", "position"])
         ]
+
+
+class UUIDTaggedItem(GenericUUIDTaggedItemBase, TaggedItemBase):
+    class Meta:
+        verbose_name = _("Tag")
+        verbose_name_plural = _("Tags")
 
 
 class Food(ImageIncludedBaseModel):
