@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from taggit.managers import TaggableManager
 
 from pizzami.common.models import ImageIncludedBaseModel, BaseModel
+from pizzami.common.tags import UUIDTaggedItem
 from pizzami.foods.mangers import FoodManager
 from pizzami.ingredients.models import IngredientCategory, Ingredient
 from pizzami.users.models import Profile
@@ -81,7 +82,7 @@ class Food(ImageIncludedBaseModel):
     auto_check_availability = models.BooleanField(default=False, verbose_name=_("auto check availability"))
 
     objects = FoodManager()
-    tags = TaggableManager()
+    tags = TaggableManager(through=UUIDTaggedItem)
 
     main_fk_field = "category"
 
