@@ -31,3 +31,8 @@ def search_food(queryset: QuerySet[Food], search_param: str) -> QuerySet[Food]:
 
 def order_foods(queryset: QuerySet[Food], order_param: str) -> QuerySet[Food]:
     return queryset.order_by(order_param)
+
+
+def add_food_tags(food: Food, tags: list[str]):
+    food.tags.all().delete()
+    food.tags.add(*tags, food.name, food.category.name)
