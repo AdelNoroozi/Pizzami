@@ -1,4 +1,5 @@
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, TrigramSimilarity
+from django.db import transaction
 from django.db.models import QuerySet, Q
 
 from pizzami.foods.models import Food
@@ -33,6 +34,7 @@ def order_foods(queryset: QuerySet[Food], order_param: str) -> QuerySet[Food]:
     return queryset.order_by(order_param)
 
 
+@transaction.atomic
 def add_food_tags(food: Food, tags: list[str]):
-    food.tags.all().delete()
+    food.tags.clear()
     food.tags.add(*tags, food.name, food.category.name)
