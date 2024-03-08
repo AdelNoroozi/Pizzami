@@ -16,6 +16,7 @@ django-extensions==3.2.1
 django-cors-headers==3.13.0
 django-mptt==0.16.0
 django-storages==1.13.1
+django-taggit==3.0.0
 
 drf-jwt==1.19.2
 

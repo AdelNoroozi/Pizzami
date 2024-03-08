@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models import Avg, F
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from taggit.managers import TaggableManager
 
 from pizzami.common.models import ImageIncludedBaseModel, BaseModel
 from pizzami.foods.mangers import FoodManager
@@ -80,6 +81,7 @@ class Food(ImageIncludedBaseModel):
     auto_check_availability = models.BooleanField(default=False, verbose_name=_("auto check availability"))
 
     objects = FoodManager()
+    tags = TaggableManager()
 
     main_fk_field = "category"
 
