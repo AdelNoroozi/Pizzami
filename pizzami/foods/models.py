@@ -55,12 +55,6 @@ class FoodCategoryCompound(BaseModel):
         ]
 
 
-class UUIDTaggedItem(GenericUUIDTaggedItemBase, TaggedItemBase):
-    class Meta:
-        verbose_name = _("Tag")
-        verbose_name_plural = _("Tags")
-
-
 class Food(ImageIncludedBaseModel):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=50, verbose_name=_("name"))
@@ -88,6 +82,12 @@ class Food(ImageIncludedBaseModel):
     auto_check_availability = models.BooleanField(default=False, verbose_name=_("auto check availability"))
 
     objects = FoodManager()
+
+    class UUIDTaggedItem(GenericUUIDTaggedItemBase, TaggedItemBase):
+        class Meta:
+            verbose_name = _("Tag")
+            verbose_name_plural = _("Tags")
+
     tags = TaggableManager(through=UUIDTaggedItem)
 
     main_fk_field = "category"

@@ -85,14 +85,15 @@ class FoodCompleteOutputSerializer(FoodDetailedOutputSerializer):
 
 
 class FoodInputSerializer(serializers.ModelSerializer):
-    ingredients = FoodIngredientBaseInputSerializer(many=True, required=False)
+    ingredients = FoodIngredientBaseInputSerializer(many=True, required=True)
     price = serializers.FloatField(required=False)
+    tags = serializers.ListField(child=serializers.CharField(), required=False)
 
     class Meta:
         model = Food
         fields = (
             "name", "category", "description", "ingredients", "image_url", "image_alt_text", "is_public",
-            "is_available", "price")
+            "is_available", "price", "tags")
 
     def validate_category(self, value):
         if not value.is_active:
@@ -125,6 +126,7 @@ class FoodInputSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def save(self, **kwargs):
+        self.validated_data.pop("tags", [])
         ingredients = self.validated_data.pop("ingredients", [])
         current_user = self.context.get("user")
         if not current_user.is_staff:

@@ -9,7 +9,7 @@ from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 from pizzami.foods.filters import FoodFilter
 from pizzami.foods.models import Food
 from pizzami.foods.selectors import get_foods as get_foods_selector, search_food, order_foods, \
-    delete_food_ingredients_by_food
+    delete_food_ingredients_by_food, add_food_tags
 from pizzami.foods.serializers import FoodBaseOutputSerializer, FoodDetailedOutputSerializer, FoodInputSerializer, \
     FoodCompleteOutputSerializer, FoodPublicDetailedOutputSerializer, FoodMinorInputSerializer
 from pizzami.foods.services.food_ingredient import create_food_ingredient
@@ -46,6 +46,8 @@ def create_food(data: dict, user: BaseUser) -> ReturnDict:
         ingredients = data.pop("ingredients")
         for ingredient_data in ingredients:
             create_food_ingredient(food=serializer.instance, data=ingredient_data)
+    if "tags" in data:
+        add_food_tags(food=serializer.instance, tags=data.pop("tags"))
     response_serializer = FoodCompleteOutputSerializer(serializer.instance, many=False)
     return response_serializer.data
 
@@ -83,6 +85,7 @@ def update_food(food_id: uuid, data: dict, user: BaseUser):
             ingredients = data.pop("ingredients")
             for ingredient_data in ingredients:
                 create_food_ingredient(food=serializer.instance, data=ingredient_data)
+    add_food_tags(food=serializer.instance, tags=data.pop("tags"))
     response_serializer = FoodCompleteOutputSerializer(serializer.instance, many=False)
     return response_serializer.data
 
