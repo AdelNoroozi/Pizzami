@@ -1,6 +1,7 @@
 from django.db import transaction
 from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
+from pizzami.users.filters import UserFilter
 from pizzami.users.models import BaseUser
 from pizzami.users.selectors import get_users as get_users_selector, search_users
 from pizzami.users.selectors.profile import create_profile
@@ -43,5 +44,6 @@ def get_users(query_dict: dict, is_superuser: bool) -> ReturnList:
     search_param = query_dict.get("search")
     if search_param:
         queryset = search_users(queryset=queryset, search_param=search_param)
+    queryset = UserFilter(query_dict, queryset=queryset).qs
     serializer = UserOutputSerializer(queryset, many=True)
     return serializer.data
