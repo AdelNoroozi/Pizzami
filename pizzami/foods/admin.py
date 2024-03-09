@@ -34,9 +34,10 @@ class FoodAdmin(BaseModelAdmin,  NumericFilterModelAdmin):
     list_editable = BaseModelAdmin.list_editable + ["is_confirmed", "is_public", "is_available",
                                                     "auto_check_availability"]
     list_filter = BaseModelAdmin.list_filter + ["is_public", "is_confirmed", "is_original", "is_available",
+                                                "tags__name",
                                                 ("price", SliderNumericFilter),
                                                 ("ordered_count", SliderNumericFilter)]
-    search_fields = ["name", "description"]
+    search_fields = ["name", "description", "tags__name"]
     prepopulated_fields = {
         "image_alt_text": ("name",),
     }
