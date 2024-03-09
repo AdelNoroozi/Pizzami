@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -9,9 +9,9 @@ from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin, IsSup
 from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES, UPDATE_ADDRESS_RESPONSES, \
     DELETE_ADDRESS_RESPONSES
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
-    AddressInputSerializer, AdminInputSerializer
+    AddressInputSerializer, AdminInputSerializer, UserOutputSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
-    delete_address, create_admin
+    delete_address, create_admin, get_users
 
 
 class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -34,6 +34,17 @@ class RegisterApi(APIView):
         register_data = register(data=request.data)
 
         return Response(register_data, status=status.HTTP_201_CREATED)
+
+
+class UsersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "GET": [IsAdminUser]
+    }
+
+    @extend_schema(tags=['Users:Users'], responses=UserOutputSerializer(many=True))
+    def get(self, request):
+        data = get_users(is_superuser=request.user.is_superuser)
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class CreateAdmin(ApiAuthMixin, BasePermissionsMixin, APIView):

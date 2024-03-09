@@ -68,7 +68,7 @@ class UserOutputSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BaseUser
-        exclude = ("password",)
+        exclude = ("password", "groups", "user_permissions")
 
     def get_public_name(self, obj: BaseUser):
         if hasattr(obj, "profile"):
