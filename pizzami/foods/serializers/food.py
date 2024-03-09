@@ -19,12 +19,13 @@ class FoodBaseOutputSerializer(serializers.ModelSerializer):
     created_by = serializers.CharField(source="created_by.public_name", allow_null=True)
     ingredients_str = serializers.SerializerMethodField()
     discounted_price = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Food
         fields = (
             "id", "name", "price", "discounted_price", "category", "created_by", "rate", "ordered_count", "is_original",
-            "is_available", "ingredients_str", "image_url", "image_alt_text")
+            "is_available", "ingredients_str", "image_url", "image_alt_text", "tags")
 
     def get_ingredients_str(self, obj: Food) -> str:
         ingredients = FoodIngredient.objects.filter(food=obj).values_list(
@@ -49,6 +50,9 @@ class FoodBaseOutputSerializer(serializers.ModelSerializer):
                     return obj.price - discount.absolute_value
             else:
                 return ((100 - discount.percentage_value) / 100) * obj.price
+
+    def get_tags(self, obj: Food):
+        return obj.tags.all().values_list("name", flat=True)
 
 
 class FoodDetailedOutputSerializer(FoodBaseOutputSerializer):
