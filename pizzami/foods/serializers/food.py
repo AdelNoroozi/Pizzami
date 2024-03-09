@@ -103,6 +103,11 @@ class FoodInputSerializer(serializers.ModelSerializer):
         if not value.is_active:
             raise ValidationError(_("category is not active"),
                                   code="deactivated_category")
+
+        if not value.is_customizable and not self.context.get("user").is_staff:
+            raise ValidationError(_("normal users can only create foods in customizable categories."),
+                                  code="non_customizable_category")
+
         return value
 
     def validate_image_alt_text(self, value):
