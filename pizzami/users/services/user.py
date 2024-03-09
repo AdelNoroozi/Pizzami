@@ -2,7 +2,7 @@ from django.db import transaction
 from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 from pizzami.users.models import BaseUser
-from pizzami.users.selectors import get_users as get_users_selector
+from pizzami.users.selectors import get_users as get_users_selector, search_users
 from pizzami.users.selectors.profile import create_profile
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, AdminInputSerializer, \
     UserOutputSerializer
@@ -38,7 +38,10 @@ def create_admin(data: dict):
     BaseUser.objects.create_admin(email=data.get("email"), password=data.get("password"))
 
 
-def get_users(is_superuser: bool) -> ReturnList:
+def get_users(query_dict: dict, is_superuser: bool) -> ReturnList:
     queryset = get_users_selector(base_only=not is_superuser)
+    search_param = query_dict.get("search")
+    if search_param:
+        queryset = search_users(queryset=queryset, search_param=search_param)
     serializer = UserOutputSerializer(queryset, many=True)
     return serializer.data

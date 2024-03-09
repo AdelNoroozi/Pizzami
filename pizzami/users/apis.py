@@ -43,7 +43,7 @@ class UsersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(tags=['Users:Users'], responses=UserOutputSerializer(many=True))
     def get(self, request):
-        data = get_users(is_superuser=request.user.is_superuser)
+        data = get_users(query_dict=request.GET, is_superuser=request.user.is_superuser)
         return Response(data, status=status.HTTP_200_OK)
 
 
