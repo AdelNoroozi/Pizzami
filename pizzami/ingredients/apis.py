@@ -106,7 +106,8 @@ class IngredientCategoryActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView)
         responses=CHANGE_INGREDIENT_CATEGORY_ACTIVATION_STATUS_RESPONSES)
     def patch(self, request, **kwargs):
         ingredient_category_id = kwargs.get("id")
-        new_activation_status = change_activation_status(obj_id=ingredient_category_id, obj_cls=IngredientCategory)
+        new_activation_status = change_activation_status(obj_id=ingredient_category_id,
+                                                         queryset=IngredientCategory.objects.all())
         if new_activation_status:
             activation_str = "activated"
         else:
@@ -179,7 +180,7 @@ class IngredientActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         responses=CHANGE_INGREDIENT_ACTIVATION_STATUS_RESPONSES)
     def patch(self, request, **kwargs):
         ingredient_id = kwargs.get("id")
-        new_activation_status = change_activation_status(obj_id=ingredient_id, obj_cls=Ingredient)
+        new_activation_status = change_activation_status(obj_id=ingredient_id, queryset=Ingredient.objects.all())
         if new_activation_status:
             activation_str = "activated"
         else:

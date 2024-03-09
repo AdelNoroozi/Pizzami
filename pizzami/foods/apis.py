@@ -108,7 +108,7 @@ class FoodCategoryActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         responses=CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_RESPONSES)
     def patch(self, request, **kwargs):
         food_category_id = kwargs.get("id")
-        new_activation_status = change_activation_status(obj_id=food_category_id, obj_cls=FoodCategory)
+        new_activation_status = change_activation_status(obj_id=food_category_id, queryset=FoodCategory.objects.all())
         if new_activation_status:
             activation_str = "activated"
         else:
@@ -184,7 +184,7 @@ class FoodActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         responses=CHANGE_FOOD_ACTIVATION_STATUS_RESPONSES)
     def patch(self, request, **kwargs):
         food_id = kwargs.get("id")
-        new_activation_status = change_activation_status(obj_id=food_id, obj_cls=Food)
+        new_activation_status = change_activation_status(obj_id=food_id, queryset=Food.objects.all())
         if new_activation_status:
             activation_str = "activated"
         else:
