@@ -20,7 +20,7 @@ class RateFoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Feedback'],
+        tags=['Feedback:Rating'],
         request=RatingInputSerializer,
         description=RATE_FOOD_DESCRIPTION,
         responses=RATE_FOOD_RESPONSES
@@ -39,7 +39,7 @@ class CommentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=["Feedback"],
+        tags=["Feedback:Comments"],
         description=GET_COMMENTS_DESCRIPTION,
         parameters=GET_COMMENTS_PARAMETERS,
         responses=GET_COMMENTS_RESPONSES
@@ -60,7 +60,7 @@ class CommentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=["Feedback"],
+        tags=["Feedback:Comments"],
         request=CommentInputSerializer,
         responses=CREATE_COMMENT_RESPONSES
     )
@@ -75,7 +75,7 @@ class CommentAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=["Feedback"]
+        tags=["Feedback:Comments"]
     )
     def delete(self, request, **kwargs):
         _id = kwargs.get("id")
@@ -89,7 +89,7 @@ class CommentConfirmAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=["Feedback"],
+        tags=["Feedback:Comments"],
         responses=CHANGE_COMMENT_CONFIRMATION_STATUS_RESPONSES,
         description=CHANGE_COMMENT_CONFIRMATION_STATUS_DESCRIPTION
     )
