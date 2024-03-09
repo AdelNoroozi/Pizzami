@@ -39,6 +39,11 @@ class RegisterInputSerializer(serializers.Serializer):
         return data
 
 
+class AdminInputSerializer(RegisterInputSerializer):
+    bio = None
+    public_name = None
+
+
 class RegisterOutputSerializer(serializers.ModelSerializer):
     token = serializers.SerializerMethodField("get_token")
 
