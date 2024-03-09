@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from pizzami.common.serializers import PaginatedOutputSerializer
 from pizzami.common.validators import string_ending_validator, string_included_validator
 from pizzami.ingredients.models import IngredientCategory
 
@@ -34,3 +35,10 @@ class IngredientCategoryCompleteOutputSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientCategory
         fields = "__all__"
+
+
+class IngredientCategoryPaginatedOutputSerializer(PaginatedOutputSerializer):
+    class ResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
+        data = IngredientCategoryCompleteOutputSerializer(many=True)
+
+    results = ResultsOutputSerializer(many=False)
