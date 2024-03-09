@@ -18,6 +18,19 @@ class BaseUserManager(BUM):
 
         return user
 
+    def create_admin(self, email, password=None):
+        user = self.create_user(
+            email=email,
+            is_active=True,
+            is_admin=True,
+            password=password,
+        )
+
+        user.is_superuser = False
+        user.save(using=self._db)
+
+        return user
+
     def create_superuser(self, email, password=None):
         user = self.create_user(
             email=email,
