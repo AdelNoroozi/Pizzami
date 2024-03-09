@@ -5,13 +5,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
-from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
+from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin, IsSuperUser
 from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES, UPDATE_ADDRESS_RESPONSES, \
     DELETE_ADDRESS_RESPONSES
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
-    AddressInputSerializer
+    AddressInputSerializer, AdminInputSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
-    delete_address
+    delete_address, create_admin
 
 
 class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -34,6 +34,17 @@ class RegisterApi(APIView):
         register_data = register(data=request.data)
 
         return Response(register_data, status=status.HTTP_201_CREATED)
+
+
+class CreateAdmin(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "POST": [IsSuperUser]
+    }
+
+    @extend_schema(tags=['Users:Admins'], request=AdminInputSerializer)
+    def post(self, request):
+        create_admin(data=request.data)
+        return Response({"email": request.data.get("email")}, status=status.HTTP_201_CREATED)
 
 
 class MyAddressesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):

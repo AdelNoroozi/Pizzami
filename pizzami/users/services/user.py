@@ -3,7 +3,7 @@ from rest_framework.utils.serializer_helpers import ReturnDict
 
 from pizzami.users.models import BaseUser
 from pizzami.users.selectors.profile import create_profile
-from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer
+from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, AdminInputSerializer
 from pizzami.users.services import send_welcome_mail
 
 
@@ -31,6 +31,6 @@ def register(data: dict) -> ReturnDict:
 
 @transaction.atomic
 def create_admin(data: dict):
-    serializer = RegisterInputSerializer(data=data)
+    serializer = AdminInputSerializer(data=data)
     serializer.is_valid(raise_exception=True)
     BaseUser.objects.create_admin(email=data.get("email"), password=data.get("password"))
