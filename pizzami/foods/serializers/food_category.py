@@ -1,5 +1,6 @@
 from django.db import transaction
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from pizzami.common.validators import string_included_validator, string_ending_validator
 from pizzami.foods.models import FoodCategory
@@ -28,7 +29,7 @@ class FoodCategoryCompleteOutputSerializer(FoodCategoryDetailedOutputSerializer)
 
 class FoodCategoryInputSerializer(serializers.ModelSerializer):
     # this field is only for defining structure and is not used for creating or updating compounds.
-    compounds = FoodCategoryCompoundInputSerializer(many=True, required=True)
+    compounds = FoodCategoryCompoundInputSerializer(many=True, required=False)
 
     class Meta:
         model = FoodCategory
@@ -61,6 +62,15 @@ class FoodCategoryInputSerializer(serializers.ModelSerializer):
             included_helper="food category's name"
         )
         return value
+
+    def validate(self, data):
+        if data.get("is_customizable") is True and "compounds" not in data:
+            raise ValidationError("customizable food categories must have compounds.")
+
+        if data.get("is_customizable") is False and "compounds" in data:
+            raise ValidationError("non-customizable food categories can not have compounds")
+
+        return data
 
     @transaction.atomic
     def save(self, **kwargs):
