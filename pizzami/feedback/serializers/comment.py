@@ -2,6 +2,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from pizzami.common.serializers import PaginatedOutputSerializer
 from pizzami.feedback.models import Comment
 from pizzami.foods.serializers import FoodBaseOutputSerializer
 from pizzami.users.serializers import ProfileReferenceSerializer
@@ -70,3 +71,10 @@ class CommentHierarchicalOutputSerializer(serializers.ModelSerializer):
     def get_children(self, obj):
         serializer = CommentHierarchicalOutputSerializer(obj.children, many=True)
         return serializer.data
+
+
+class CommentPaginatedOutputSerializer(PaginatedOutputSerializer):
+    class ResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
+        data = CommentDetailedOutputSerializer(many=True)
+
+    results = ResultsOutputSerializer(many=False)
