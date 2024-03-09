@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin, IsSuperUser
 from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES, UPDATE_ADDRESS_RESPONSES, \
-    DELETE_ADDRESS_RESPONSES
+    DELETE_ADDRESS_RESPONSES, GET_USERS_PARAMETERS
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
     AddressInputSerializer, AdminInputSerializer, UserOutputSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
@@ -41,7 +41,7 @@ class UsersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         "GET": [IsAdminUser]
     }
 
-    @extend_schema(tags=['Users:Users'], responses=UserOutputSerializer(many=True))
+    @extend_schema(tags=['Users:Users'], parameters=GET_USERS_PARAMETERS, responses=UserOutputSerializer(many=True))
     def get(self, request):
         data = get_users(query_dict=request.GET, is_superuser=request.user.is_superuser)
         return Response(data, status=status.HTTP_200_OK)
