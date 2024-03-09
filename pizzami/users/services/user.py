@@ -10,7 +10,6 @@ from pizzami.users.services import send_welcome_mail
 def create_user(email: str, password: str) -> BaseUser:
     return BaseUser.objects.create_user(email=email, password=password)
 
-
 @transaction.atomic
 def register(data: dict) -> ReturnDict:
     serializer = RegisterInputSerializer(data=data)
@@ -28,3 +27,10 @@ def register(data: dict) -> ReturnDict:
     send_welcome_mail(user=user, public_name=public_name)
 
     return RegisterOutputSerializer(user).data
+
+
+@transaction.atomic
+def create_admin(data: dict):
+    serializer = RegisterInputSerializer(data=data)
+    serializer.is_valid(raise_exception=True)
+    BaseUser.objects.create_admin(email=data.get("email"), password=data.get("password"))
