@@ -29,7 +29,7 @@ def get_comments(query_dict: QueryDict, is_user_staff: bool, user: BaseUser = No
     order_param = query_dict.get("order_by")
     if search_param:
         queryset = search_comment(queryset=queryset, search_param=search_param)
-    if order_param and order_param.lstrip("-") in ["position", "created_at", "modified_at"]:
+    if order_param and order_param.lstrip("-") in ["position", "created_at", "updated_at"]:
         queryset = order_comments(queryset=queryset, order_param=order_param)
     queryset = CommentFilter(query_dict, queryset=queryset).qs
     serializer_class = CommentDetailedOutputSerializer if is_user_staff else CommentBaseOutputSerializer

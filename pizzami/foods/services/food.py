@@ -28,7 +28,7 @@ def get_foods(query_dict: QueryDict, is_user_staff: bool, user_created: bool, us
         queryset = search_food(queryset=queryset, search_param=search_param)
     queryset = FoodFilter(query_dict, queryset=queryset).qs
     if order_param and \
-            order_param.lstrip("-") in ["rate", "price", "ordered_count", "position", "created_at", "modified_at"]:
+            order_param.lstrip("-") in ["rate", "price", "ordered_count", "position", "created_at", "updated_at"]:
         queryset = order_foods(queryset=queryset, order_param=order_param)
     if is_user_staff or user_created:
         serializer = FoodDetailedOutputSerializer(queryset, many=True)

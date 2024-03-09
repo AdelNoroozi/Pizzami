@@ -23,7 +23,7 @@ def get_discount_list(query_dict: QueryDict, is_user_staff: bool, user: BaseUser
         if specified_to:
             queryset = specific_filter_discounts(queryset=queryset, object_id=specified_to)
         if order_param and \
-                order_param.lstrip("-") in ["start_date", "expiration_date", "position", "created_at", "modified_at",
+                order_param.lstrip("-") in ["start_date", "expiration_date", "position", "created_at", "updated_at",
                                             "absolute_value", "percentage_value"]:
             queryset = order_discounts(queryset=queryset, order_param=order_param)
         serializer = DiscountCompleteOutputSerializer(queryset, many=True)

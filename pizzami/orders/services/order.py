@@ -79,7 +79,7 @@ def get_orders(query_dict: QueryDict, user_created: bool, user: BaseUser = None)
     if search_param:
         queryset = search_order(queryset=queryset, search_param=search_param)
     queryset = OrderFilter(query_dict, queryset=queryset).qs
-    if order_param and order_param.lstrip("-") in ["final_value", "position", "created_at", "modified_at"]:
+    if order_param and order_param.lstrip("-") in ["final_value", "position", "created_at", "updated_at"]:
         queryset = order_orders(queryset=queryset, order_param=order_param)
     serializer = OrderBaseOutputSerializer(queryset, many=True)
     return serializer.data
