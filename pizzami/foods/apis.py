@@ -1,13 +1,14 @@
 from django.db import transaction
 from django.db.models import RestrictedError
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
+from pizzami.api.pagination import FullPagination
 from pizzami.common.services import change_activation_status
 from pizzami.foods.documentaion import (
     CREATE_FOOD_CATEGORY_201_RESPONSE,
@@ -19,7 +20,7 @@ from pizzami.foods.documentaion import (
     FOOD_CATEGORY_404_RESPONSE, DELETE_FOOD_CATEGORY_204_RESPONSE, UPDATE_FOOD_CATEGORY_200_RESPONSE,
     GET_FOODS_200_RESPONSE, GET_FOODS_200_PARAMETERS, CREATE_FOOD_RESPONSES, RETRIEVE_FOOD_RESPONSES,
     UPDATE_FOOD_RESPONSES, CHANGE_FOOD_ACTIVATION_STATUS_RESPONSES, CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_RESPONSES,
-    CHANGE_FOOD_CONFIRMATION_STATUS_RESPONSES
+    CHANGE_FOOD_CONFIRMATION_STATUS_RESPONSES, GET_FOOD_CATEGORIES_PARAMETERS
 )
 from pizzami.foods.models import Food, FoodCategory
 from pizzami.foods.serializers import FoodInputSerializer
@@ -33,12 +34,14 @@ class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=['Foods:Categories'],
-        parameters=[OpenApiParameter(name="is_customizable")],
+        parameters=GET_FOOD_CATEGORIES_PARAMETERS,
         responses={200: GET_FOOD_CATEGORIES_200_RESPONSE}
     )
     def get(self, request):
         data = get_food_categories(query_dict=request.GET, is_user_staff=request.user.is_staff)
-        return Response(data=data, status=status.HTTP_200_OK)
+        paginator = FullPagination()
+        paginated_data = paginator.paginate_queryset(queryset=data, request=request)
+        return paginator.get_paginated_response(data={"ok": True, "data": paginated_data, "status": status.HTTP_200_OK})
 
     @extend_schema(
         tags=['Foods:Categories'],
@@ -137,7 +140,9 @@ class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
                              user=request.user)
         else:
             data = get_foods(query_dict=get_method, is_user_staff=request.user.is_staff, user_created=False)
-        return Response(data=data, status=status.HTTP_200_OK)
+        paginator = FullPagination()
+        paginated_data = paginator.paginate_queryset(queryset=data, request=request)
+        return paginator.get_paginated_response(data={"ok": True, "data": paginated_data, "status": status.HTTP_200_OK})
 
     @extend_schema(
         tags=['Foods:Foods'],

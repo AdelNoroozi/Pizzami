@@ -1,9 +1,10 @@
 from drf_spectacular.utils import OpenApiResponse, OpenApiParameter
 
-from pizzami.foods.serializers import FoodDetailedOutputSerializer, FoodCompleteOutputSerializer
+from pizzami.foods.serializers import FoodCompleteOutputSerializer, \
+    FoodCategoryPaginatedOutputSerializer
 
 GET_FOODS_200_RESPONSE = OpenApiResponse(
-    response=FoodDetailedOutputSerializer(many=True),
+    response=FoodCategoryPaginatedOutputSerializer(),
     description="Represents a list of foods. If the set parameter has the value 'mine' it will show foods created by"
                 "requesting user. This list can be filtered these parameters: category, creator, being original, "
                 "price range, confirmed & publicity. It can also be ordered by rate, price, ordered_count, position,"
@@ -14,6 +15,8 @@ GET_FOODS_200_RESPONSE = OpenApiResponse(
 GET_FOODS_200_PARAMETERS = [
     OpenApiParameter(name="set", description="can be null or 'mine'"),
     OpenApiParameter(name="search", description="can be any string"),
+    OpenApiParameter(name="page_size", description="must be a valid int"),
+    OpenApiParameter(name="page", description="must be a valid int"),
     OpenApiParameter(name="category", description="must be the id of a food category"),
     OpenApiParameter(name="tags__name", description="must be a tag"),
     OpenApiParameter(name="created_by", description="must be the id of a user profile"),

@@ -1,7 +1,7 @@
-from drf_spectacular.utils import OpenApiResponse
+from drf_spectacular.utils import OpenApiResponse, OpenApiParameter
 
-from pizzami.foods.serializers import FoodCategoryCompleteOutputSerializer, FoodCategoryBaseOutputSerializer, \
-    FoodCategoryDetailedOutputSerializer
+from pizzami.foods.serializers import FoodCategoryCompleteOutputSerializer, FoodCategoryDetailedOutputSerializer, \
+    FoodCategoryPaginatedOutputSerializer
 
 CREATE_FOOD_CATEGORY_201_RESPONSE = OpenApiResponse(
     response=FoodCategoryCompleteOutputSerializer,
@@ -22,7 +22,7 @@ FOOD_CATEGORY_403_RESPONSE = OpenApiResponse(
 )
 
 GET_FOOD_CATEGORIES_200_RESPONSE = OpenApiResponse(
-    response=FoodCategoryBaseOutputSerializer(many=True),
+    response=FoodCategoryPaginatedOutputSerializer(),
     description="just for list representation and contains only id, icon & name"
 )
 
@@ -47,10 +47,8 @@ UPDATE_FOOD_CATEGORY_200_RESPONSE = OpenApiResponse(
     description="food category updated successfully"
 )
 
-
 CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_200_RESPONSE = OpenApiResponse(
     response={"message": "food category activated/deactivated successfully"})
-
 
 CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_RESPONSES = {
     200: CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_200_RESPONSE,
@@ -58,3 +56,9 @@ CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_RESPONSES = {
     403: FOOD_CATEGORY_403_RESPONSE,
     404: FOOD_CATEGORY_404_RESPONSE
 }
+
+GET_FOOD_CATEGORIES_PARAMETERS = [
+    OpenApiParameter(name="is_customizable", description="can be true or false"),
+    OpenApiParameter(name="page_size", description="must be a valid int"),
+    OpenApiParameter(name="page", description="must be a valid int")
+]
