@@ -8,4 +8,7 @@ def send_welcome_mail(user: BaseUser, public_name: str):
     subject = "Welcome to Pizzami!"
     message = f"Hello {public_name}. Welcome to Pizzami.\nWish you a great day."
     recipients = [user.email]
-    send_mail(subject=subject, message=message, from_email=EMAIL_HOST, recipient_list=recipients)
+    try:
+        send_mail(subject=subject, message=message, from_email=EMAIL_HOST, recipient_list=recipients)
+    except:
+        pass
