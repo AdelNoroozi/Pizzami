@@ -20,7 +20,7 @@ class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Users'],
+        tags=['Users:Users'],
         responses=ProfileOutputSerializer)
     def get(self, request):
         profile_data = get_profile(user=request.user)
@@ -29,7 +29,7 @@ class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class RegisterApi(APIView):
 
-    @extend_schema(tags=['Users'], request=RegisterInputSerializer, responses=RegisterOutputSerializer)
+    @extend_schema(tags=['Users:Users'], request=RegisterInputSerializer, responses=RegisterOutputSerializer)
     def post(self, request):
         register_data = register(data=request.data)
 
@@ -43,7 +43,7 @@ class MyAddressesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Users'],
+        tags=['Users:Addresses'],
         parameters=[OpenApiParameter(name="search", description="can be any string.")],
         responses=GET_ADDRESSES_RESPONSES
     )
@@ -53,7 +53,7 @@ class MyAddressesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=['Users'],
+        tags=['Users:Addresses'],
         request=AddressInputSerializer,
         responses=CREATE_ADDRESS_RESPONSES
     )
@@ -69,7 +69,7 @@ class MyAddressAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Users'],
+        tags=['Users:Addresses'],
         request=AddressInputSerializer,
         responses=UPDATE_ADDRESS_RESPONSES
     )
@@ -79,7 +79,7 @@ class MyAddressAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=['Users'],
+        tags=['Users:Addresses'],
         responses=DELETE_ADDRESS_RESPONSES
     )
     def delete(self, request, **kwargs):
