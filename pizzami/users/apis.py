@@ -16,7 +16,7 @@ from pizzami.users.services import register, get_profile, get_my_addresses, crea
 
 class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
     permissions = {
-        "GET": [IsAuthenticated]
+        "GET": [IsAuthenticatedAndNotAdmin]
     }
 
     @extend_schema(
