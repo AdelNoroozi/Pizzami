@@ -32,7 +32,7 @@ from pizzami.foods.services.food_category import delete_food_category, update_fo
 class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
-        tags=['Foods'],
+        tags=['Foods:Categories'],
         parameters=[OpenApiParameter(name="is_customizable")],
         responses={200: GET_FOOD_CATEGORIES_200_RESPONSE}
     )
@@ -41,7 +41,7 @@ class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=['Foods'],
+        tags=['Foods:Categories'],
         request=FoodCategoryInputSerializer,
         responses={201: CREATE_FOOD_CATEGORY_201_RESPONSE,
                    400: SAVE_FOOD_CATEGORY_400_RESPONSE,
@@ -55,7 +55,7 @@ class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     @extend_schema(
-        tags=['Foods'],
+        tags=['Foods:Categories'],
         responses={200: RETRIEVE_FOOD_CATEGORY_200_RESPONSE,
                    404: FOOD_CATEGORY_404_RESPONSE}
     )
@@ -65,7 +65,7 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=food_category_data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=['Foods'],
+        tags=['Foods:Categories'],
         # add 400
         responses={204: DELETE_FOOD_CATEGORY_204_RESPONSE,
                    401: FOOD_CATEGORY_401_RESPONSE,
@@ -84,7 +84,7 @@ class FoodCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
 
     @extend_schema(
-        tags=['Foods'],
+        tags=['Foods:Categories'],
         request=FoodCategoryInputSerializer,
         responses={200: UPDATE_FOOD_CATEGORY_200_RESPONSE,
                    400: SAVE_FOOD_CATEGORY_400_RESPONSE,
@@ -103,7 +103,7 @@ class FoodCategoryActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Foods'],
+        tags=['Foods:Categories'],
         description="changes food category's activation status. only for staff users.",
         responses=CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_RESPONSES)
     def patch(self, request, **kwargs):
@@ -123,7 +123,7 @@ class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Foods'],
+        tags=['Foods:Foods'],
         parameters=GET_FOODS_200_PARAMETERS,
         responses={200: GET_FOODS_200_RESPONSE}
     )
@@ -140,7 +140,7 @@ class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=['Foods'],
+        tags=['Foods:Foods'],
         request=FoodInputSerializer,
         responses=CREATE_FOOD_RESPONSES
     )
@@ -155,14 +155,14 @@ class FoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         "PUT": [IsAuthenticated]
     }
 
-    @extend_schema(tags=['Foods'], responses=RETRIEVE_FOOD_RESPONSES)
+    @extend_schema(tags=['Foods:Foods'], responses=RETRIEVE_FOOD_RESPONSES)
     def get(self, request, **kwargs):
         _id = kwargs.get("id")
         food_data = retrieve_food(food_id=_id, user=request.user)
         return Response(data=food_data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=['Foods'],
+        tags=['Foods:Foods'],
         description="normal users can only update name, description and publicity of their own foods.",
         request=FoodInputSerializer,
         responses=UPDATE_FOOD_RESPONSES
@@ -179,7 +179,7 @@ class FoodActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Foods'],
+        tags=['Foods:Foods'],
         description="changes foods activation status. only for staff users.",
         responses=CHANGE_FOOD_ACTIVATION_STATUS_RESPONSES)
     def patch(self, request, **kwargs):
@@ -198,7 +198,7 @@ class FoodConfirmAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Foods'],
+        tags=['Foods:Foods'],
         description="changes foods confirmation status. the action must be confirm, reject or suspend."
                     " only for staff users.",
         responses=CHANGE_FOOD_CONFIRMATION_STATUS_RESPONSES)
