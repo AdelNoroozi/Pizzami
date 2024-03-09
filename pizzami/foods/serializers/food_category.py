@@ -2,6 +2,7 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from pizzami.common.serializers import PaginatedOutputSerializer
 from pizzami.common.validators import string_included_validator, string_ending_validator
 from pizzami.foods.models import FoodCategory
 from pizzami.foods.serializers.food_category_compound import FoodCategoryCompoundSerializer, \
@@ -76,3 +77,10 @@ class FoodCategoryInputSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         self.validated_data.pop("compounds", [])
         return super().save(**kwargs)
+
+
+class FoodCategoryPaginatedOutputSerializer(PaginatedOutputSerializer):
+    class ResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
+        data = FoodCategoryBaseOutputSerializer(many=True)
+
+    results = ResultsOutputSerializer(many=False)
