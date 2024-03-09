@@ -38,7 +38,7 @@ def create_admin(data: dict):
     BaseUser.objects.create_admin(email=data.get("email"), password=data.get("password"))
 
 
-def get_users(is_staff: bool) -> ReturnList:
-    queryset = get_users_selector(base_only=not is_staff)
+def get_users(is_superuser: bool) -> ReturnList:
+    queryset = get_users_selector(base_only=not is_superuser)
     serializer = UserOutputSerializer(queryset, many=True)
     return serializer.data

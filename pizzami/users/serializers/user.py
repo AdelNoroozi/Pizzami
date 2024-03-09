@@ -71,5 +71,5 @@ class UserOutputSerializer(serializers.ModelSerializer):
         exclude = ("password",)
 
     def get_public_name(self, obj: BaseUser):
-        if obj.profile:
+        if hasattr(obj, "profile"):
             return obj.profile.public_name
