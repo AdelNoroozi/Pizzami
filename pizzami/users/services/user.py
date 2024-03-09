@@ -1,9 +1,11 @@
 from django.db import transaction
-from rest_framework.utils.serializer_helpers import ReturnDict
+from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 from pizzami.users.models import BaseUser
+from pizzami.users.selectors import get_users as get_users_selector
 from pizzami.users.selectors.profile import create_profile
-from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, AdminInputSerializer
+from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, AdminInputSerializer, \
+    UserOutputSerializer
 from pizzami.users.services import send_welcome_mail
 
 
@@ -34,3 +36,9 @@ def create_admin(data: dict):
     serializer = AdminInputSerializer(data=data)
     serializer.is_valid(raise_exception=True)
     BaseUser.objects.create_admin(email=data.get("email"), password=data.get("password"))
+
+
+def get_users(is_staff: bool) -> ReturnList:
+    queryset = get_users_selector(base_only=not is_staff)
+    serializer = UserOutputSerializer(queryset, many=True)
+    return serializer.data
