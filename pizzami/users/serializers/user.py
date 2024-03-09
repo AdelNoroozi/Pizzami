@@ -62,3 +62,14 @@ class RegisterOutputSerializer(serializers.ModelSerializer):
 
         return data
 
+
+class UserOutputSerializer(serializers.ModelSerializer):
+    public_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = BaseUser
+        exclude = ("password",)
+
+    def get_public_name(self, obj: BaseUser):
+        if obj.profile:
+            return obj.profile.public_name
