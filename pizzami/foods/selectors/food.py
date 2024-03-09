@@ -19,9 +19,10 @@ def get_foods(return_all: bool, user_profile: Profile = None) -> QuerySet[Food]:
 def search_food(queryset: QuerySet[Food], search_param: str) -> QuerySet[Food]:
     trigram_similarity = TrigramSimilarity("name", search_param) + \
                          TrigramSimilarity("description", search_param) + \
-                         TrigramSimilarity("category__name", search_param)
+                         TrigramSimilarity("category__name", search_param) + \
+                         TrigramSimilarity("tags__name", search_param)
     search_vector = SearchVector("name", weight="A") + SearchVector("description", weight="C") + SearchVector(
-        "category__name", weight="B")
+        "category__name", weight="B") + SearchVector("tags__name", weight="B")
     search_query = SearchQuery(search_param)
     return queryset.annotate(
         search=search_vector,
