@@ -6,8 +6,10 @@ from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin, IsSuperUser
+from pizzami.common.services import change_activation_status
 from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES, UPDATE_ADDRESS_RESPONSES, \
     DELETE_ADDRESS_RESPONSES, GET_USERS_PARAMETERS
+from pizzami.users.models import BaseUser
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
     AddressInputSerializer, AdminInputSerializer, UserOutputSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
@@ -45,6 +47,22 @@ class UsersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def get(self, request):
         data = get_users(query_dict=request.GET, is_superuser=request.user.is_superuser)
         return Response(data, status=status.HTTP_200_OK)
+
+
+class UserActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "PATCH": [IsAdminUser]
+    }
+
+    @extend_schema(
+        tags=['Users:Users'],
+        description="changes user's activation status. only for staff users.")
+    def patch(self, request, **kwargs):
+        user_id = kwargs.get("id")
+        queryset = BaseUser.objects.exclude(id=request.user.id) if request.user.is_superuser else BaseUser.objects.filter(is_admin=False, is_superuser=False)
+        new_activation_status = change_activation_status(obj_id=user_id, queryset=queryset)
+        activation_str = "activated" if new_activation_status else "deactivated"
+        return Response(data={"message": f"user {activation_str} successfully"})
 
 
 class CreateAdmin(ApiAuthMixin, BasePermissionsMixin, APIView):
