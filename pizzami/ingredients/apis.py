@@ -39,7 +39,7 @@ from pizzami.ingredients.services import (
 class IngredientCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
-        tags=['Ingredients'],
+        tags=['Ingredients:Categories'],
         responses={200: GET_INGREDIENT_CATEGORIES_200_RESPONSE}
     )
     def get(self, request):
@@ -47,7 +47,7 @@ class IngredientCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=['Ingredients'],
+        tags=['Ingredients:Categories'],
         request=IngredientCategoryInputSerializer,
         responses={201: CREATE_INGREDIENT_CATEGORY_201_RESPONSE,
                    400: SAVE_INGREDIENT_CATEGORY_400_RESPONSE,
@@ -62,7 +62,7 @@ class IngredientCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 class IngredientCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
-        tags=['Ingredients'],
+        tags=['Ingredients:Categories'],
         request=IngredientCategoryInputSerializer,
         responses={200: UPDATE_INGREDIENT_CATEGORY_200_RESPONSE,
                    400: SAVE_INGREDIENT_CATEGORY_400_RESPONSE,
@@ -76,7 +76,7 @@ class IngredientCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=updated_ingredient_category_data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=['Ingredients'],
+        tags=['Ingredients:Categories'],
         responses={204: DELETE_INGREDIENT_CATEGORY_204_RESPONSE,
                    401: INGREDIENT_CATEGORY_401_RESPONSE,
                    403: INGREDIENT_CATEGORY_403_RESPONSE,
@@ -101,7 +101,7 @@ class IngredientCategoryActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView)
     }
 
     @extend_schema(
-        tags=['Ingredients'],
+        tags=['Ingredients:Categories'],
         description="changes ingredient category's activation status. only for staff users.",
         responses=CHANGE_INGREDIENT_CATEGORY_ACTIVATION_STATUS_RESPONSES)
     def patch(self, request, **kwargs):
@@ -117,7 +117,7 @@ class IngredientCategoryActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView)
 class IngredientsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
-        tags=['Ingredients'],
+        tags=['Ingredients:Ingredients'],
         parameters=[OpenApiParameter(name="category")],
         responses={200: GET_INGREDIENTS_200_RESPONSE})
     def get(self, request):
@@ -125,7 +125,7 @@ class IngredientsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=['Ingredients'],
+        tags=['Ingredients:Ingredients'],
         request=IngredientInputSerializer,
         responses={201: CREATE_INGREDIENT_201_RESPONSE,
                    400: SAVE_INGREDIENT_CATEGORY_400_RESPONSE,
@@ -139,7 +139,7 @@ class IngredientsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 class IngredientAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
-        tags=['Ingredients'],
+        tags=['Ingredients:Ingredients'],
         request=IngredientInputSerializer,
         responses={200: UPDATE_INGREDIENT_200_RESPONSE,
                    400: SAVE_INGREDIENT_CATEGORY_400_RESPONSE,
@@ -152,7 +152,7 @@ class IngredientAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=updated_ingredient_data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=['Ingredients'],
+        tags=['Ingredients:Ingredients'],
         responses={204: DELETE_INGREDIENT_204_RESPONSE,
                    401: INGREDIENT_401_RESPONSE,
                    403: INGREDIENT_403_RESPONSE,
@@ -174,7 +174,7 @@ class IngredientActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Ingredients'],
+        tags=['Ingredients:Ingredients'],
         description="changes ingredient's activation status. only for staff users.",
         responses=CHANGE_INGREDIENT_ACTIVATION_STATUS_RESPONSES)
     def patch(self, request, **kwargs):
