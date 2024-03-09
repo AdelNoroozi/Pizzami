@@ -12,5 +12,6 @@ class FoodFilter(FilterSet):
             "is_original": ["exact"],
             "price": ["lt", "gt"],
             "is_confirmed": ["exact"],
-            "is_public": ["exact"]
+            "is_public": ["exact"],
+            "tags__name": ["exact"]
         }

@@ -15,6 +15,7 @@ GET_FOODS_200_PARAMETERS = [
     OpenApiParameter(name="set", description="can be null or 'mine'"),
     OpenApiParameter(name="search", description="can be any string"),
     OpenApiParameter(name="category", description="must be the id of a food category"),
+    OpenApiParameter(name="tags__name", description="must be a tag"),
     OpenApiParameter(name="created_by", description="must be the id of a user profile"),
     OpenApiParameter(name="is_original", description="must be true or false"),
     OpenApiParameter(name="is_confirmed", description="must be true or false"),
