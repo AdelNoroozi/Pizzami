@@ -65,6 +65,7 @@ class RegisterOutputSerializer(serializers.ModelSerializer):
 
 class UserOutputSerializer(serializers.ModelSerializer):
     public_name = serializers.SerializerMethodField()
+    bio = serializers.SerializerMethodField()
 
     class Meta:
         model = BaseUser
@@ -73,3 +74,7 @@ class UserOutputSerializer(serializers.ModelSerializer):
     def get_public_name(self, obj: BaseUser):
         if hasattr(obj, "profile"):
             return obj.profile.public_name
+
+    def get_bio(self, obj: BaseUser):
+        if hasattr(obj, "profile"):
+            return obj.profile.bio
