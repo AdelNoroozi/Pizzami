@@ -26,7 +26,7 @@ class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Discounts'],
         parameters=GET_DISCOUNTS_PARAMETERS,
         responses=GET_DISCOUNTS_RESPONSES
     )
@@ -36,7 +36,7 @@ class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Discounts'],
         request=DiscountInputSerializer,
         responses=CREATE_DISCOUNT_RESPONSES
     )
@@ -47,7 +47,7 @@ class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
 class DiscountAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Discounts'],
         responses=DELETE_DISCOUNT_RESPONSES
     )
     def delete(self, request, **kwargs):
@@ -60,7 +60,7 @@ class DiscountAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
 
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Discounts'],
         request=DiscountInputSerializer,
         responses=UPDATE_DISCOUNT_RESPONSES
     )
@@ -76,7 +76,7 @@ class InquiryDiscountAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Discounts'],
         request=DiscountInquirySerializer,
         responses=INQUIRY_DISCOUNT_RESPONSES
     )
@@ -96,7 +96,7 @@ class AddToCartAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Carts'],
         request=CartItemInputSerializer,
         responses=ADD_TO_CART_RESPONSES
     )
@@ -117,7 +117,7 @@ class MyCartAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Carts'],
         responses=MY_CART_RESPONSES
     )
     def get(self, request, **kwargs):
@@ -133,7 +133,7 @@ class OrdersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Orders'],
         request=OrderInputSerializer,
         responses=CREATE_OR_UPDATE_ORDER_RESPONSES
     )
@@ -144,7 +144,7 @@ class OrdersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data=order_data, status=status.HTTP_200_OK)
 
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Orders'],
         parameters=GET_ORDERS_PARAMETERS,
         responses=GET_ORDERS_RESPONSES
     )
@@ -171,7 +171,7 @@ class OrderAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Orders'],
         request=UpdateOrderStatusSerializer,
         responses=UPDATE_ORDER_STATUS_RESPONSES
     )
@@ -187,7 +187,7 @@ class OrderAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data={"message": response_message}, status=res_status)
 
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Orders'],
         responses=RETRIEVE_ORDER_RESPONSES
     )
     def get(self, request, **kwargs):
@@ -206,7 +206,7 @@ class SubmitMyOrderAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Orders'],
         responses=SUBMIT_MY_ORDER_RESPONSES
     )
     def patch(self, request, **kwargs):
@@ -226,7 +226,7 @@ class PaymentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     }
 
     @extend_schema(
-        tags=['Orders'],
+        tags=['Orders:Payments'],
         request=PaymentGenericSerializer,
         description="don't use. this has no real function."
     )
