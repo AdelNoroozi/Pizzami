@@ -11,4 +11,9 @@ def get_users(base_only: bool) -> QuerySet:
 
 
 def search_users(queryset: QuerySet, search_param: str) -> QuerySet:
-    return queryset.filter(Q(email__icontains=search_param) | Q(profile__public_name__icontains=search_param))
+    return queryset.filter(
+        Q(email__icontains=search_param) | Q(profile__public_name__icontains=search_param)).distinct()
+
+
+def order_users(queryset: QuerySet, order_param: str) -> QuerySet:
+    return queryset.order_by(order_param)

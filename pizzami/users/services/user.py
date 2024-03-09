@@ -3,7 +3,7 @@ from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 from pizzami.users.filters import UserFilter
 from pizzami.users.models import BaseUser
-from pizzami.users.selectors import get_users as get_users_selector, search_users
+from pizzami.users.selectors import get_users as get_users_selector, search_users, order_users
 from pizzami.users.selectors.profile import create_profile
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, AdminInputSerializer, \
     UserOutputSerializer
@@ -42,8 +42,12 @@ def create_admin(data: dict):
 def get_users(query_dict: dict, is_superuser: bool) -> ReturnList:
     queryset = get_users_selector(base_only=not is_superuser)
     search_param = query_dict.get("search")
+    order_param = query_dict.get("order_by")
     if search_param:
         queryset = search_users(queryset=queryset, search_param=search_param)
+    if order_param and \
+            order_param.lstrip("-") in ["position", "created_at", "updated_at"]:
+        queryset = order_users(queryset=queryset, order_param=order_param)
     queryset = UserFilter(query_dict, queryset=queryset).qs
     serializer = UserOutputSerializer(queryset, many=True)
     return serializer.data
