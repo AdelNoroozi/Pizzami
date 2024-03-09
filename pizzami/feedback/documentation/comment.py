@@ -1,7 +1,8 @@
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import OpenApiResponse, OpenApiParameter
 
-from pizzami.feedback.serializers import CommentBaseOutputSerializer, CommentDetailedOutputSerializer
+from pizzami.feedback.serializers import CommentBaseOutputSerializer, CommentDetailedOutputSerializer, \
+    CommentPaginatedOutputSerializer
 
 CREATE_COMMENT_201_RESPONSE = OpenApiResponse(
     response=CommentBaseOutputSerializer,
@@ -30,7 +31,7 @@ CREATE_COMMENT_RESPONSES = {
 }
 
 GET_COMMENTS_200_RESPONSE = OpenApiResponse(
-    response=CommentDetailedOutputSerializer(many=True),
+    response=CommentPaginatedOutputSerializer(),
     description=_("returns a list of comments. the user field is only shown to staff users.")
 )
 
@@ -44,6 +45,8 @@ GET_COMMENTS_PARAMETERS = [
     OpenApiParameter(name="set", description="can be null or mine."),
     OpenApiParameter(name="search",
                      description="can be any string. this will be done on comment's text or food's name."),
+    OpenApiParameter(name="page_size", description="must be a valid int"),
+    OpenApiParameter(name="page", description="must be a valid int"),
     OpenApiParameter(name="is_confirmed", description="must be true or false or null"),
     OpenApiParameter(name="food", description="must be the id of a food"),
     OpenApiParameter(name="user", description="must be the id of a user profile"),

@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
+from pizzami.api.pagination import FullPagination
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.feedback.documentation import RATE_FOOD_DESCRIPTION, RATE_FOOD_RESPONSES, CREATE_COMMENT_RESPONSES, \
     GET_COMMENTS_DESCRIPTION, GET_COMMENTS_PARAMETERS, GET_COMMENTS_RESPONSES, \
@@ -57,7 +58,9 @@ class CommentsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
                 return Response(data={"error": "only authenticated normal users can access their own comments"},
                                 status=status.HTTP_403_FORBIDDEN)
             data = get_comments(query_dict=query_dict, is_user_staff=False, user=user)
-        return Response(data=data, status=status.HTTP_200_OK)
+        paginator = FullPagination()
+        paginated_data = paginator.paginate_queryset(queryset=data, request=request)
+        return paginator.get_paginated_response(data={"ok": True, "data": paginated_data, "status": status.HTTP_200_OK})
 
     @extend_schema(
         tags=["Feedback:Comments"],
