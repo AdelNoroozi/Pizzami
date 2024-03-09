@@ -93,7 +93,7 @@ GET_ORDERS_PARAMETERS = [
     OpenApiParameter(name="cart__items__food__category", description="must be the id of a food category"),
     OpenApiParameter(name="cart__user", description="must be the id of a user profile"),
     OpenApiParameter(name="order_by",
-                     description="can be final_value, position, created_at, modified_at. a - symbol can"
+                     description="can be final_value, position, created_at, updated_at. a - symbol can"
                                  " be added before the param for descending order.")
 ]
 

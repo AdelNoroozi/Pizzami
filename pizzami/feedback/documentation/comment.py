@@ -48,7 +48,7 @@ GET_COMMENTS_PARAMETERS = [
     OpenApiParameter(name="food", description="must be the id of a food"),
     OpenApiParameter(name="user", description="must be the id of a user profile"),
     OpenApiParameter(name="order_by",
-                     description="can be position, created_at, modified_at. a - symbol can"
+                     description="can be position, created_at, updated_at. a - symbol can"
                                  " be added before the param for descending order.")
 ]
 

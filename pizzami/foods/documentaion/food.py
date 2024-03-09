@@ -23,7 +23,7 @@ GET_FOODS_200_PARAMETERS = [
     OpenApiParameter(name="price__gt", description="must be a float"),
     OpenApiParameter(name="price__lt", description="must be a float"),
     OpenApiParameter(name="order_by", description="can be rate, price, ordered_count, position, created_at or "
-                                                  "modified_at. a - symbol can be added before the param for descending"
+                                                  "updated_at. a - symbol can be added before the param for descending"
                                                   " order."),
 ]
 
