@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
+from pizzami.common.serializers import PaginatedOutputSerializer
 from pizzami.foods.models import Food, FoodCategory
 from pizzami.foods.serializers import FoodBaseOutputSerializer, FoodCategoryBaseOutputSerializer
 from pizzami.orders.models import Discount
@@ -96,3 +97,10 @@ class DiscountInputSerializer(serializers.ModelSerializer):
 
 class DiscountInquirySerializer(serializers.Serializer):
     code = serializers.CharField(required=True)
+
+
+class DiscountPaginatedOutputSerializer(PaginatedOutputSerializer):
+    class ResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
+        data = DiscountCompleteOutputSerializer(many=True)
+
+    results = ResultsOutputSerializer(many=False)

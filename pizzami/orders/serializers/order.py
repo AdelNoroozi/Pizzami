@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from pizzami.common.serializers import PaginatedOutputSerializer
 from pizzami.orders.models import Order, Discount
 from pizzami.orders.selectors import inquiry_discount_by_id
 from pizzami.orders.serializers import CartCompleteOutputsSerializer, DiscountBaseOutputSerializer
@@ -95,3 +96,9 @@ class UpdateOrderStatusSerializer(serializers.Serializer):
     )
     status = serializers.ChoiceField(choices=STATUS_MANUAL_CHOICES)
 
+
+class OrderPaginatedOutputSerializer(PaginatedOutputSerializer):
+    class ResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
+        data = OrderBaseOutputSerializer(many=True)
+
+    results = ResultsOutputSerializer(many=False)
