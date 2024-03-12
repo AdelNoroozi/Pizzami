@@ -1,9 +1,9 @@
-from drf_spectacular.utils import OpenApiResponse
+from drf_spectacular.utils import OpenApiResponse, OpenApiParameter
 
-from pizzami.ingredients.serializers import IngredientCompleteOutputSerializer
+from pizzami.ingredients.serializers import IngredientCompleteOutputSerializer, IngredientPaginatedOutputSerializer
 
 GET_INGREDIENTS_200_RESPONSE = OpenApiResponse(
-    response=IngredientCompleteOutputSerializer(many=True),
+    response=IngredientPaginatedOutputSerializer(),
     description="created_at, updated_at & is_active fields are only visible to users with staff privileges."
 )
 
@@ -47,3 +47,9 @@ CHANGE_INGREDIENT_ACTIVATION_STATUS_RESPONSES = {
     403: INGREDIENT_403_RESPONSE,
     404: INGREDIENT_404_RESPONSE
 }
+
+GET_INGREDIENT_PARAMETERS = [
+    OpenApiParameter(name="page_size", description="must be a valid int"),
+    OpenApiParameter(name="page", description="must be a valid int"),
+    OpenApiParameter(name="category", description="must be the id of an ingredient category")
+]

@@ -16,3 +16,4 @@ from pizzami.ingredients.documentation.ingredient import UPDATE_INGREDIENT_200_R
 from pizzami.ingredients.documentation.ingredient import INGREDIENT_404_RESPONSE
 from pizzami.ingredients.documentation.ingredient import DELETE_INGREDIENT_204_RESPONSE
 from pizzami.ingredients.documentation.ingredient import CHANGE_INGREDIENT_ACTIVATION_STATUS_RESPONSES
+from pizzami.ingredients.documentation.ingredient import GET_INGREDIENT_PARAMETERS

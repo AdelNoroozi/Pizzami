@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
+from pizzami.api.pagination import FullPagination
 from pizzami.common.services import change_activation_status
 from pizzami.ingredients.documentation import (
     GET_INGREDIENT_CATEGORIES_200_RESPONSE,
@@ -22,7 +23,8 @@ from pizzami.ingredients.documentation import (
     CREATE_INGREDIENT_201_RESPONSE,
     INGREDIENT_401_RESPONSE,
     INGREDIENT_403_RESPONSE, UPDATE_INGREDIENT_200_RESPONSE, INGREDIENT_404_RESPONSE, DELETE_INGREDIENT_204_RESPONSE,
-    CHANGE_INGREDIENT_CATEGORY_ACTIVATION_STATUS_RESPONSES, CHANGE_INGREDIENT_ACTIVATION_STATUS_RESPONSES
+    CHANGE_INGREDIENT_CATEGORY_ACTIVATION_STATUS_RESPONSES, CHANGE_INGREDIENT_ACTIVATION_STATUS_RESPONSES,
+    GET_INGREDIENT_PARAMETERS
 )
 from pizzami.ingredients.models import IngredientCategory, Ingredient
 from pizzami.ingredients.serializers import IngredientCategoryInputSerializer, IngredientInputSerializer
@@ -119,11 +121,13 @@ class IngredientsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=['Ingredients:Ingredients'],
-        parameters=[OpenApiParameter(name="category")],
+        parameters=GET_INGREDIENT_PARAMETERS,
         responses={200: GET_INGREDIENTS_200_RESPONSE})
     def get(self, request):
         data = get_ingredients(query_dict=request.GET, is_user_staff=request.user.is_staff)
-        return Response(data=data, status=status.HTTP_200_OK)
+        paginator = FullPagination()
+        paginated_data = paginator.paginate_queryset(queryset=data, request=request)
+        return paginator.get_paginated_response(data={"ok": True, "data": paginated_data, "status": status.HTTP_200_OK})
 
     @extend_schema(
         tags=['Ingredients:Ingredients'],
