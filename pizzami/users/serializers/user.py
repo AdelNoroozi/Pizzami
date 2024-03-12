@@ -2,6 +2,7 @@ from django.core.validators import MinLengthValidator
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from pizzami.common.serializers import PaginatedOutputSerializer
 from pizzami.users.models import BaseUser, Profile
 from pizzami.users.validators import number_validator, letter_validator, special_char_validator
 
@@ -78,3 +79,10 @@ class UserOutputSerializer(serializers.ModelSerializer):
     def get_bio(self, obj: BaseUser):
         if hasattr(obj, "profile"):
             return obj.profile.bio
+
+
+class UserPaginatedOutputSerializer(PaginatedOutputSerializer):
+    class UserResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
+        data = UserOutputSerializer(many=True)
+
+    results = UserResultsOutputSerializer(many=False)

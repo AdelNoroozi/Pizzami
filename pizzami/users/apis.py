@@ -5,13 +5,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
+from pizzami.api.pagination import FullPagination
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin, IsSuperUser
 from pizzami.common.services import change_activation_status
 from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES, UPDATE_ADDRESS_RESPONSES, \
     DELETE_ADDRESS_RESPONSES, GET_USERS_PARAMETERS
 from pizzami.users.models import BaseUser
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
-    AddressInputSerializer, AdminInputSerializer, UserOutputSerializer
+    AddressInputSerializer, AdminInputSerializer, UserOutputSerializer, UserPaginatedOutputSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
     delete_address, create_admin, get_users
 
@@ -43,10 +44,12 @@ class UsersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         "GET": [IsAdminUser]
     }
 
-    @extend_schema(tags=['Users:Users'], parameters=GET_USERS_PARAMETERS, responses=UserOutputSerializer(many=True))
+    @extend_schema(tags=['Users:Users'], parameters=GET_USERS_PARAMETERS, responses=UserPaginatedOutputSerializer())
     def get(self, request):
         data = get_users(query_dict=request.GET, is_superuser=request.user.is_superuser)
-        return Response(data, status=status.HTTP_200_OK)
+        paginator = FullPagination()
+        paginated_data = paginator.paginate_queryset(queryset=data, request=request)
+        return paginator.get_paginated_response(data={"ok": True, "data": paginated_data, "status": status.HTTP_200_OK})
 
 
 class UserActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView):

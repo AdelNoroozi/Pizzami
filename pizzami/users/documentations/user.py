@@ -2,6 +2,8 @@ from drf_spectacular.utils import OpenApiParameter
 
 GET_USERS_PARAMETERS = [
     OpenApiParameter(name="search", description="can be any str. this will be done on users' 'email' & 'public name'."),
+    OpenApiParameter(name="page_size", description="must be a valid int"),
+    OpenApiParameter(name="page", description="must be a valid int"),
     OpenApiParameter(name="is_active", description="must be true or false"),
     OpenApiParameter(name="is_admin", description="must be true or false"),
     OpenApiParameter(name="is_superuser", description="must be true or false"),
