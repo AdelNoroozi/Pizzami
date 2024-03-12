@@ -3,6 +3,7 @@ from django.db import transaction
 from django.db.models import QuerySet, Q
 
 from pizzami.foods.models import Food
+from pizzami.orders.models import CartItem
 from pizzami.users.models import Profile
 
 
@@ -39,3 +40,11 @@ def order_foods(queryset: QuerySet[Food], order_param: str) -> QuerySet[Food]:
 def add_food_tags(food: Food, tags: list[str]):
     food.tags.clear()
     food.tags.add(*tags, food.name, food.category.name)
+
+
+def is_food_in_any_cart(food: Food) -> bool:
+    return CartItem.objects.filter(food=food).exists()
+
+
+def delete_food(food: Food):
+    food.delete()
