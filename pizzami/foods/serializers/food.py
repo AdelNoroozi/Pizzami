@@ -158,7 +158,7 @@ class FoodMinorInputSerializer(serializers.ModelSerializer):
 
 
 class FoodPaginatedOutputSerializer(PaginatedOutputSerializer):
-    class ResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
+    class FoodResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
         data = FoodDetailedOutputSerializer(many=True)
 
-    results = ResultsOutputSerializer(many=False)
+    results = FoodResultsOutputSerializer(many=False)

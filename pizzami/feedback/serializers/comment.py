@@ -74,7 +74,7 @@ class CommentHierarchicalOutputSerializer(serializers.ModelSerializer):
 
 
 class CommentPaginatedOutputSerializer(PaginatedOutputSerializer):
-    class ResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
+    class CommentResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
         data = CommentDetailedOutputSerializer(many=True)
 
-    results = ResultsOutputSerializer(many=False)
+    results = CommentResultsOutputSerializer(many=False)

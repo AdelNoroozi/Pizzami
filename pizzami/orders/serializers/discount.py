@@ -100,7 +100,7 @@ class DiscountInquirySerializer(serializers.Serializer):
 
 
 class DiscountPaginatedOutputSerializer(PaginatedOutputSerializer):
-    class ResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
+    class DiscountResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
         data = DiscountCompleteOutputSerializer(many=True)
 
-    results = ResultsOutputSerializer(many=False)
+    results = DiscountResultsOutputSerializer(many=False)

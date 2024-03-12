@@ -98,7 +98,7 @@ class UpdateOrderStatusSerializer(serializers.Serializer):
 
 
 class OrderPaginatedOutputSerializer(PaginatedOutputSerializer):
-    class ResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
+    class OrderResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
         data = OrderBaseOutputSerializer(many=True)
 
-    results = ResultsOutputSerializer(many=False)
+    results = OrderResultsOutputSerializer(many=False)

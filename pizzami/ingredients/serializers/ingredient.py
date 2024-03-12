@@ -36,7 +36,7 @@ class IngredientCompleteOutputSerializer(IngredientBaseOutputSerializer):
 
 
 class IngredientPaginatedOutputSerializer(PaginatedOutputSerializer):
-    class ResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
+    class IngredientResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
         data = IngredientCompleteOutputSerializer(many=True)
 
-    results = ResultsOutputSerializer(many=False)
+    results = IngredientResultsOutputSerializer(many=False)
