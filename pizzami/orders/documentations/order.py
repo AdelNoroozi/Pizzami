@@ -1,6 +1,7 @@
 from drf_spectacular.utils import OpenApiResponse, OpenApiParameter
 
-from pizzami.orders.serializers import OrderDetailedOutputSerializer, OrderBaseOutputSerializer
+from pizzami.orders.serializers import OrderDetailedOutputSerializer, OrderBaseOutputSerializer, \
+    OrderPaginatedOutputSerializer
 
 CREATE_OR_UPDATE_ORDER_200_RESPONSE = OpenApiResponse(
     response=OrderDetailedOutputSerializer,
@@ -83,6 +84,8 @@ UPDATE_ORDER_STATUS_RESPONSES = {
 
 GET_ORDERS_PARAMETERS = [
     OpenApiParameter(name="set", description="can be null or mine."),
+    OpenApiParameter(name="page_size", description="must be a valid int"),
+    OpenApiParameter(name="page", description="must be a valid int"),
     OpenApiParameter(name="search", description="can be any string. this will be done on addresses, foods' name, "
                                                 "foods' category & user's name."),
     OpenApiParameter(name="is_active", description="must be true or false"),
@@ -98,7 +101,7 @@ GET_ORDERS_PARAMETERS = [
 ]
 
 GET_ORDERS_200_RESPONSE = OpenApiResponse(
-    response=OrderBaseOutputSerializer(many=True),
+    response=OrderPaginatedOutputSerializer(),
     description="returns a list of orders. only staff users can access all of the orders. non staff users can only "
                 "access their own orders which can be done by setting the value for parameter 'set' to 'mine'."
 )

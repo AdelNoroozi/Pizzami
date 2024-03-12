@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
+from pizzami.api.pagination import FullPagination
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin
 from pizzami.orders.documentations import GET_DISCOUNTS_RESPONSES, CREATE_DISCOUNT_RESPONSES, GET_DISCOUNTS_PARAMETERS, \
     DELETE_DISCOUNT_RESPONSES, UPDATE_DISCOUNT_RESPONSES, ADD_TO_CART_RESPONSES, MY_CART_RESPONSES, \
@@ -33,7 +34,9 @@ class DiscountsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def get(self, request):
         query_dict = request.GET
         data = get_discount_list(query_dict=query_dict, is_user_staff=request.user.is_staff, user=request.user)
-        return Response(data=data, status=status.HTTP_200_OK)
+        paginator = FullPagination()
+        paginated_data = paginator.paginate_queryset(queryset=data, request=request)
+        return paginator.get_paginated_response(data={"ok": True, "data": paginated_data, "status": status.HTTP_200_OK})
 
     @extend_schema(
         tags=['Orders:Discounts'],
@@ -161,7 +164,9 @@ class OrdersAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
                 return Response(data={"error": "only authenticated normal users can access their own orders"},
                                 status=status.HTTP_403_FORBIDDEN)
             data = get_orders(query_dict=query_dict, user_created=True, user=user)
-        return Response(data=data, status=status.HTTP_200_OK)
+        paginator = FullPagination()
+        paginated_data = paginator.paginate_queryset(queryset=data, request=request)
+        return paginator.get_paginated_response(data={"ok": True, "data": paginated_data, "status": status.HTTP_200_OK})
 
 
 class OrderAPI(ApiAuthMixin, BasePermissionsMixin, APIView):

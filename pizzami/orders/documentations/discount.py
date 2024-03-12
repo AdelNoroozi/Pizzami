@@ -1,9 +1,10 @@
 from drf_spectacular.utils import OpenApiResponse, OpenApiParameter
 
-from pizzami.orders.serializers import DiscountCompleteOutputSerializer, DiscountBaseOutputSerializer
+from pizzami.orders.serializers import DiscountCompleteOutputSerializer, DiscountBaseOutputSerializer, \
+    DiscountPaginatedOutputSerializer
 
 GET_DISCOUNTS_200_RESPONSE = OpenApiResponse(
-    response=DiscountCompleteOutputSerializer(many=True),
+    response=DiscountPaginatedOutputSerializer(),
     description="Represents a list of discounts. For Staff users, it shows all of the discounts but for normal users "
                 "just the discounts that are specified to them. Also the representation for normal users only contains"
                 " the id, name, description, code, exp dat and value of the discount, but for staff users it contains "
@@ -21,6 +22,8 @@ GET_DISCOUNTS_RESPONSES = {
 
 GET_DISCOUNTS_PARAMETERS = [
     OpenApiParameter(name="search", description="can be any string"),
+    OpenApiParameter(name="page_size", description="must be a valid int"),
+    OpenApiParameter(name="page", description="must be a valid int"),
     OpenApiParameter(name="is_active", description="must be true or false"),
     OpenApiParameter(name="is_public", description="must be true or false"),
     OpenApiParameter(name="has_time_limit", description="must be true or false"),
