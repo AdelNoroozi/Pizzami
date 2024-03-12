@@ -1,7 +1,7 @@
 from drf_spectacular.utils import OpenApiResponse, OpenApiParameter
 
 from pizzami.foods.serializers import FoodCategoryCompleteOutputSerializer, FoodCategoryDetailedOutputSerializer, \
-    FoodCategoryPaginatedOutputSerializer
+    FoodCategoryBaseOutputSerializer
 
 CREATE_FOOD_CATEGORY_201_RESPONSE = OpenApiResponse(
     response=FoodCategoryCompleteOutputSerializer,
@@ -22,7 +22,7 @@ FOOD_CATEGORY_403_RESPONSE = OpenApiResponse(
 )
 
 GET_FOOD_CATEGORIES_200_RESPONSE = OpenApiResponse(
-    response=FoodCategoryPaginatedOutputSerializer(),
+    response=FoodCategoryBaseOutputSerializer(many=True),
     description="just for list representation and contains only id, icon & name"
 )
 
@@ -58,7 +58,5 @@ CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_RESPONSES = {
 }
 
 GET_FOOD_CATEGORIES_PARAMETERS = [
-    OpenApiParameter(name="is_customizable", description="can be true or false"),
-    OpenApiParameter(name="page_size", description="must be a valid int"),
-    OpenApiParameter(name="page", description="must be a valid int")
+    OpenApiParameter(name="is_customizable", description="can be true or false")
 ]

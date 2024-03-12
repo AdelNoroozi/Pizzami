@@ -39,9 +39,7 @@ class FoodCategoriesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     )
     def get(self, request):
         data = get_food_categories(query_dict=request.GET, is_user_staff=request.user.is_staff)
-        paginator = FullPagination()
-        paginated_data = paginator.paginate_queryset(queryset=data, request=request)
-        return paginator.get_paginated_response(data={"ok": True, "data": paginated_data, "status": status.HTTP_200_OK})
+        return Response(data=data, status=status.HTTP_200_OK)
 
     @extend_schema(
         tags=['Foods:Categories'],

@@ -79,8 +79,3 @@ class FoodCategoryInputSerializer(serializers.ModelSerializer):
         return super().save(**kwargs)
 
 
-class FoodCategoryPaginatedOutputSerializer(PaginatedOutputSerializer):
-    class ResultsOutputSerializer(PaginatedOutputSerializer.ResultsOutputSerializer):
-        data = FoodCategoryBaseOutputSerializer(many=True)
-
-    results = ResultsOutputSerializer(many=False)
