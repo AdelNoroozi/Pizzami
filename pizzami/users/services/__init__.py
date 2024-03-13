@@ -8,3 +8,4 @@ from pizzami.users.services.profile import get_profile
 from pizzami.users.services.user import register
 from pizzami.users.services.user import create_admin
 from pizzami.users.services.user import get_users
+from pizzami.users.services.user import reset_password

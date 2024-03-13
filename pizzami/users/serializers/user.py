@@ -97,3 +97,23 @@ class RequestPasswordResetSerializer(serializers.Serializer):
             raise serializers.ValidationError("no active user found with this email")
 
         return data
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(
+        validators=[
+            number_validator,
+            letter_validator,
+            special_char_validator,
+            MinLengthValidator(limit_value=10)
+        ]
+    )
+    confirm_password = serializers.CharField(max_length=255)
+
+    def validate(self, data):
+        if not data.get("password") or not data.get("confirm_password"):
+            raise serializers.ValidationError("Please fill password and confirm password")
+
+        if data.get("password") != data.get("confirm_password"):
+            raise serializers.ValidationError("confirm password is not equal to password")
+        return data

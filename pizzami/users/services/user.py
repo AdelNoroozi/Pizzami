@@ -1,4 +1,8 @@
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.db import transaction
+from django.utils.encoding import smart_str
+from django.utils.http import urlsafe_base64_decode
+from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 from pizzami.users.filters import UserFilter
@@ -51,3 +55,16 @@ def get_users(query_dict: dict, is_superuser: bool) -> ReturnList:
     queryset = UserFilter(query_dict, queryset=queryset).qs
     serializer = UserOutputSerializer(queryset, many=True)
     return serializer.data
+
+
+def reset_password(uid: str, token: str, password: str):
+    try:
+        _id = smart_str(urlsafe_base64_decode(uid))
+        user = get_object_or_404(BaseUser, is_active=True, id=_id)
+        if not PasswordResetTokenGenerator().check_token(user=user, token=token):
+            return False
+        user.set_password(password)
+        user.save()
+    except:
+        return False
+    return True
