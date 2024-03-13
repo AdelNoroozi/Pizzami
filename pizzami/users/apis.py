@@ -9,12 +9,13 @@ from pizzami.api.pagination import FullPagination
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin, IsSuperUser
 from pizzami.common.services import change_activation_status
 from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES, UPDATE_ADDRESS_RESPONSES, \
-    DELETE_ADDRESS_RESPONSES, GET_USERS_PARAMETERS
+    DELETE_ADDRESS_RESPONSES, GET_USERS_PARAMETERS, REQUEST_PASSWORD_RESPONSES
 from pizzami.users.models import BaseUser
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
-    AddressInputSerializer, AdminInputSerializer, UserOutputSerializer, UserPaginatedOutputSerializer
+    AddressInputSerializer, AdminInputSerializer, UserPaginatedOutputSerializer, \
+    RequestPasswordResetSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
-    delete_address, create_admin, get_users
+    delete_address, create_admin, get_users, request_password_reset
 
 
 class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -103,6 +104,21 @@ class MyAddressesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def post(self, request):
         data = create_address(data=request.data, user=request.user)
         return Response(data, status=status.HTTP_201_CREATED)
+
+
+class RequestPasswordResetAPI(APIView):
+    @extend_schema(
+        tags=['Users:Password'],
+        request=RequestPasswordResetSerializer,
+        responses=REQUEST_PASSWORD_RESPONSES
+    )
+    def post(self, request):
+        serializer = RequestPasswordResetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.data.get("email")
+        if request_password_reset(email=email):
+            return Response({"message": f"password reset link sent to {email}"}, status=status.HTTP_200_OK)
+        return Response(data={"error": "something went wrong"}, status=status.HTTP_408_REQUEST_TIMEOUT)
 
 
 class MyAddressAPI(ApiAuthMixin, BasePermissionsMixin, APIView):

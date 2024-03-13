@@ -22,7 +22,7 @@ def request_password_reset(email: str) -> bool:
     user = BaseUser.objects.filter(email=email).first()
     uid = urlsafe_base64_encode(force_bytes(user.id))
     token = PasswordResetTokenGenerator().make_token(user)
-    link = f"{BASE_URL.restrip('/')}/api/user/reset-password/{uid}/{token}/"
+    link = f"{BASE_URL.rstrip('/')}/api/users/reset-password/{uid}/{token}/"
     subject = "Password Reset"
     message = f"use this link to reset your password:\n{link}\nif you have not requested for password reset, ignore " \
               f"this message."
