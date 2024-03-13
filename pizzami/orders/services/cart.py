@@ -16,7 +16,7 @@ def add_to_cart(food_id: str, count: int, user: BaseUser) -> (Cart | None, bool)
         from pizzami.orders.services import change_order_status
         change_order_status(order=cart.order, status=Order.STATUS_CREATED)
     food = get_object_or_404(Food, id=food_id, is_active=True)
-    if (not food.is_public) and (food.created_by != profile):
+    if (not food.is_public) and (not food.is_confirmed) and (food.created_by != profile):
         raise Http404
     if not food.is_available:
         return None, "food is not available"
@@ -25,7 +25,7 @@ def add_to_cart(food_id: str, count: int, user: BaseUser) -> (Cart | None, bool)
     if count_sum <= 0:
         delete_cart_item(cart_item=cart_item)
     if count_sum >= 8:
-        return None, "can't have more than 7 foods of the same type in 1 order"
+        return None, "can't have more than 8 foods of the same type in 1 order"
     else:
         cart_item.count = count_sum
         cart_item.save()
