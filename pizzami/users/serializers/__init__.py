@@ -3,6 +3,7 @@ from pizzami.users.serializers.user import RegisterOutputSerializer
 from pizzami.users.serializers.user import AdminInputSerializer
 from pizzami.users.serializers.user import UserOutputSerializer
 from pizzami.users.serializers.user import UserPaginatedOutputSerializer
+from pizzami.users.serializers.user import RequestPasswordResetSerializer
 from pizzami.users.serializers.profile import ProfileOutputSerializer
 from pizzami.users.serializers.profile import ProfileReferenceSerializer
 from pizzami.users.serializers.address import AddressOutputSerializer

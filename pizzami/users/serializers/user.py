@@ -86,3 +86,14 @@ class UserPaginatedOutputSerializer(PaginatedOutputSerializer):
         data = UserOutputSerializer(many=True)
 
     results = UserResultsOutputSerializer(many=False)
+
+
+class RequestPasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=255)
+
+    def validate(self, data):
+        email = data.get("email")
+        if not BaseUser.objects.filter(is_active=True, email=email).exists():
+            raise serializers.ValidationError("no active user found with this email")
+
+        return data
