@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from pizzami.api.mixins import ApiAuthMixin, BasePermissionsMixin
 from pizzami.api.pagination import FullPagination
 from pizzami.common.services import change_activation_status
+from pizzami.core.helpers import is_it_work_hour
 from pizzami.foods.documentaion import (
     CREATE_FOOD_CATEGORY_201_RESPONSE,
     SAVE_FOOD_CATEGORY_400_RESPONSE,
@@ -179,7 +180,10 @@ class FoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     @extend_schema(tags=['Foods:Foods'], responses=DELETE_FOOD_RESPONSES)
     def delete(self, request, **kwargs):
         _id = kwargs.get("id")
-        delete_food(food_id=_id, user=request.user)
+        is_deleted = delete_food(food_id=_id, user=request.user)
+        if not is_deleted:
+            return Response(data={"error": "can't perform this action in work hours"},
+                            status=status.HTTP_503_SERVICE_UNAVAILABLE)
         return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
 
 

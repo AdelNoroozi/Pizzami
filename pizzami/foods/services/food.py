@@ -6,6 +6,7 @@ from django.http import QueryDict, Http404
 from rest_framework.generics import get_object_or_404
 from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 
+from pizzami.core.helpers import is_it_work_hour
 from pizzami.foods.filters import FoodFilter
 from pizzami.foods.models import Food
 from pizzami.foods.selectors import get_foods as get_foods_selector, search_food, order_foods, \
@@ -69,7 +70,7 @@ def retrieve_food(food_id: uuid, user: BaseUser = None) -> ReturnDict:
 @transaction.atomic
 def update_food(food_id: uuid, data: dict, user: BaseUser):
     if not user.is_staff:
-        food = get_object_or_404(Food, id=food_id, created_by=user.profile)
+        food = get_object_or_404(Food, id=food_id, created_by=user.profile, is_active=True)
         serializer = FoodMinorInputSerializer(instance=food, data=data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -124,8 +125,10 @@ def add_food_ordered_count(food: Food, count: int):
 
 
 def delete_food(food_id: uuid, user: BaseUser):
-    food = get_object_or_404(Food, id=food_id) if user.is_staff else get_object_or_404(Food, id=food_id,
+    food = get_object_or_404(Food, id=food_id) if user.is_staff else get_object_or_404(Food, id=food_id, is_active=True,
                                                                                        created_by=user.profile)
+    if food.is_public and is_it_work_hour():
+        return False
     if is_food_in_any_cart(food=food):
         food.is_active = False
         food.is_public = False
@@ -133,3 +136,4 @@ def delete_food(food_id: uuid, user: BaseUser):
         food.save()
     else:
         delete_food_selector(food=food)
+    return True

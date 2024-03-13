@@ -109,8 +109,14 @@ DELETE_FOOD_204_RESPONSE = OpenApiResponse(
     description="food deleted successfully."
 )
 
+DELETE_FOOD_503_RESPONSE = OpenApiResponse(
+    description="can't delete public foods in work hours."
+)
+
+
 DELETE_FOOD_RESPONSES = {
     204: DELETE_FOOD_204_RESPONSE,
     401: FOOD_401_RESPONSE,
-    404: FOOD_404_RESPONSE
+    404: FOOD_404_RESPONSE,
+    503: DELETE_FOOD_503_RESPONSE
 }
