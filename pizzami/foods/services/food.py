@@ -123,10 +123,13 @@ def add_food_ordered_count(food: Food, count: int):
     food.save()
 
 
-def delete_food(food_id: uuid, user: BaseUser) -> bool:
+def delete_food(food_id: uuid, user: BaseUser):
     food = get_object_or_404(Food, id=food_id) if user.is_staff else get_object_or_404(Food, id=food_id,
                                                                                        created_by=user.profile)
     if is_food_in_any_cart(food=food):
-        return False
-    delete_food_selector(food=food)
-    return True
+        food.is_active = False
+        food.is_public = False
+        food.is_confirmed = False
+        food.save()
+    else:
+        delete_food_selector(food=food)

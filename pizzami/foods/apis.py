@@ -179,9 +179,7 @@ class FoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     @extend_schema(tags=['Foods:Foods'], responses=DELETE_FOOD_RESPONSES)
     def delete(self, request, **kwargs):
         _id = kwargs.get("id")
-        is_deleted = delete_food(food_id=_id, user=request.user)
-        if not is_deleted:
-            return Response(data={"error": "food may be in a cart or order"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        delete_food(food_id=_id, user=request.user)
         return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
 
 
