@@ -20,13 +20,13 @@ from pizzami.foods.documentaion import (
     FOOD_CATEGORY_404_RESPONSE, DELETE_FOOD_CATEGORY_204_RESPONSE, UPDATE_FOOD_CATEGORY_200_RESPONSE,
     GET_FOODS_200_RESPONSE, GET_FOODS_200_PARAMETERS, CREATE_FOOD_RESPONSES, RETRIEVE_FOOD_RESPONSES,
     UPDATE_FOOD_RESPONSES, CHANGE_FOOD_ACTIVATION_STATUS_RESPONSES, CHANGE_FOOD_CATEGORY_ACTIVATION_STATUS_RESPONSES,
-    CHANGE_FOOD_CONFIRMATION_STATUS_RESPONSES, GET_FOOD_CATEGORIES_PARAMETERS
+    CHANGE_FOOD_CONFIRMATION_STATUS_RESPONSES, GET_FOOD_CATEGORIES_PARAMETERS, DELETE_FOOD_RESPONSES
 )
 from pizzami.foods.models import Food, FoodCategory
 from pizzami.foods.serializers import FoodInputSerializer
 from pizzami.foods.serializers.food_category import FoodCategoryInputSerializer
 from pizzami.foods.services import get_food_categories, create_food_category, retrieve_food_category, get_foods, \
-    create_food, retrieve_food, update_food, confirm_food
+    create_food, retrieve_food, update_food, confirm_food, delete_food
 from pizzami.foods.services.food_category import delete_food_category, update_food_category
 
 
@@ -155,7 +155,8 @@ class FoodsAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 class FoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     permissions = {
         "GET": [AllowAny],
-        "PUT": [IsAuthenticated]
+        "PUT": [IsAuthenticated],
+        "DELETE": [IsAuthenticated]
     }
 
     @extend_schema(tags=['Foods:Foods'], responses=RETRIEVE_FOOD_RESPONSES)
@@ -174,6 +175,14 @@ class FoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         _id = kwargs.get("id")
         food_data = update_food(food_id=_id, data=request.data, user=request.user)
         return Response(data=food_data, status=status.HTTP_200_OK)
+
+    @extend_schema(tags=['Foods:Foods'], responses=DELETE_FOOD_RESPONSES)
+    def delete(self, request, **kwargs):
+        _id = kwargs.get("id")
+        is_deleted = delete_food(food_id=_id, user=request.user)
+        if not is_deleted:
+            return Response(data={"error": "food may be in a cart or order"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
 
 
 class FoodActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView):

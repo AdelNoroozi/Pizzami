@@ -9,7 +9,7 @@ from rest_framework.utils.serializer_helpers import ReturnList, ReturnDict
 from pizzami.foods.filters import FoodFilter
 from pizzami.foods.models import Food
 from pizzami.foods.selectors import get_foods as get_foods_selector, search_food, order_foods, \
-    delete_food_ingredients_by_food, add_food_tags
+    delete_food_ingredients_by_food, add_food_tags, is_food_in_any_cart, delete_food as delete_food_selector
 from pizzami.foods.serializers import FoodBaseOutputSerializer, FoodDetailedOutputSerializer, FoodInputSerializer, \
     FoodCompleteOutputSerializer, FoodPublicDetailedOutputSerializer, FoodMinorInputSerializer
 from pizzami.foods.services.food_ingredient import create_food_ingredient
@@ -121,3 +121,12 @@ def confirm_food(food_id: uuid, action: str) -> Union[None, bool]:
 def add_food_ordered_count(food: Food, count: int):
     food.ordered_count = food.ordered_count + count
     food.save()
+
+
+def delete_food(food_id: uuid, user: BaseUser) -> bool:
+    food = get_object_or_404(Food, id=food_id) if user.is_staff else get_object_or_404(Food, id=food_id,
+                                                                                       created_by=user.profile)
+    if is_food_in_any_cart(food=food):
+        return False
+    delete_food_selector(food=food)
+    return True

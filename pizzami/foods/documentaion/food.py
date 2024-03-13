@@ -104,3 +104,18 @@ CHANGE_FOOD_CONFIRMATION_STATUS_RESPONSES = {
     403: FOOD_403_RESPONSE,
     404: FOOD_404_RESPONSE
 }
+
+DELETE_FOOD_204_RESPONSE = OpenApiResponse(
+    description="food deleted successfully."
+)
+
+DELETE_FOOD_406_RESPONSE = OpenApiResponse(
+    description="can't delete th food since it exists in someone's cart or order."
+)
+
+DELETE_FOOD_RESPONSES = {
+    204: DELETE_FOOD_204_RESPONSE,
+    401: FOOD_401_RESPONSE,
+    404: FOOD_404_RESPONSE,
+    406: DELETE_FOOD_406_RESPONSE
+}
