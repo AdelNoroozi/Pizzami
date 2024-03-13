@@ -9,13 +9,13 @@ from pizzami.api.pagination import FullPagination
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin, IsSuperUser
 from pizzami.common.services import change_activation_status
 from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES, UPDATE_ADDRESS_RESPONSES, \
-    DELETE_ADDRESS_RESPONSES, GET_USERS_PARAMETERS, REQUEST_PASSWORD_RESPONSES
+    DELETE_ADDRESS_RESPONSES, GET_USERS_PARAMETERS, REQUEST_PASSWORD_RESPONSES, RESET_PASSWORD_RESPONSES
 from pizzami.users.models import BaseUser
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
     AddressInputSerializer, AdminInputSerializer, UserPaginatedOutputSerializer, \
-    RequestPasswordResetSerializer
+    RequestPasswordResetSerializer, ChangePasswordSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
-    delete_address, create_admin, get_users, request_password_reset
+    delete_address, create_admin, get_users, request_password_reset, reset_password
 
 
 class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -119,6 +119,20 @@ class RequestPasswordResetAPI(APIView):
         if request_password_reset(email=email):
             return Response({"message": f"password reset link sent to {email}"}, status=status.HTTP_200_OK)
         return Response(data={"error": "something went wrong"}, status=status.HTTP_408_REQUEST_TIMEOUT)
+
+
+class ResetPasswordAPI(APIView):
+    @extend_schema(
+        tags=['Users:Password'],
+        request=ChangePasswordSerializer,
+        responses=RESET_PASSWORD_RESPONSES
+    )
+    def post(self, request, **kwargs):
+        serializer = ChangePasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if reset_password(uid=kwargs.get("uid"), token=kwargs.get("token"), password=serializer.data.get("password")):
+            return Response({"message": "password changed successfully"}, status=status.HTTP_200_OK)
+        return Response({"message": "invalid or expired token"}, status=status.HTTP_403_FORBIDDEN)
 
 
 class MyAddressAPI(ApiAuthMixin, BasePermissionsMixin, APIView):

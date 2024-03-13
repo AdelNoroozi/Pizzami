@@ -28,3 +28,22 @@ REQUEST_PASSWORD_RESPONSES = {
     400: REQUEST_PASSWORD_400_RESPONSE,
     408: REQUEST_PASSWORD_408_RESPONSE
 }
+
+RESET_PASSWORD_200_RESPONSE = OpenApiResponse(
+    description="password reset successfully."
+)
+
+RESET_PASSWORD_400_RESPONSE = OpenApiResponse(
+    description="input values are invalid or don't match the expected format. e.g: password & confirm password don't"
+                " match."
+)
+
+RESET_PASSWORD_403_RESPONSE = OpenApiResponse(
+    description="Invalid or expired token."
+)
+
+RESET_PASSWORD_RESPONSES = {
+    200: RESET_PASSWORD_200_RESPONSE,
+    400: RESET_PASSWORD_400_RESPONSE,
+    403: RESET_PASSWORD_403_RESPONSE
+}
