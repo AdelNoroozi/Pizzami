@@ -53,18 +53,22 @@ def get_users(query_dict: dict, is_superuser: bool) -> ReturnList:
             order_param.lstrip("-") in ["position", "created_at", "updated_at"]:
         queryset = order_users(queryset=queryset, order_param=order_param)
     queryset = UserFilter(query_dict, queryset=queryset).qs
-    serializer = UserOutputSerializer(queryset, many=True)
+    serializer = UserOutputSerializer(queryset)
     return serializer.data
 
 
-def reset_password(uid: str, token: str, password: str):
+def change_password(user: BaseUser, password: str):
+    user.set_password(password)
+    user.save()
+
+
+def reset_password(uid: str, token: str, password: str) -> bool:
     try:
         _id = smart_str(urlsafe_base64_decode(uid))
         user = get_object_or_404(BaseUser, is_active=True, id=_id)
         if not PasswordResetTokenGenerator().check_token(user=user, token=token):
             return False
-        user.set_password(password)
-        user.save()
+        change_password(user=user, password=password)
     except:
         return False
     return True

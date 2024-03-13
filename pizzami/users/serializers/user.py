@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.core.validators import MinLengthValidator
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -99,7 +100,7 @@ class RequestPasswordResetSerializer(serializers.Serializer):
         return data
 
 
-class ChangePasswordSerializer(serializers.Serializer):
+class ResetPasswordSerializer(serializers.Serializer):
     password = serializers.CharField(
         validators=[
             number_validator,
@@ -116,4 +117,35 @@ class ChangePasswordSerializer(serializers.Serializer):
 
         if data.get("password") != data.get("confirm_password"):
             raise serializers.ValidationError("confirm password is not equal to password")
+        return data
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(max_length=255)
+    password = serializers.CharField(
+        validators=[
+            number_validator,
+            letter_validator,
+            special_char_validator,
+            MinLengthValidator(limit_value=10)
+        ]
+    )
+    confirm_password = serializers.CharField(max_length=255)
+
+    def validate_old_password(self, value):
+        if not authenticate(email=self.context.get("user").email, password=value):
+            raise serializers.ValidationError("old password is incorrect")
+
+        return value
+
+    def validate(self, data):
+        if not data.get("password") or not data.get("confirm_password"):
+            raise serializers.ValidationError("Please fill password and confirm password")
+
+        if data.get("password") != data.get("confirm_password"):
+            raise serializers.ValidationError("confirm password is not equal to password")
+
+        if data.get("password") == data.get("old_password"):
+            raise serializers.ValidationError("old password and new password can't be the same")
+
         return data

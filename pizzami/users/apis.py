@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -13,9 +13,10 @@ from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS
 from pizzami.users.models import BaseUser
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
     AddressInputSerializer, AdminInputSerializer, UserPaginatedOutputSerializer, \
-    RequestPasswordResetSerializer, ChangePasswordSerializer
+    RequestPasswordResetSerializer, ResetPasswordSerializer
+from pizzami.users.serializers.user import ChangePasswordSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
-    delete_address, create_admin, get_users, request_password_reset, reset_password
+    delete_address, create_admin, get_users, request_password_reset, reset_password, change_password
 
 
 class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -106,6 +107,23 @@ class MyAddressesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         return Response(data, status=status.HTTP_201_CREATED)
 
 
+class ChangePasswordAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "POST": [IsAuthenticated]
+    }
+
+    @extend_schema(
+        tags=['Users:Password'],
+        request=ChangePasswordSerializer,
+        responses=RESET_PASSWORD_RESPONSES
+    )
+    def post(self, request, **kwargs):
+        serializer = ChangePasswordSerializer(data=request.data, context={"user": request.user})
+        serializer.is_valid(raise_exception=True)
+        change_password(user=request.user, password=serializer.data.get("password"))
+        return Response({"message": "password changed successfully"}, status=status.HTTP_200_OK)
+
+
 class RequestPasswordResetAPI(APIView):
     @extend_schema(
         tags=['Users:Password'],
@@ -124,11 +142,11 @@ class RequestPasswordResetAPI(APIView):
 class ResetPasswordAPI(APIView):
     @extend_schema(
         tags=['Users:Password'],
-        request=ChangePasswordSerializer,
+        request=ResetPasswordSerializer,
         responses=RESET_PASSWORD_RESPONSES
     )
     def post(self, request, **kwargs):
-        serializer = ChangePasswordSerializer(data=request.data)
+        serializer = ResetPasswordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if reset_password(uid=kwargs.get("uid"), token=kwargs.get("token"), password=serializer.data.get("password")):
             return Response({"message": "password changed successfully"}, status=status.HTTP_200_OK)
