@@ -147,7 +147,6 @@ class FoodInputSerializer(serializers.ModelSerializer):
             self.validated_data["price"] = price
         else:
             self.validated_data["is_confirmed"] = True
-            self.validated_data["is_public"] = True
         return super().save(**kwargs)
 
 

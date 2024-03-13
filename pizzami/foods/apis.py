@@ -174,7 +174,10 @@ class FoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     )
     def put(self, request, **kwargs):
         _id = kwargs.get("id")
-        food_data = update_food(food_id=_id, data=request.data, user=request.user)
+        food_data, is_done = update_food(food_id=_id, data=request.data, user=request.user)
+        if not is_done:
+            return Response(data={"error": "can't perform this action in work hours"},
+                            status=status.HTTP_503_SERVICE_UNAVAILABLE)
         return Response(data=food_data, status=status.HTTP_200_OK)
 
     @extend_schema(tags=['Foods:Foods'], responses=DELETE_FOOD_RESPONSES)

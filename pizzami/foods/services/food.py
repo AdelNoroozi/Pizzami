@@ -68,27 +68,28 @@ def retrieve_food(food_id: uuid, user: BaseUser = None) -> ReturnDict:
 
 
 @transaction.atomic
-def update_food(food_id: uuid, data: dict, user: BaseUser):
-    if not user.is_staff:
-        food = get_object_or_404(Food, id=food_id, created_by=user.profile, is_active=True)
-        serializer = FoodMinorInputSerializer(instance=food, data=data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        food.is_confirmed = None
-        food.save()
-    else:
-        food = get_object_or_404(Food, id=food_id)
+def update_food(food_id: uuid, data: dict, user: BaseUser) -> (ReturnDict, bool):
+    food = get_object_or_404(Food, id=food_id) if user.is_staff else get_object_or_404(Food, id=food_id,
+                                                                                       created_by=user.profile,
+                                                                                       is_active=True)
+    if food.is_public and is_it_work_hour():
+        return None, False
+    if user.is_staff:
         serializer = FoodInputSerializer(instance=food, data=data, partial=True, context={"user": user})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        delete_food_ingredients_by_food(food=food)
         if "ingredients" in data:
+            delete_food_ingredients_by_food(food=food)
             ingredients = data.pop("ingredients")
             for ingredient_data in ingredients:
-                create_food_ingredient(food=serializer.instance, data=ingredient_data)
+                create_food_ingredient(food=food, data=ingredient_data)
+    else:
+        food.is_confirmed = None
+        food.save()
+        serializer = FoodMinorInputSerializer(instance=food, data=data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
     add_food_tags(food=serializer.instance, tags=data.pop("tags"))
     response_serializer = FoodCompleteOutputSerializer(serializer.instance, many=False)
-    return response_serializer.data
+    return response_serializer.data, True
 
 
 def confirm_food(food_id: uuid, action: str) -> Union[None, bool]:
