@@ -9,7 +9,8 @@ from pizzami.api.pagination import FullPagination
 from pizzami.authentication.permissions import IsAuthenticatedAndNotAdmin, IsSuperUser
 from pizzami.common.services import change_activation_status
 from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES, UPDATE_ADDRESS_RESPONSES, \
-    DELETE_ADDRESS_RESPONSES, GET_USERS_PARAMETERS, REQUEST_PASSWORD_RESPONSES, RESET_PASSWORD_RESPONSES
+    DELETE_ADDRESS_RESPONSES, GET_USERS_PARAMETERS, REQUEST_PASSWORD_RESPONSES, RESET_PASSWORD_RESPONSES, \
+    CHANGE_PASSWORD_RESPONSES
 from pizzami.users.models import BaseUser
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
     AddressInputSerializer, AdminInputSerializer, UserPaginatedOutputSerializer, \
@@ -115,7 +116,7 @@ class ChangePasswordAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     @extend_schema(
         tags=['Users:Password'],
         request=ChangePasswordSerializer,
-        responses=RESET_PASSWORD_RESPONSES
+        responses=CHANGE_PASSWORD_RESPONSES
     )
     def post(self, request, **kwargs):
         serializer = ChangePasswordSerializer(data=request.data, context={"user": request.user})

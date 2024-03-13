@@ -5,3 +5,4 @@ from pizzami.users.documentations.address import UPDATE_ADDRESS_RESPONSES
 from pizzami.users.documentations.user import GET_USERS_PARAMETERS
 from pizzami.users.documentations.user import REQUEST_PASSWORD_RESPONSES
 from pizzami.users.documentations.user import RESET_PASSWORD_RESPONSES
+from pizzami.users.documentations.user import CHANGE_PASSWORD_RESPONSES

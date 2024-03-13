@@ -47,3 +47,22 @@ RESET_PASSWORD_RESPONSES = {
     400: RESET_PASSWORD_400_RESPONSE,
     403: RESET_PASSWORD_403_RESPONSE
 }
+
+CHANGE_PASSWORD_200_RESPONSE = OpenApiResponse(
+    description="password changed successfully."
+)
+
+CHANGE_PASSWORD_400_RESPONSE = OpenApiResponse(
+    description="input values are invalid or don't match the expected format. e.g: password & confirm password don't"
+                " match. old password is incorrect. old password and new password are the same."
+)
+
+CHANGE_PASSWORD_401_RESPONSE = OpenApiResponse(
+    description="user is not authenticated."
+)
+
+CHANGE_PASSWORD_RESPONSES = {
+    200: CHANGE_PASSWORD_200_RESPONSE,
+    400: CHANGE_PASSWORD_400_RESPONSE,
+    401: CHANGE_PASSWORD_401_RESPONSE
+}
