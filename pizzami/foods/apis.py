@@ -176,7 +176,7 @@ class FoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         _id = kwargs.get("id")
         food_data, is_done = update_food(food_id=_id, data=request.data, user=request.user)
         if not is_done:
-            return Response(data={"error": "can't perform this action in work hours"},
+            return Response(data={"error": "can't perform this action on foods in menu during work hours"},
                             status=status.HTTP_503_SERVICE_UNAVAILABLE)
         return Response(data=food_data, status=status.HTTP_200_OK)
 
@@ -185,7 +185,7 @@ class FoodAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         _id = kwargs.get("id")
         is_deleted = delete_food(food_id=_id, user=request.user)
         if not is_deleted:
-            return Response(data={"error": "can't perform this action in work hours"},
+            return Response(data={"error": "can't perform this action on foods in menu during work hours"},
                             status=status.HTTP_503_SERVICE_UNAVAILABLE)
         return Response(data={"message": "done"}, status=status.HTTP_204_NO_CONTENT)
 
@@ -200,12 +200,12 @@ class FoodActivateAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         description="changes foods activation status. only for staff users.",
         responses=CHANGE_FOOD_ACTIVATION_STATUS_RESPONSES)
     def patch(self, request, **kwargs):
+        if is_it_work_hour():
+            return Response(data={"error": "can't perform this action during workhours."},
+                            status=status.HTTP_503_SERVICE_UNAVAILABLE)
         food_id = kwargs.get("id")
         new_activation_status = change_activation_status(obj_id=food_id, queryset=Food.objects.all())
-        if new_activation_status:
-            activation_str = "activated"
-        else:
-            activation_str = "deactivated"
+        activation_str = "activated" if new_activation_status else "deactivated"
         return Response(data={"message": f"food {activation_str} successfully"})
 
 
@@ -222,9 +222,7 @@ class FoodConfirmAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def patch(self, request, **kwargs):
         food_id = kwargs.get("id")
         action = kwargs.get("action")
-        food_confirmation = confirm_food(food_id=food_id, action=action)
+        food_confirmation, message = confirm_food(food_id=food_id, action=action)
         if food_confirmation:
-            return Response(data={"message": f"Food {action}ed successfully"}, status=status.HTTP_200_OK)
-        if food_confirmation is None:
-            return Response(data={"message": f"Food is already {action}ed"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(data={"message": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={"message": message}, status=status.HTTP_200_OK)
+        return Response(data={"message": message}, status=status.HTTP_400_BAD_REQUEST)

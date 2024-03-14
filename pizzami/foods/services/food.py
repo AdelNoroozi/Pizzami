@@ -72,7 +72,7 @@ def update_food(food_id: uuid, data: dict, user: BaseUser) -> (ReturnDict, bool)
     food = get_object_or_404(Food, id=food_id) if user.is_staff else get_object_or_404(Food, id=food_id,
                                                                                        created_by=user.profile,
                                                                                        is_active=True)
-    if food.is_public and is_it_work_hour():
+    if food.is_public and food.is_confirmed is True and is_it_work_hour():
         return None, False
     if user.is_staff:
         serializer = FoodInputSerializer(instance=food, data=data, partial=True, context={"user": user})
@@ -92,32 +92,24 @@ def update_food(food_id: uuid, data: dict, user: BaseUser) -> (ReturnDict, bool)
     return response_serializer.data, True
 
 
-def confirm_food(food_id: uuid, action: str) -> Union[None, bool]:
+def confirm_food(food_id: uuid, action: str) -> (Union[None, bool], str):
     valid_actions = ["confirm", "reject", "suspend"]
-
     if action not in valid_actions:
-        return False
-
+        return False, "Invalid action"
     food = get_object_or_404(Food, id=food_id)
-
-    if action == "confirm":
-        if food.is_confirmed is not True:
-            food.is_confirmed = True
-            food.save()
-            return True
-    elif action == "reject":
-        if food.is_confirmed is not False:
-            food.is_confirmed = False
-            food.is_public = False
-            food.save()
-            return True
-    elif action == "suspend":
-        if food.is_confirmed is not None:
-            food.is_confirmed = None
-            food.save()
-            return True
-
-    return None
+    if food.is_confirmed is True and food.is_public and is_it_work_hour():
+        return None, f"Can't perform this action on foods in menu during work hours."
+    if action == "confirm" and food.is_confirmed is not True:
+        food.is_confirmed = True
+    elif action == "reject" and food.is_confirmed is not False:
+        food.is_confirmed = False
+        food.is_public = False
+    elif action == "suspend" and food.is_confirmed is not None:
+        food.is_confirmed = None
+    else:
+        return None, f"Food is already {action}ed"
+    food.save()
+    return True, f"Food {action}ed successfully"
 
 
 def add_food_ordered_count(food: Food, count: int):
@@ -128,7 +120,7 @@ def add_food_ordered_count(food: Food, count: int):
 def delete_food(food_id: uuid, user: BaseUser):
     food = get_object_or_404(Food, id=food_id) if user.is_staff else get_object_or_404(Food, id=food_id, is_active=True,
                                                                                        created_by=user.profile)
-    if food.is_public and is_it_work_hour():
+    if food.is_confirmed is True and food.is_public and is_it_work_hour():
         return False
     if is_food_in_any_cart(food=food):
         food.is_active = False
