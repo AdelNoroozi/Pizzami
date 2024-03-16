@@ -24,7 +24,7 @@ from pizzami.ingredients.documentation import (
     INGREDIENT_401_RESPONSE,
     INGREDIENT_403_RESPONSE, UPDATE_INGREDIENT_200_RESPONSE, INGREDIENT_404_RESPONSE, DELETE_INGREDIENT_204_RESPONSE,
     CHANGE_INGREDIENT_CATEGORY_ACTIVATION_STATUS_RESPONSES, CHANGE_INGREDIENT_ACTIVATION_STATUS_RESPONSES,
-    GET_INGREDIENT_PARAMETERS
+    GET_INGREDIENT_PARAMETERS, DELETE_INGREDIENT_CATEGORY_RESPONSES
 )
 from pizzami.ingredients.models import IngredientCategory, Ingredient
 from pizzami.ingredients.serializers import IngredientCategoryInputSerializer, IngredientInputSerializer
@@ -79,10 +79,7 @@ class IngredientCategoryAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=['Ingredients:Categories'],
-        responses={204: DELETE_INGREDIENT_CATEGORY_204_RESPONSE,
-                   401: INGREDIENT_CATEGORY_401_RESPONSE,
-                   403: INGREDIENT_CATEGORY_403_RESPONSE,
-                   404: INGREDIENT_CATEGORY_404_RESPONSE}
+        responses=DELETE_INGREDIENT_CATEGORY_RESPONSES
     )
     def delete(self, request, **kwargs):
         _id = kwargs.get("id")
