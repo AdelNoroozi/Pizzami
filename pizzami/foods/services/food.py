@@ -48,7 +48,7 @@ def create_food(data: dict, user: BaseUser) -> ReturnDict:
         for ingredient_data in ingredients:
             create_food_ingredient(food=serializer.instance, data=ingredient_data)
     if "tags" in data:
-        add_food_tags(food=serializer.instance, tags=data.pop("tags"))
+        add_food_tags(food=serializer.instance, tags=data.pop("tags") if data.get("tags") is not None else [])
     response_serializer = FoodCompleteOutputSerializer(serializer.instance, many=False)
     return response_serializer.data
 
@@ -87,7 +87,7 @@ def update_food(food_id: uuid, data: dict, user: BaseUser) -> (ReturnDict, bool)
         serializer = FoodMinorInputSerializer(instance=food, data=data, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    add_food_tags(food=serializer.instance, tags=data.pop("tags"))
+    add_food_tags(food=serializer.instance, tags=data.pop("tags") if data.get("tags") is not None else [])
     response_serializer = FoodCompleteOutputSerializer(serializer.instance, many=False)
     return response_serializer.data, True
 
