@@ -29,16 +29,16 @@ class FoodIngredientInlineAdmin(admin.TabularInline):
 class FoodAdmin(BaseModelAdmin,  NumericFilterModelAdmin):
     inlines = (FoodIngredientInlineAdmin,)
     list_display = ["name", "price"] + BaseModelAdmin.list_display + ["rate", "is_confirmed", "is_public",
-                                                                      "is_available", "auto_check_availability", "rate",
+                                                                      "is_available", "auto_check_availability",
                                                                       "views", "ordered_count", "is_original"]
     list_editable = BaseModelAdmin.list_editable + ["is_confirmed", "is_public", "is_available",
                                                     "auto_check_availability"]
     list_filter = BaseModelAdmin.list_filter + ["is_public", "is_confirmed", "is_original", "is_available",
-                                                "tags__name",
+                                                "tags__name", "category", "auto_check_availability",
                                                 ("price", SliderNumericFilter),
                                                 ("ordered_count", SliderNumericFilter)]
-    search_fields = ["name", "description", "tags__name"]
+    search_fields = ["name", "description", "tags__name", "category__name"]
     prepopulated_fields = {
         "image_alt_text": ("name",),
     }
-    ordering = BaseModelAdmin.ordering + ["rate", "views"]
+    ordering = BaseModelAdmin.ordering + ["rate", "views", "created_at", "updated_at", "price", "ordered_count"]

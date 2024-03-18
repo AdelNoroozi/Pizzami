@@ -98,12 +98,11 @@ class FoodInputSerializer(serializers.ModelSerializer):
         model = Food
         fields = (
             "name", "category", "description", "ingredients", "image_url", "image_alt_text", "is_public",
-            "is_available", "price", "tags")
+            "is_available", "price", "tags", "auto_check_availability")
 
     def validate_category(self, value):
-        if not value.is_active:
-            raise ValidationError(_("category is not active"),
-                                  code="deactivated_category")
+        if not value.is_active and not self.context.get("user").is_staff:
+            raise ValidationError(_(f"Invalid pk \"{value.id}\" - object does not exist."))
 
         if not value.is_customizable and not self.context.get("user").is_staff:
             raise ValidationError(_("normal users can only create foods in customizable categories."),
@@ -145,6 +144,7 @@ class FoodInputSerializer(serializers.ModelSerializer):
             self.validated_data["created_by"] = profile
             price = self.calculate_price(ingredients=ingredients)
             self.validated_data["price"] = price
+            self.validated_data["auto_check_availability"] = False
         else:
             self.validated_data["is_confirmed"] = True
         return super().save(**kwargs)
