@@ -81,10 +81,9 @@ class FoodPublicDetailedOutputSerializer(FoodBaseOutputSerializer):
         return serializer.data
 
 
-class FoodCompleteOutputSerializer(FoodDetailedOutputSerializer):
-    ingredients = FoodIngredientOutputSerializer(many=True)
+class FoodCompleteOutputSerializer(FoodPublicDetailedOutputSerializer):
 
-    class Meta(FoodDetailedOutputSerializer.Meta):
+    class Meta(FoodPublicDetailedOutputSerializer.Meta):
         exclude = None
         fields = "__all__"
 
