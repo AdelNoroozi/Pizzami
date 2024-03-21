@@ -73,7 +73,7 @@ python manage.py runserver
 python manage.py createsuperuser
 ```
 # Description
-## <img src="https://raw.githubusercontent.com/AdelNoroozi/Pizzami/master/resources/core-app-icon.png?token=GHSAT0AAAAAACLBABR3HJKSBGPTW7IPHUA2ZP4HAIQ" style="vertical-align:middle;margin-right:10px;"> Core App
+## <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/core-app-icon.png?raw=true" style="vertical-align:middle;margin-right:10px;"> Core App
 
 The core app is defined for data and functions which belong to the whole project, not a specific part of it.
 
