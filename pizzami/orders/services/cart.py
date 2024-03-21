@@ -16,7 +16,7 @@ def add_to_cart(food_id: str, count: int, user: BaseUser) -> (Cart | None, bool)
         from pizzami.orders.services import change_order_status
         change_order_status(order=cart.order, status=Order.STATUS_CREATED)
     food = get_object_or_404(Food, id=food_id, is_active=True)
-    if (not food.is_public) and (not food.is_confirmed) and (food.created_by != profile):
+    if (not (food.is_public and food.is_confirmed)) and (food.created_by != profile):
         raise Http404
     if not food.is_available:
         return None, "food is not available"
