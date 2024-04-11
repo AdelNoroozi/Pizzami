@@ -14,6 +14,7 @@ This application provides both customer and management APIs.
   <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/rest-api-icon.png" >
   <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/postgresql-icon.png" >
   <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/jwt-icon.png" >
+  <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/redis-icon.png" >
   <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/docker-icon.png" >
   <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/cookiecutter-icon.png" >
   <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/swagger-icon.png" >
@@ -31,6 +32,8 @@ https://github.com/AdelNoroozi/Personal-Cookiecutter
 - The rest_framework_simplejwt package is used for authentication. The API classes inherit from two custom mixins for authentication & authorization called ApiAuthMixin and BasePermissionsMixin (pizzami/api/mixins.py). The ApiAuthMixin class is used to access the user requesting when it is needed through business logic. The BasePermissionsMixin defines the logic of API permissions by the HTTP method. There is a dictionary which by default states that HTTP requests with GET methods can be sent by any user, but staff privileges is needed for other methods. This dictionary can be overwritten in any API class if needed.
 
 - PostgreSQL is used as the database for this project. The PostgreSQL's full-text-search tools are used in this project for better search results. To do so, a PostgreSQL extension called pg_trgm is needed. The process of its installation is handled through a migration file inside the core app (pizzami/core/migrations/0001_install_pg_trgm.py). The package will be installed when running the django migrate command and there is no need for manual installation of this extension inside the database.
+
+- Redis is used for caching some frequently used APIs in this project.
 
 - The drf_spectacular package is used for documentation of this project. It generates a great UI for working with APIs and also provides the whole authentication functionalities. This UI is accessible inside the base url of the project after running it. Defining these docmentations is done inside the files found in the documentations directory of each app. Request body structure for POST requests, possible respones, parameters & query parameters are described inside the swagger UI for most of the APIs.
 
@@ -78,7 +81,7 @@ python manage.py createsuperuser
 The core app is defined for data and functions which belong to the whole project, not a specific part of it.
 
 ### constants
-Inside the constants.py file, there are three constan values which can be provided by environment variables (.env file).
+Inside the constants.py file, there are three constant values which can be provided by environment variables (.env file).
 - WORK_HOUR_START_TIME (default value is 10:00:00): this is used for checking if a process is happening during the work hours and if it causes any conflicts, avoid it to happen.
 - WORK_HOUR_END_TIME (default value is 23:00:00): this is used for checking if a process is happening during the work hours and if it causes any conflicts, avoid it to happen.
 - BASE_URL (default is the local host): this is used for generating the password reset URL and sending that to users' emails.
@@ -86,8 +89,10 @@ Inside the constants.py file, there are three constan values which can be provid
 Inside the helpers.py there is a function that checks current server times and tells if it is during the work hours or not. function is used in multiple places inside the project.
 ### scheduler
 The start function inside scheduler.py file handles periodic tasks. The tasks should be started in related app's apps.py file. This function uses the aspcheduler package. It was first implemented with Celery but then refactored using apscheduler so it works both on windows and linux. (Celery has too many issues on windows)
+### cache
+The redis_cache function is defined as a decorator for services that would have a better performance with caching. This decorator takes a ttl argument so that the records are kept inside redis for that long.
 ## <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/common-app-icon.png?raw=true" style="vertical-align:middle;margin-right:10px;"> common app
-This app contains some abstract classes that can be inheritted by other classes inside other apps. This reduces duplicated codes and makes it cleaner.
+This app contains some abstract classes that can be inherited by other classes inside other apps. That reduces duplicated codes and makes it cleaner.
 ### models
 The common models are:
 - BaseModel
