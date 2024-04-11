@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 from pizzami.common.models import TimeStampedBaseModel
+from pizzami.core.cache import invalidate_cache
 from pizzami.users.managers import BaseUserManager
 
 
@@ -39,6 +40,11 @@ class Profile(models.Model):
     user = models.OneToOneField(BaseUser, on_delete=models.CASCADE, related_name="profile", verbose_name=_("user"))
     bio = models.CharField(max_length=1000, null=True, blank=True, verbose_name=_("bio"))
     public_name = models.CharField(max_length=50, unique=True, verbose_name=_("public name"))
+
+    def save(self, *args, **kwargs):
+        profile_cache_key = f"get_profile:():{{'user': <BaseUser: {self.user.email}>}}"
+        invalidate_cache(profile_cache_key)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user} profile"

@@ -199,6 +199,8 @@ profile model holds non-staff users' extended data.
 | bio          | CharField      | Biography of the user|
 | public_name  | CharField      | Public name of the user. must be unique |
 
+The save function of this model is overridden to remove all the cache related to a user's profile after updating its information.
+
 #### APIs
 
 <details>
@@ -253,7 +255,7 @@ This API is used for registering new non-staff users. If no problem occurs, user
 ```
 </details>
 
-This API is used for retrieving authenticated non staff user's data. The responses are cached to avoid multiple requests since this API will be frequently called in the front end
+This API is used for retrieving authenticated non staff user's data. The responses are cached to avoid multiple requests since this API will be frequently called in the front end.
 
 <details>
   <summary>GET /api/users/</summary>
