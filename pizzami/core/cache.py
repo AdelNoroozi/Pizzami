@@ -12,7 +12,7 @@ def redis_cache(ttl):
         def wrapper(*args, **kwargs):
             cache_key = f"{func.__name__}:{args}:{kwargs}"
             cached_data = redis_conn.get(cache_key)
-
+            print(cache_key)
             if cached_data:
                 print("hit")
                 return pickle.loads(cached_data)
@@ -25,3 +25,9 @@ def redis_cache(ttl):
         return wrapper
 
     return decorator
+
+
+def invalidate_cache(cache_key_pattern):
+    cache_keys = redis_conn.keys(cache_key_pattern)
+    for cache_key in cache_keys:
+        redis_conn.delete(cache_key)

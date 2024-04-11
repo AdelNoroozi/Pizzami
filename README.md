@@ -90,7 +90,8 @@ Inside the helpers.py there is a function that checks current server times and t
 ### scheduler
 The start function inside scheduler.py file handles periodic tasks. The tasks should be started in related app's apps.py file. This function uses the aspcheduler package. It was first implemented with Celery but then refactored using apscheduler so it works both on windows and linux. (Celery has too many issues on windows)
 ### cache
-The redis_cache function is defined as a decorator for services that would have a better performance with caching. This decorator takes a ttl argument so that the records are kept inside redis for that long.
+- The redis_cache function is defined as a decorator for services that would have a better performance with caching. It checks if the service's response data exists in the cache. This decorator takes a ttl argument so that the records are kept inside redis for that long.
+- The invalidate_cache function is defined to remove caches from redis after any change in datasets that have been cached before. It takes a cache key and removes it from redis.
 ## <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/common-app-icon.png?raw=true" style="vertical-align:middle;margin-right:10px;"> common app
 This app contains some abstract classes that can be inherited by other classes inside other apps. That reduces duplicated codes and makes it cleaner.
 ### models
@@ -252,7 +253,7 @@ This API is used for registering new non-staff users. If no problem occurs, user
 ```
 </details>
 
-This API is used for retrieving authenticated non staff user's data.
+This API is used for retrieving authenticated non staff user's data. The responses are cached to avoid multiple requests since this API will be frequently called in the front end
 
 <details>
   <summary>GET /api/users/</summary>
