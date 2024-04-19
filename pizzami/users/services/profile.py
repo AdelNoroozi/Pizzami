@@ -16,13 +16,19 @@ def get_profile(user: BaseUser) -> ReturnDict:
 
 
 def update_profile_custom_fields(profile_id: int, custom_fields: dict):
+    custom_fields.pop("_id", None)
+    custom_fields.pop("core_profile_id", None)
     profile_document = profile_collection.find_one({"core_profile_id": profile_id})
-
     if profile_document:
-        pass
-    else:
-        custom_fields["core_profile_id"] = profile_id
-        profile_collection.insert_one(custom_fields)
+        old_fields = profile_document.copy()
+        old_fields.pop("_id")
+        old_fields.pop("core_profile_id")
+        profile_collection.update_one(profile_document, {"$unset": old_fields})
+
+    profile_collection.update_one(
+        {"core_profile_id": profile_id},
+        {"$set": custom_fields}
+    )
 
 
 def update_profile(user: BaseUser, data: dict) -> ReturnDict:
