@@ -20,4 +20,4 @@ class ProfileReferenceSerializer(serializers.ModelSerializer):
 class ProfileUpdateSerializer(serializers.Serializer):
     bio = serializers.CharField(max_length=1000, required=False)
     public_name = serializers.CharField(max_length=1000, required=False)
-    custom_fields = serializers.JSONField(required=False)
+    custom_fields = serializers.DictField(required=False)
