@@ -14,10 +14,10 @@ from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS
 from pizzami.users.models import BaseUser
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
     AddressInputSerializer, AdminInputSerializer, UserPaginatedOutputSerializer, \
-    RequestPasswordResetSerializer, ResetPasswordSerializer
+    RequestPasswordResetSerializer, ResetPasswordSerializer, ProfileUpdateSerializer
 from pizzami.users.serializers.user import ChangePasswordSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
-    delete_address, create_admin, get_users, request_password_reset, reset_password, change_password
+    delete_address, create_admin, get_users, request_password_reset, reset_password, change_password, update_profile
 
 
 class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -106,6 +106,21 @@ class MyAddressesAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     def post(self, request):
         data = create_address(data=request.data, user=request.user)
         return Response(data, status=status.HTTP_201_CREATED)
+
+
+class UpdateProfileAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
+    permissions = {
+        "PUT": [IsAuthenticatedAndNotAdmin]
+    }
+
+    @extend_schema(
+        tags=['Users:Users'],
+        request=ProfileUpdateSerializer,
+        responses=ProfileOutputSerializer
+    )
+    def put(self, request, **kwargs):
+        data = update_profile(user=request.user, data=request.data)
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 class ChangePasswordAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
