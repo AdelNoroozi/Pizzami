@@ -3,13 +3,15 @@ from rest_framework import serializers
 from pizzami.users.models import Profile
 
 
-class ProfileOutputSerializer(serializers.ModelSerializer):
+class ProfileBaseOutputSerializer(serializers.ModelSerializer):
     email = serializers.CharField(source="user.email")
 
     class Meta:
         model = Profile
         fields = ("email", "bio", "public_name")
 
+
+class ProfileFullOutputSerializer(ProfileBaseOutputSerializer):
     def to_representation(self, instance):
         from pizzami.users.services.profile import profile_collection
         data = super().to_representation(instance)

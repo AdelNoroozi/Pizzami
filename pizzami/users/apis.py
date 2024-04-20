@@ -12,9 +12,9 @@ from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS
     DELETE_ADDRESS_RESPONSES, GET_USERS_PARAMETERS, REQUEST_PASSWORD_RESPONSES, RESET_PASSWORD_RESPONSES, \
     CHANGE_PASSWORD_RESPONSES
 from pizzami.users.models import BaseUser
-from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileOutputSerializer, \
+from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileBaseOutputSerializer, \
     AddressInputSerializer, AdminInputSerializer, UserPaginatedOutputSerializer, \
-    RequestPasswordResetSerializer, ResetPasswordSerializer, ProfileUpdateSerializer
+    RequestPasswordResetSerializer, ResetPasswordSerializer, ProfileUpdateSerializer, ProfileFullOutputSerializer
 from pizzami.users.serializers.user import ChangePasswordSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
     delete_address, create_admin, get_users, request_password_reset, reset_password, change_password, update_profile
@@ -27,7 +27,7 @@ class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=['Users:Users'],
-        responses=ProfileOutputSerializer)
+        responses=ProfileBaseOutputSerializer)
     def get(self, request):
         profile_data = get_profile(user=request.user)
         return Response(profile_data, status=status.HTTP_200_OK)
@@ -116,7 +116,7 @@ class UpdateProfileAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
     @extend_schema(
         tags=['Users:Users'],
         request=ProfileUpdateSerializer,
-        responses=ProfileOutputSerializer
+        responses=ProfileFullOutputSerializer
     )
     def put(self, request, **kwargs):
         data = update_profile(user=request.user, data=request.data)
