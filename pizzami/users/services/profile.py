@@ -1,7 +1,7 @@
 from rest_framework.utils.serializer_helpers import ReturnDict
 
 from config.settings.mongodb import mongodb
-from pizzami.core.cache import redis_cache
+from pizzami.core.cache import redis_cache, invalidate_cache
 from pizzami.users.models import BaseUser, Profile
 from pizzami.users.selectors import get_profile as get_profile_selector
 from pizzami.users.serializers import ProfileOutputSerializer, ProfileUpdateSerializer
@@ -18,6 +18,8 @@ def get_profile(user: BaseUser) -> ReturnDict:
 def update_profile_custom_fields(profile_id: int, custom_fields: dict):
     custom_fields.pop("_id", None)
     custom_fields.pop("core_profile_id", None)
+    custom_fields.pop("public_name", None)
+    custom_fields.pop("bio", None)
     profile_document = profile_collection.find_one({"core_profile_id": profile_id})
     if profile_document:
         old_fields = profile_document.copy()
@@ -38,9 +40,10 @@ def update_profile(user: BaseUser, data: dict) -> ReturnDict:
     if "custom_fields" in data:
         custom_fields = data.pop("custom_fields")
     profile_qs = Profile.objects.filter(user=user)
-    profile_qs.update(bio=data["bio"], public_name=data["public_name"])
+    profile_qs.update(**data)
     profile = profile_qs.first()
-
+    profile_cache_key = f"get_profile:():{{'user': <BaseUser: {user.email}>}}"
+    invalidate_cache(profile_cache_key)
     if custom_fields is not None:
         update_profile_custom_fields(profile_id=profile.id, custom_fields=custom_fields)
     return ProfileOutputSerializer(profile).data

@@ -15,6 +15,7 @@ This application provides both customer and management APIs.
   <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/postgresql-icon.png" >
   <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/jwt-icon.png" >
   <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/redis-icon.png" >
+  <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/mongodb-icon.png" >
   <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/docker-icon.png" >
   <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/cookiecutter-icon.png" >
   <img src="https://github.com/AdelNoroozi/Pizzami/blob/master/resources/swagger-icon.png" >
@@ -34,6 +35,8 @@ https://github.com/AdelNoroozi/Personal-Cookiecutter
 - PostgreSQL is used as the database for this project. The PostgreSQL's full-text-search tools are used in this project for better search results. To do so, a PostgreSQL extension called pg_trgm is needed. The process of its installation is handled through a migration file inside the core app (pizzami/core/migrations/0001_install_pg_trgm.py). The package will be installed when running the django migrate command and there is no need for manual installation of this extension inside the database.
 
 - Redis is used for caching some frequently used APIs in this project.
+
+- Mongodb is used for storing normal user's custom profile data. Since the custom profile data can contain any information from a field that the users want to share about themselves, these data's structure can be in any given format, so the Mongodb is used as a noSQL database for this purpose.
 
 - The drf_spectacular package is used for documentation of this project. It generates a great UI for working with APIs and also provides the whole authentication functionalities. This UI is accessible inside the base url of the project after running it. Defining these docmentations is done inside the files found in the documentations directory of each app. Request body structure for POST requests, possible respones, parameters & query parameters are described inside the swagger UI for most of the APIs.
 
@@ -201,6 +204,18 @@ profile model holds non-staff users' extended data.
 
 The save function of this model is overridden to remove all the cache related to a user's profile after updating its information.
 
+- Profile Custom fields
+
+User profiles' extended data is stored inside a mongodb collection inside separate documents. The base structure of these documents looks like this:
+
+| Field                 | Type                    | Description                                  |
+|-----------------------|-------------------------|----------------------------------------------|
+| _id                   | BSON object of a string | Unique identifier for the address            |
+| core_profile_id       | Integer                 | profile's id in the core PostgreSQL database |
+| [other custom fields] | ...                     | ...                                          |
+
+Each document inside the Mongodb collection holds the profile's id in the core PostgreSQL database so it can be accessible by having the profile object inside the code.
+
 #### APIs
 
 <details>
@@ -239,7 +254,7 @@ The save function of this model is overridden to remove all the cache related to
 This API is used for registering new non-staff users. If no problem occurs, user will be registered and a new access token will be returned in response for instant login.
 
 <details>
-  <summary>/api/users/profile/</summary>
+  <summary>GET /api/users/profile/</summary>
 
 ##### method: GET
 ##### permission: authenticated non staff users
@@ -250,12 +265,50 @@ This API is used for registering new non-staff users. If no problem occurs, user
 {
   "email": "string",
   "bio": "string",
-  "public_name": "string"
+  "public_name": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
 }
 ```
 </details>
 
-This API is used for retrieving authenticated non staff user's data. The responses are cached to avoid multiple requests since this API will be frequently called in the front end.
+This API is used for retrieving authenticated non staff user's data. Profile's custom fields are first retrieved from the Mongodb collection and then are represented through this API's response. The responses are cached to avoid multiple requests since this API will be frequently called in the front end.
+
+<details>
+  <summary>PUT /api/users/update-profile/</summary>
+
+##### method: PUT
+##### permission: authenticated non staff users
+##### request:
+```json
+{
+  "bio": "string",
+  "public_name": "string",
+  "custom_fields": {
+    "additionalProp1": "string",
+    "additionalProp2": "string",
+    "additionalProp3": "string"
+  }
+}
+```
+##### responses:
+- 200: 
+
+```json
+{
+  "email": "string",
+  "bio": "string",
+  "public_name": "string",
+  "additionalProp1": "string",
+  "additionalProp2": "string",
+  "additionalProp3": "string"
+}
+```
+</details>
+
+This API is used for updating user's profile data. Profile's custom fields can be added inside a separate object and can be in any type. If the user doesn't have a document inside mongodb first a document is created and then the custom fields will be stored there, otherwise user's previous document is cleared (except for id and core_profile_id) and then the new information will be stored. The "_id", "core_profile_id", "bio" and "public_name" will be deleted from custom fields object to avoid any conflict in saving data or representing it.
+
 
 <details>
   <summary>GET /api/users/</summary>

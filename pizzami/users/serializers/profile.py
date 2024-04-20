@@ -10,6 +10,15 @@ class ProfileOutputSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ("email", "bio", "public_name")
 
+    def to_representation(self, instance):
+        from pizzami.users.services.profile import profile_collection
+        data = super().to_representation(instance)
+        custom_fields_document = dict(profile_collection.find_one({"core_profile_id": instance.user.profile.id}))
+        custom_fields_document.pop("_id", None)
+        custom_fields_document.pop("core_profile_id", None)
+        data.update(custom_fields_document)
+        return data
+
 
 class ProfileReferenceSerializer(serializers.ModelSerializer):
     class Meta:
