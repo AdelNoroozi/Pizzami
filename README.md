@@ -258,6 +258,8 @@ This API is used for registering new non-staff users. If no problem occurs, user
 
 ##### method: GET
 ##### permission: authenticated non staff users
+##### parameters:
+- **full**: must be 'yes' or null
 ##### responses:
 - 200: 
 
@@ -273,7 +275,9 @@ This API is used for registering new non-staff users. If no problem occurs, user
 ```
 </details>
 
-This API is used for retrieving authenticated non staff user's data. Profile's custom fields are first retrieved from the Mongodb collection and then are represented through this API's response. The responses are cached to avoid multiple requests since this API will be frequently called in the front end.
+This API is used for retrieving authenticated non staff user's data. The full parameter is for determining the fields that should be represented. It must be 'yes' or null (anything else would be considered as null.):
+- If the full parameter's value is yes: Every field containing base fields inside PostgreSQL database and custom fields inside Mongodb will be represented. The purpose is to show the full information in each user's profile page. Profile's custom fields are first retrieved from the Mongodb collection and then are represented through this API's response. 
+- If the full parameter's value is null or anything else: Only the basic fields like email, bio and public_name are represented so that they can be visible inside every page. The responses are cached to avoid multiple requests since this API will be frequently called in the front end.
 
 <details>
   <summary>PUT /api/users/update-profile/</summary>

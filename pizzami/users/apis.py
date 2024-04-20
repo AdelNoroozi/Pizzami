@@ -17,7 +17,8 @@ from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSer
     RequestPasswordResetSerializer, ResetPasswordSerializer, ProfileUpdateSerializer, ProfileFullOutputSerializer
 from pizzami.users.serializers.user import ChangePasswordSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
-    delete_address, create_admin, get_users, request_password_reset, reset_password, change_password, update_profile
+    delete_address, create_admin, get_users, request_password_reset, reset_password, change_password, update_profile, \
+    get_full_profile
 
 
 class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -27,9 +28,13 @@ class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
 
     @extend_schema(
         tags=['Users:Users'],
-        responses=ProfileBaseOutputSerializer)
+        responses=ProfileBaseOutputSerializer,
+        parameters=[OpenApiParameter(name="full", description="must be 'yes' or null")])
     def get(self, request):
-        profile_data = get_profile(user=request.user)
+        if request.GET.get("full") == "yes":
+            profile_data = get_full_profile(user=request.user)
+        else:
+            profile_data = get_profile(user=request.user)
         return Response(profile_data, status=status.HTTP_200_OK)
 
 

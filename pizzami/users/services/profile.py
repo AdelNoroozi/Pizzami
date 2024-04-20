@@ -14,6 +14,12 @@ def get_profile(user: BaseUser) -> ReturnDict:
     profile = get_profile_selector(user=user)
     return ProfileBaseOutputSerializer(profile).data
 
+
+def get_full_profile(user: BaseUser) -> ReturnDict:
+    profile = get_profile_selector(user=user)
+    return ProfileFullOutputSerializer(profile).data
+
+
 def update_profile_custom_fields(profile_id: int, custom_fields: dict):
     custom_fields.pop("_id", None)
     custom_fields.pop("core_profile_id", None)
