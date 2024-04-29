@@ -32,7 +32,9 @@ THIRD_PARTY_APPS = [
     'corsheaders',
     'drf_spectacular',
     'django_extensions',
-    'taggit'
+    'taggit',
+    "django_elasticsearch_dsl",
+    "django_elasticsearch_dsl_drf"
 ]
 
 INSTALLED_APPS = [
@@ -186,3 +188,4 @@ from config.settings.celery import *  # noqa
 from config.settings.swagger import *  # noqa
 #from config.settings.sentry import *  # noqa
 from config.settings.email_sending import *  # noqa
+from config.settings.elasticsearch import *  # noqa

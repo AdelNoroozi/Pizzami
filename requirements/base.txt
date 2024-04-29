@@ -18,6 +18,9 @@ django-mptt==0.16.0
 django-storages==1.13.1
 django-taggit==3.0.0
 
+django-elasticsearch-dsl==8.0
+django-elasticsearch-dsl-drf==0.22.5
+
 drf-jwt==1.19.2
 
 boto3==1.24.71
