@@ -22,6 +22,14 @@ class ProfileFullOutputSerializer(ProfileBaseOutputSerializer):
         return data
 
 
+class ProfilePageOutputSerializer(ProfileFullOutputSerializer):
+    email = None
+
+    class Meta:
+        model = Profile
+        fields = ("email", "bio", "public_name")
+
+
 class ProfileReferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
