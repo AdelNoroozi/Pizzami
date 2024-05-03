@@ -1,5 +1,6 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -11,17 +12,18 @@ from pizzami.common.services import change_activation_status
 from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES, UPDATE_ADDRESS_RESPONSES, \
     DELETE_ADDRESS_RESPONSES, GET_USERS_PARAMETERS, REQUEST_PASSWORD_RESPONSES, RESET_PASSWORD_RESPONSES, \
     CHANGE_PASSWORD_RESPONSES
-from pizzami.users.models import BaseUser
+from pizzami.users.models import BaseUser, Profile
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileBaseOutputSerializer, \
     AddressInputSerializer, AdminInputSerializer, UserPaginatedOutputSerializer, \
-    RequestPasswordResetSerializer, ResetPasswordSerializer, ProfileUpdateSerializer, ProfileFullOutputSerializer
+    RequestPasswordResetSerializer, ResetPasswordSerializer, ProfileUpdateSerializer, ProfileFullOutputSerializer, \
+    ProfilePageOutputSerializer
 from pizzami.users.serializers.user import ChangePasswordSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
     delete_address, create_admin, get_users, request_password_reset, reset_password, change_password, update_profile, \
     get_full_profile
 
 
-class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
+class SelfProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
     permissions = {
         "GET": [IsAuthenticatedAndNotAdmin]
     }
@@ -32,9 +34,21 @@ class ProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
         parameters=[OpenApiParameter(name="full", description="must be 'yes' or null")])
     def get(self, request):
         if request.GET.get("full") == "yes":
-            profile_data = get_full_profile(user=request.user)
+            profile_data = get_full_profile(profile=request.user.profile, is_self=True)
         else:
             profile_data = get_profile(user=request.user)
+        return Response(profile_data, status=status.HTTP_200_OK)
+
+
+class ProfileApi(APIView):
+
+    @extend_schema(
+        tags=['Users:Profiles'],
+        responses=ProfilePageOutputSerializer)
+    def get(self, request, **kwargs):
+        _id = kwargs.get("id")
+        profile = get_object_or_404(Profile, id=_id, user__is_active=True)
+        profile_data = get_full_profile(profile=profile, is_self=False)
         return Response(profile_data, status=status.HTTP_200_OK)
 
 

@@ -4,7 +4,8 @@ from config.settings.mongodb import mongodb
 from pizzami.core.cache import redis_cache, invalidate_cache
 from pizzami.users.models import BaseUser, Profile
 from pizzami.users.selectors import get_profile as get_profile_selector
-from pizzami.users.serializers import ProfileBaseOutputSerializer, ProfileUpdateSerializer, ProfileFullOutputSerializer
+from pizzami.users.serializers import ProfileBaseOutputSerializer, ProfileUpdateSerializer, ProfileFullOutputSerializer, \
+    ProfilePageOutputSerializer
 
 profile_collection = mongodb["profiles"]
 
@@ -15,9 +16,12 @@ def get_profile(user: BaseUser) -> ReturnDict:
     return ProfileBaseOutputSerializer(profile).data
 
 
-def get_full_profile(user: BaseUser) -> ReturnDict:
-    profile = get_profile_selector(user=user)
-    return ProfileFullOutputSerializer(profile).data
+def get_full_profile(profile: Profile, is_self: bool) -> ReturnDict:
+    if is_self:
+        serializer = ProfileFullOutputSerializer
+    else:
+        serializer = ProfilePageOutputSerializer
+    return serializer(profile).data
 
 
 def update_profile_custom_fields(profile_id: int, custom_fields: dict):
