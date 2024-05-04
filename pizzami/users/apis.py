@@ -16,11 +16,11 @@ from pizzami.users.models import BaseUser, Profile
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileBaseOutputSerializer, \
     AddressInputSerializer, AdminInputSerializer, UserPaginatedOutputSerializer, \
     RequestPasswordResetSerializer, ResetPasswordSerializer, ProfileUpdateSerializer, ProfileFullOutputSerializer, \
-    ProfilePageOutputSerializer
+    ProfilePageOutputSerializer, ProfileReferenceSerializer
 from pizzami.users.serializers.user import ChangePasswordSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
     delete_address, create_admin, get_users, request_password_reset, reset_password, change_password, update_profile, \
-    get_full_profile
+    get_full_profile, get_profile_list
 
 
 class SelfProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
@@ -38,6 +38,16 @@ class SelfProfileApi(ApiAuthMixin, BasePermissionsMixin, APIView):
         else:
             profile_data = get_profile(user=request.user)
         return Response(profile_data, status=status.HTTP_200_OK)
+
+
+class ProfilesApi(APIView):
+
+    @extend_schema(
+        tags=['Users:Profiles'],
+        responses=ProfileReferenceSerializer(many=UnicodeTranslateError))
+    def get(self, request, **kwargs):
+        data = get_profile_list()
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class ProfileApi(APIView):
