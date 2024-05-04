@@ -1,11 +1,11 @@
-from rest_framework.utils.serializer_helpers import ReturnDict
+from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 from config.settings.mongodb import mongodb
 from pizzami.core.cache import redis_cache, invalidate_cache
 from pizzami.users.models import BaseUser, Profile
-from pizzami.users.selectors import get_profile as get_profile_selector
+from pizzami.users.selectors import get_profile as get_profile_selector, get_profile_list as get_profile_list_selector
 from pizzami.users.serializers import ProfileBaseOutputSerializer, ProfileUpdateSerializer, ProfileFullOutputSerializer, \
-    ProfilePageOutputSerializer
+    ProfilePageOutputSerializer, ProfileReferenceSerializer
 
 profile_collection = mongodb["profiles"]
 
@@ -56,3 +56,9 @@ def update_profile(user: BaseUser, data: dict) -> ReturnDict:
     if custom_fields is not None:
         update_profile_custom_fields(profile_id=profile.id, custom_fields=custom_fields)
     return ProfileFullOutputSerializer(profile).data
+
+
+def get_profile_list() -> ReturnDict:
+    profiles = get_profile_list_selector()
+    serializer = ProfileReferenceSerializer(profiles, many=True)
+    return serializer.data

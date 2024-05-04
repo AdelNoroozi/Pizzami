@@ -33,7 +33,7 @@ class ProfilePageOutputSerializer(ProfileFullOutputSerializer):
 class ProfileReferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ("id", "public_name")
+        fields = ("id", "public_name", "bio")
 
 
 class ProfileUpdateSerializer(serializers.Serializer):

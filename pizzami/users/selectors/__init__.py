@@ -3,6 +3,7 @@ from pizzami.users.selectors.address import get_addresses_by_user
 from pizzami.users.selectors.address import search_address
 from pizzami.users.selectors.profile import create_profile
 from pizzami.users.selectors.profile import get_profile
+from pizzami.users.selectors.profile import get_profile_list
 from pizzami.users.selectors.user import get_users
 from pizzami.users.selectors.user import search_users
 from pizzami.users.selectors.user import order_users
