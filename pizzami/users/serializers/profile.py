@@ -1,5 +1,7 @@
+from django_elasticsearch_dsl_drf.serializers import DocumentSerializer
 from rest_framework import serializers
 
+from pizzami.users.documents import ProfilesDocument
 from pizzami.users.models import Profile
 
 
@@ -40,3 +42,17 @@ class ProfileUpdateSerializer(serializers.Serializer):
     bio = serializers.CharField(max_length=1000, required=False)
     public_name = serializers.CharField(max_length=1000, required=False)
     custom_fields = serializers.DictField(required=False)
+
+
+class ProfileDocumentSerializer(DocumentSerializer):
+    class Meta(object):
+        model = Profile
+        document = ProfilesDocument
+
+        fields = ("id", "public_name", "bio")
+
+        def get_location(self, obj):
+            try:
+                return obj.location.to_dict()
+            except:
+                return {}
