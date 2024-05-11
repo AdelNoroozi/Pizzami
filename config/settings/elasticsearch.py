@@ -1,3 +1,3 @@
 ELASTICSEARCH_DSL = {
-    "default": {"hosts": "elasticsearch:9200"},
+    "default": {"hosts": "elasticsearch://localhost:9200"},
 }
