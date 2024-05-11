@@ -1,3 +1,5 @@
+from django_elasticsearch_dsl_drf.filter_backends import FilteringFilterBackend, CompoundSearchFilterBackend
+from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
@@ -12,11 +14,13 @@ from pizzami.common.services import change_activation_status
 from pizzami.users.documentations import GET_ADDRESSES_RESPONSES, CREATE_ADDRESS_RESPONSES, UPDATE_ADDRESS_RESPONSES, \
     DELETE_ADDRESS_RESPONSES, GET_USERS_PARAMETERS, REQUEST_PASSWORD_RESPONSES, RESET_PASSWORD_RESPONSES, \
     CHANGE_PASSWORD_RESPONSES
+from pizzami.users.documents import ProfilesDocument
 from pizzami.users.models import BaseUser, Profile
 from pizzami.users.serializers import RegisterInputSerializer, RegisterOutputSerializer, ProfileBaseOutputSerializer, \
     AddressInputSerializer, AdminInputSerializer, UserPaginatedOutputSerializer, \
     RequestPasswordResetSerializer, ResetPasswordSerializer, ProfileUpdateSerializer, ProfileFullOutputSerializer, \
     ProfilePageOutputSerializer, ProfileReferenceSerializer
+from pizzami.users.serializers.profile import ProfileDocumentSerializer
 from pizzami.users.serializers.user import ChangePasswordSerializer
 from pizzami.users.services import register, get_profile, get_my_addresses, create_address, update_address, \
     delete_address, create_admin, get_users, request_password_reset, reset_password, change_password, update_profile, \
@@ -222,3 +226,20 @@ class MyAddressAPI(ApiAuthMixin, BasePermissionsMixin, APIView):
         _id = kwargs.get("id")
         delete_address(address_id=_id, user=request.user)
         return Response({"message": "done"}, status=status.HTTP_204_NO_CONTENT)
+
+
+class ProfilesSearchDocumentView(DocumentViewSet):
+    document = ProfilesDocument
+    serializer_class = ProfileDocumentSerializer
+
+    filter_backends = [
+        FilteringFilterBackend,
+        CompoundSearchFilterBackend
+    ]
+
+    search_fields = ("public_name", "bio")
+    multi_match_search_fields = ("public_name", "bio")
+    filter_fields = {
+        "public_name": "public_name",
+        "bio": "bio"
+    }
